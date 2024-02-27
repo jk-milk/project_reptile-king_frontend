@@ -8,8 +8,8 @@ import Community from './Pages/Community'
 function App() {
   return (
     <Routes>
-      <Route path='/home' element={<Home />} />
-      <Route path='/' element={<Layout />}>
+      <Route path='/' element={<Home />} />
+      <Route path='*' element={<Layout />}>
         <Route path='market' element={<Market/>}/>
         <Route path='cage' element={<Cage/>}/>
         <Route path='community' element={<Community/>}/>
