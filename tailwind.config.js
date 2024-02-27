@@ -11,6 +11,10 @@ export default {
         mainTextColor: '#10ff45',
       }
     },
+    fontFamily: {
+      'home': ['Georgia', 'Impact', 'Arial', 'sans-serif']
+    }
+
   },
   plugins: [],
 }
