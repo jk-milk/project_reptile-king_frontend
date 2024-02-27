@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 
 function Body() {
-  return (<div className="bg-bgGreen h-screen mt-16">
+  return (<div className="bg-bgGreen mt-16">
     <Outlet />
   </div>
   );

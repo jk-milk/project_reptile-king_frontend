@@ -1,7 +1,11 @@
+import CategoryList from "../components/CategoryList"
+import ImageSlider from "../components/ImageSlider"
+
 function Market() {
   return (
     <>
-      <h1>Market</h1>
+      <ImageSlider />
+      <CategoryList />
     </>
   )
 }
