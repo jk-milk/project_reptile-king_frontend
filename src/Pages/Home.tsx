@@ -123,7 +123,7 @@ const Home = () => {
       <Dots numberOfPages={numberOfPages} currentPage={currentPage} movePageTo={movePageTo} />
             <div className="h-screen overflow-hidden scrollbar-hide" ref={outerDivRef}>
         <div className="relative h-screen w-screen bg-[url('./assets/reptile1.png')] bg-cover">
-          <div className="absolute top-24 left-28 leading-[8rem] max-w-xl">
+          <div className="absolute top-24 left-28 leading-[6rem] max-w-xl">
             <p className="block">
               <span className="text-mainTextColor text-7xl font-bold font-sans">파충류</span>
               <span className="text-white text-6xl font-bold font-sans">를 사랑하는</span>
@@ -131,7 +131,7 @@ const Home = () => {
             <span className="text-white text-6xl font-bold font-home">이들을 위한</span>
             <span className="block text-white text-7xl font-bold font-home">최고의 서비스</span>
           </div>
-          <button className="absolute bottom-20 right-36 px-2 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-4 text-white text-center font-sans text-5xl font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/cage')}>
+          <button className="absolute bottom-10 right-64 px-2 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-2 text-white text-center font-sans text-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/cage')}>
             사육장 바로가기
           </button>
         </div>
@@ -141,7 +141,7 @@ const Home = () => {
             <span className="block text-white text-5xl font-bold font-sans leading-[4rem]">사육장을</span>
             <span className="block text-white text-5xl font-bold font-sans leading-[4rem]">예쁘게 꾸며 보세요</span>
           </p>
-          <button className="absolute left-1/2 transform -translate-x-1/2 bottom-20 px-3 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-4 text-white text-center font-sans text-5xl font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/market')}>
+          <button className="absolute left-1/2 transform -translate-x-1/2 bottom-20 px-3 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-2 text-white text-center font-sans text-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/market')}>
             마켓 바로가기
           </button>
         </div>
@@ -151,7 +151,7 @@ const Home = () => {
             <span className="block text-white text-7xl font-bold font-home leading-[6rem]">여러분의 이야기와 </span>
             <span className="block text-white text-7xl font-bold font-home leading-[6rem]">경험이 만나는 곳 </span>
           </p>
-          <button className="absolute top-48 right-32 px-3 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-4 text-white text-center font-sans text-5xl font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/community')}>
+          <button className="absolute top-48 right-32 px-3 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-2 text-white text-center font-sans text-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/community')}>
             커뮤니티 바로가기
           </button>
         </div>
