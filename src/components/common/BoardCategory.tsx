@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-interface CategoryProps {
+type BoardCategoryProps = {
   categories: {
     title: string;
     subCategories?: string[];
@@ -8,7 +8,7 @@ interface CategoryProps {
   }[];
 }
 
-const Category: React.FC<CategoryProps> = ({ categories }) => {
+const BoardCategory = ({ categories }: BoardCategoryProps) => {
   return (
     <div className="flex flex-col items-center">
       {categories.map((category) => (
@@ -46,4 +46,4 @@ const Category: React.FC<CategoryProps> = ({ categories }) => {
 
 
 
-export default Category;
+export default BoardCategory;

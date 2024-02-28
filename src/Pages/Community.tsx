@@ -1,4 +1,4 @@
-import Category from "../components/common/BoardCategory"
+import BoardCategory from "../components/common/BoardCategory"
 
 function Community() {
   const categories = [
@@ -22,7 +22,7 @@ function Community() {
     <div className="flex">
       <div className="flex-1 ml-auto">
         Search
-        <Category categories={categories} />
+        <BoardCategory categories={categories} />
       </div>
       <div className="flex-[2_2_0%]">
         메인컨텐츠
