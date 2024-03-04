@@ -94,7 +94,16 @@ function Board() {
         <PostList posts={filteredPosts} />
       </div>
       <div className="w-1/4">
-        우측 사이드바
+        <h2>인기글</h2>
+        {posts
+          .filter((post) => post.likes >= LIKES_NUMBER)
+          .sort((a, b) => b.likes - a.likes)
+          .slice(0, 5)
+          .map((post) => (
+            <div key={post.id}>
+              <p>{post.title}</p>
+            </div>
+          ))}
       </div>
     </div>
   )
