@@ -9,14 +9,15 @@ function Board() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null); // 선택된 세부 카테고리
   const [filter, setFilter] = useState('전체글'); // 전체글, 인기글 필터
+  const [sort, setSort] = useState('등록순'); // 정렬 방식
   const LIKES_NUMBER = 5; // 인기글 조건 좋아요 수
 
   useEffect(() => {
     const fetchPosts = async () => {
-      // const categoriesResponse = await axios.get('http://localhost:8080/categories');
-      // const postsResponse = await axios.get('http://localhost:8080/api/posts'); // 실제 api
-      const categoriesResponse = await axios.get('http://localhost:3300/categories');
-      const postsResponse = await axios.get('http://localhost:3300/posts'); // json server
+      // const categoriesResponse = await axios.get('http://localhost:8080/categories'); // 실제 api
+      // const postsResponse = await axios.get('http://localhost:8080/api/posts');
+      const categoriesResponse = await axios.get('http://localhost:3300/categories'); // json server
+      const postsResponse = await axios.get('http://localhost:3300/posts');
 
       setCategories(categoriesResponse.data);
       setPosts(postsResponse.data);
@@ -35,6 +36,18 @@ function Board() {
   // 전체글, 인기글 필터링
   if (filter === '인기글') {
     filteredPosts = filteredPosts.filter(post => post.likes >= LIKES_NUMBER);
+  }
+
+  switch (sort) {
+    case '등록순':
+      filteredPosts.sort((a, b) => b.id - a.id); // id 기준 내림차순 정렬
+      break;
+    case '최신순':
+      filteredPosts.sort((a, b) => a.id - b.id); // id 기준 올림차순 정렬
+      break;
+    // case '댓글순': 차후 구현
+    default:
+      break;
   }
 
   return (
@@ -70,6 +83,14 @@ function Board() {
       <div className="w-1/2">
         <button onClick={() => setFilter('전체글')}>전체글</button>
         <button onClick={() => setFilter('인기글')}>인기글</button>
+        <select 
+          value={sort} 
+          onChange={(e) => setSort(e.target.value)}
+        >
+          <option value="등록순">등록순</option>
+          <option value="최신순">최신순</option>
+          {/* <option value="댓글순">댓글순</option> */}
+        </select>
         <PostList posts={filteredPosts} />
       </div>
       <div className="w-1/4">
