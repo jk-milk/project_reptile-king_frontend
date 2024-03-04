@@ -11,6 +11,15 @@ export type Post = {
   updated_at: string;
 };
 
+export type PostCategory = {
+  id: number;
+  category: string;
+  subCategories: {
+    title: string;
+    link: string;
+  }[];
+}
+
 export type PostListProps = {
   posts: Post[];
 };
