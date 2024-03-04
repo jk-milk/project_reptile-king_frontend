@@ -3,16 +3,16 @@ import Layout from './components/Layout/Layout'
 import Home from './Pages/Home'
 import Market from './Pages/Market'
 import Cage from './Pages/Cage'
-import Community from './Pages/Community'
+import Board from './Pages/Board'
 
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Home />} />
-      <Route path='*' element={<Layout />}>
+      <Route index element={<Home />} />
+      <Route path='/' element={<Layout />}>
         <Route path='market' element={<Market/>}/>
         <Route path='cage' element={<Cage/>}/>
-        <Route path='community' element={<Community/>}/>
+        <Route path='board' element={<Board/>}/>
       </Route>
     </Routes>
   )
