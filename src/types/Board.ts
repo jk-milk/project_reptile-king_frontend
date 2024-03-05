@@ -19,7 +19,3 @@ export type PostCategory = {
     link: string;
   }[];
 }
-
-export type PostListProps = {
-  posts: Post[];
-};

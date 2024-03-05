@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { PostListProps } from "../../types/Board";
+import { Post } from "../../types/Board";
 
-const PostList = ({ posts }: PostListProps) => {
+const PostList = ({ posts }: { posts: Post[] }) => {
   return (
     <div className="w-1/2">
       {posts.map((post) => (
