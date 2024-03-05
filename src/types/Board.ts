@@ -15,7 +15,6 @@ export type PostCategory = {
   id: number;
   category: string;
   subCategories: {
-    title: string;
-    link: string;
+    title: string
   }[];
 }
