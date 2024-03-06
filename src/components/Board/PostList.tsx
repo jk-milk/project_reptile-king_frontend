@@ -47,12 +47,12 @@ const PostList = ({ posts }: { posts: Post[] }) => {
     <div className="bg-gray-200 ps-3 mb-5 rounded">
       {posts.map((post) => (
         <div key={post.id} className="py-3 flex justify-between">
-          <div>
-            <div className="text-lg ">
-              <Link to={`/board/${post.category}/${post.id}`}>{post.title}</Link>
+          <div className="w-full">
+            <div className="text-lg font-bold">
+              <Link to={`/board/${post.id}`}>{post.title}</Link>
             </div>
             <div className="text-gray-600 pt-2">
-              <Link to={`/board/${post.category}/${post.id}`}>{post.content}</Link>
+              <Link to={`/board/${post.id}`}>{post.content}</Link>
             </div>
             <div className="pt-4">
               <span className="text-gray-400">by </span>
@@ -72,7 +72,9 @@ const PostList = ({ posts }: { posts: Post[] }) => {
               <span className="text-gray-600 pe-2">{post.likes}</span>
             </div>
           </div>
-          사용자 프로필 이미지 {/* 차후 구현 */}
+          <div className="w-24">
+            사용자 프로필 이미지 {/* 차후 구현 */}
+          </div>
         </div>
       ))}
     </div>
