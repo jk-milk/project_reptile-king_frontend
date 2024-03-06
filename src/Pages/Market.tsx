@@ -1,11 +1,11 @@
-import CategoryList from "../components/CategoryList"
-import ImageSlider from "../components/ImageSlider"
+import MarketCategoryList from "../components/MarketCategoryList"
+import MarketImageSlider from "../components/MarketImageSlider"
 
 function Market() {
   return (
     <>
-      <ImageSlider />
-      <CategoryList />
+      <MarketImageSlider />
+      <MarketCategoryList />
     </>
   )
 }

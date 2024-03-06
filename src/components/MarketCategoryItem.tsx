@@ -1,14 +1,14 @@
 import React from "react";
 
-interface CategoryItemProps {
+interface MarketCategoryItemProps {
   title: string;
   count: number;
   image: string;
 }
 
-const CategoryItem: React.FC<CategoryItemProps> = ({ title, count, image }) => {
+const MarketCategoryItem: React.FC<MarketCategoryItemProps> = ({ title, count, image }) => {
   return (
-    <div className="bg-white rounded hover:bg-gray-200 duration-200 overflow-hidden shadow-md md:w-80 h-20 flex items-center">
+    <div className="bg-white rounded hover:bg-gray-200 overflow-hidden shadow-md md:w-80 h-20 flex items-center">
       <div className="p-4 flex items-center w-full">
         <div className="w-14 h-14 rounded-full overflow-hidden">
           <img
@@ -28,4 +28,4 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ title, count, image }) => {
   );
 };
 
-export default CategoryItem;
+export default MarketCategoryItem;
