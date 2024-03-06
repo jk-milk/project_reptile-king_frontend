@@ -18,3 +18,16 @@ export type PostCategory = {
     title: string
   }[];
 }
+
+export type Comment = {
+  id: number;
+  user_id: number;
+  post_id: number;
+  content: string;
+  group_comment_id: number;
+  parent_comment_id?: number,
+  depth_no: number,
+  order_no: number,
+  created_at: string;
+  updated_at: string;
+}
