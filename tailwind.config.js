@@ -11,7 +11,7 @@ export default {
         mainTextColor: '#10ff45',
       },
       width:{
-        body: '67.5rem'
+        body: '93.75rem'
       }
     },
     fontFamily: {
