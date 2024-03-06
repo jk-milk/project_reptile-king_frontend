@@ -44,9 +44,9 @@ const PostList = ({ posts }: { posts: Post[] }) => {
   }
 
   return (
-    <div className="bg-gray-200 ps-3 mb-5 rounded">
+    <div className="bg-gray-200 px-5 mb-5 rounded">
       {posts.map((post) => (
-        <div key={post.id} className="py-3 flex justify-between">
+        <div key={post.id} className="py-4 flex justify-between">
           <div className="w-full">
             <div className="text-lg font-bold">
               <Link to={`/board/${post.id}`}>{post.title}</Link>
@@ -72,8 +72,9 @@ const PostList = ({ posts }: { posts: Post[] }) => {
               <span className="text-gray-600 pe-2">{post.likes}</span>
             </div>
           </div>
-          <div className="w-24">
-            사용자 프로필 이미지 {/* 차후 구현 */}
+          <div className="w-20">
+            {/* 사용자 프로필 이미지 차후 구현 */}
+            <img src="/src/assets/profile.png" alt="" />
           </div>
         </div>
       ))}
