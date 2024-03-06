@@ -7,8 +7,11 @@ export default {
   theme: {
     extend: {
       colors:{
-        bgGreen: '#4E8A3E',
+        bgGreen: '#1C5B20',
         mainTextColor: '#10ff45',
+      },
+      width:{
+        body: '67.5rem'
       }
     },
     fontFamily: {
