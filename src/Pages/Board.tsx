@@ -88,7 +88,7 @@ function Board() {
             ))}
           </div>
         </div>
-        <div className="w-[59.75rem]"> {/* 크기 조정 후 tailwind.config.js에 추가할 것 */}
+        <div className="w-mainContent"> {/* 크기 조정 후 tailwind.config.js에 추가할 것 */}
           <h1 className="text-white text-2xl mt-5 pb-5">
             {selectedSubCategory}
           </h1>
