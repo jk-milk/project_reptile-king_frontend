@@ -94,13 +94,13 @@ function Board() {
           </h1>
           <div className="pb-3 flex justify-between">
             <div>
-              <button className="text-gray-900 border border-gray-100 rounded-full focus:outline-none bg-white hover:bg-gray-100 focus:ring-1 focus:ring-gray-300 font-bold text-sm mr-2 pl-2 pr-2 py-1.5"
+              <button className="text-gray-900 border border-gray-100 rounded-full focus:outline-none bg-white hover:bg-gray-100 focus:ring-1 focus:ring-gray-300 font-semibold text-sm mr-2 pl-2 pr-2 py-1.5"
                 onClick={() => setFilter('전체글')}
               >
                 <RiFileList2Line className="inline-block pe-1 pb-1" />
                 전체글
               </button>
-              <button className="text-white border border-red-700 rounded-full focus:outline-none bg-red-700 hover:bg-red-800 focus:ring-1 focus:ring-red-700 font-bold text-sm mr-2 pl-2 pr-2 py-1.5"
+              <button className="text-white border border-red-700 rounded-full focus:outline-none bg-red-700 hover:bg-red-800 focus:ring-1 focus:ring-red-700 font-semibold text-sm mr-2 pl-2 pr-2 py-1.5"
                 onClick={() => setFilter('인기글')}
               >
                 <HiMiniFire className="inline-block pe-1 pb-1" />
@@ -108,7 +108,7 @@ function Board() {
               </button>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="text-gray-900 border border-gray-100 bg-white hover:bg-gray-100 focus:ring-1 focus:outline-none focus:ring-gray-300 font-bold text-sm pl-2 pr-2 py-1.5 rounded-full inline-flex items-center"
+                className="text-gray-900 border border-gray-100 bg-white hover:bg-gray-100 focus:ring-1 focus:outline-none focus:ring-gray-300 font-semibold text-sm pl-2 pr-2 py-1.5 rounded-full inline-flex items-center"
               >
                 {sort}
                 <svg className="w-2.5 h-2.5 ms-1 mt-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -125,13 +125,13 @@ function Board() {
                       <button onClick={() => { setSort('최신순'); setDropdownOpen(false); }} className="block px-4 py-2 w-full text-left hover:bg-gray-100">최신순</button>
                     </li>
                     {/* <li>
-              <button onClick={() => { setSort('댓글순'); setDropdownOpen(false); }} className="block px-4 py-2 hover:bg-gray-100">댓글순</button>
-            </li> */}
+                      <button onClick={() => { setSort('댓글순'); setDropdownOpen(false); }} className="block px-4 py-2 hover:bg-gray-100">댓글순</button>
+                    </li> */}
                   </ul>
                 </div>
               }
             </div>
-            <button className="text-gray-900 border border-gray-100 rounded-full focus:outline-none bg-white  hover:bg-gray-100 focus:ring-1 focus:ring-gray-300 font-bold text-sm pl-2 pr-2 py-1.5">
+            <button className="text-gray-900 border border-gray-100 rounded-full focus:outline-none bg-white  hover:bg-gray-100 focus:ring-1 focus:ring-gray-300 font-semibold text-sm pl-2 pr-2 py-1.5">
               <RiFileList2Line className="inline-block pe-1 pb-1" />
               글쓰기
             </button>
