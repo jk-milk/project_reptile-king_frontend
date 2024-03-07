@@ -30,17 +30,16 @@ function BoardDetail() {
     fetchPosts();
   }, [detailId]);
 
-  console.log(post)
-
   return (
-    <div className="w-body m-auto">
-      <div className="flex">
-        <BoardCategory categories={categories} selectedSubCategory={selectedSubCategory} setSelectedSubCategory={setSelectedSubCategory} />
-        <div className="w-mainContent">
-          <PostDetail post={post} />
-        </div>
-        <PopularPosts posts={posts} />
+    <div className="w-body m-auto flex">
+      <BoardCategory categories={categories} selectedSubCategory={selectedSubCategory} setSelectedSubCategory={setSelectedSubCategory} />
+      <div className="w-mainContent">
+        <h1 className="text-white text-2xl mt-5 pb-5">
+          {selectedSubCategory}
+        </h1>
+        <PostDetail post={post} />
       </div>
+      <PopularPosts posts={posts} />
     </div>
   )
 }
