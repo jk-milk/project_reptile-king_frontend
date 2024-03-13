@@ -3,6 +3,7 @@ import Layout from './components/Layout/Layout'
 import Home from './Pages/Home'
 import Market from './Pages/Market'
 import Product from './Pages/Product'
+import ProductDetails from './Pages/ProductDetails'
 import Cage from './Pages/Cage'
 import Board from './Pages/Board'
 import BoardDetail from './Pages/BoardDetail'
@@ -12,10 +13,11 @@ function App() {
     <Routes>
       <Route index element={<Home />} />
       <Route path='/' element={<Layout />}>
-        <Route path='market' element={<Market />} />
-        <Route path='market/:categoryName' element={<Product />} />
-        <Route path='cage' element={<Cage />} />
-        <Route path='board' element={<Board />} />
+        <Route path='market' element={<Market />}/>
+        <Route path='market/:categoryName' element={<Product />}/>
+        <Route path="market/:categoryName/:id" element={<ProductDetails />} />
+        <Route path='cage' element={<Cage />}/>
+        <Route path='board' element={<Board />}/>
         <Route path='board/:detailId' element={<BoardDetail />} />
       </Route>
     </Routes>
