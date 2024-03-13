@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 
 // 이메일 중복 검사 
@@ -199,9 +199,8 @@ function Signup() {
   }
 
   return (
-    <div className="flex justify-center pt-20">
+    <div className="flex justify-center py-20">
       <div className="bg-[#284420] min-w-[61.75rem] max-w-[61.75rem] p-10 rounded-md">
-
         <form onSubmit={signupHandler}>
           <div className="mb-5">
             <label htmlFor="email" className="block text-white mb-2">이메일</label>
@@ -227,19 +226,17 @@ function Signup() {
             <label htmlFor="phone" className="block text-white mb-2">전화번호</label>
             <input id="phone" name="phone" type="text" value={phoneNumber} onChange={onChangePhoneNumberHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
           </div>
-          <button type="submit" className="bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300 disabled:border-gray-200 disabled:shadow-none disabled:scale-100 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-            disabled=
-            {!isEmailChecked
-              || !isEmailAvailable
-              || password.trim() === ''
-              || password !== confirm
-              || !isNicknameChecked
-              || !isNicknameAvailable
-            }
-          >
-            회원가입
-          </button>
+          <div className="flex justify-center">
+            <button type="submit" className="bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300 disabled:border-gray-200 disabled:shadow-none disabled:scale-100 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+              disabled={!isEmailChecked || !isEmailAvailable || password.trim() === '' || password !== confirm || !isNicknameChecked || !isNicknameAvailable}>
+              회원가입
+            </button>
+          </div>
         </form>
+        <div className="mt-5 flex justify-center w-full">
+          <p className="text-white mr-2">이미 회원인가요?</p>
+          <Link to="/login" className="text-blue-500 hover:text-blue-300">로그인</Link>
+        </div>
       </div>
     </div>
   )
