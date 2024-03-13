@@ -18,7 +18,7 @@ const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
     return stars;
   };
 
-  return <div className="flex items-center justify-center mt-2">{renderStars()}</div>;
+  return <div className="flex items-center">{renderStars()}</div>;
 };
 
 export default StarRating;

@@ -1,5 +1,5 @@
-import MarketCategoryList from "../components/MarketCategoryList"
-import MarketImageSlider from "../components/MarketImageSlider"
+import MarketCategoryList from "../components/Market/MarketCategoryList"
+import MarketImageSlider from "../components/Market/MarketImageSlider"
 
 function Market() {
   return (
