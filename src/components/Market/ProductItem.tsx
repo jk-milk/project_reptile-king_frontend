@@ -21,7 +21,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
       <div className="text-center text-sm">
         <h3 className="text-white mb-1">{product.name}</h3>
         <p className="text-white">{product.price.toLocaleString()}원</p>
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center mt-2">
           <StarRating rating={product.rating} />
           <span className="text-white ml-1">({product.reviewCount})</span>
         </div>
