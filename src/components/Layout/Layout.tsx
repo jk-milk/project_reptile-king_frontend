@@ -8,6 +8,7 @@ const pageTitles: { [key: string]: string[] } = {
   "board": ["파충류 이모저모", "주인님 같이 놀아요!"],
   "signup": ["파충KING", "회원가입"],
   "login": ["파충KING", "로그인"],
+  "reset-password": ["파충KING", "비밀번호 찾기"],
 }
 
 const Layout = () => {
