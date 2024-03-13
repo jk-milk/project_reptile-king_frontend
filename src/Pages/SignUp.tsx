@@ -73,19 +73,19 @@ const register = async (email: string, password: string): Promise<boolean> => {
 function Signup() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [confirm, setConfirm] = useState<string>('');
-  const [nickname, setNickname] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
-  const [emailError, setEmailError] = useState<string>('');
-  const [passwordError, setPasswordError] = useState<string>('');
-  const [confirmError, setConfirmError] = useState<string>('');
-  const [nicknameError, setNicknameError] = useState<string>('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmError, setConfirmError] = useState('');
+  const [nicknameError, setNicknameError] = useState('');
 
-  const [isEmailChecked, setIsEmailChecked] = useState<boolean>(false);
-  const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
+  const [isEmailChecked, setIsEmailChecked] = useState(false);
+  const [isEmailAvailable, setIsEmailAvailable] = useState(false);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
 
