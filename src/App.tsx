@@ -6,6 +6,7 @@ import Product from './Pages/Product'
 import ProductDetails from './Pages/ProductDetails'
 import Cage from './Pages/Cage'
 import Board from './Pages/Board'
+import BoardDetail from './Pages/BoardDetail'
 
 function App() {
   return (
@@ -14,9 +15,10 @@ function App() {
       <Route path='/' element={<Layout />}>
         <Route path='market' element={<Market />}/>
         <Route path='market/:categoryName' element={<Product />}/>
-        <Route path="/market/:categoryName/:id" element={<ProductDetails />} />
+        <Route path="market/:categoryName/:id" element={<ProductDetails />} />
         <Route path='cage' element={<Cage />}/>
         <Route path='board' element={<Board />}/>
+        <Route path='board/:detailId' element={<BoardDetail />} />
       </Route>
     </Routes>
   )
