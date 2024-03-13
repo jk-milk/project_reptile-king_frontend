@@ -77,6 +77,7 @@ function Signup() {
   const [password, setPassword] = useState<string>('');
   const [confirm, setConfirm] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
 
   const [emailError, setEmailError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
@@ -181,7 +182,9 @@ function Signup() {
     }
   }
 
-
+  const onChangePhoneNumberHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhoneNumber(e.target.value);
+  };
 
   const signupHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -202,30 +205,34 @@ function Signup() {
         <form onSubmit={signupHandler}>
           <div className="mb-5">
             <label htmlFor="email" className="block text-white mb-2">이메일</label>
-            <input id="email" name="email" type="email" value={email} onChange={onChangeEmailHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="email" name="email" type="email" value={email} required onChange={onChangeEmailHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
             {emailError && <p className="text-red-500">{emailError}</p>}
           </div>
           <div className="mb-5">
             <label htmlFor="password" className="block text-white mb-2">비밀번호</label>
-            <input id="password" name="password" type="password" value={password} onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="password" name="password" type="password" value={password} required onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
             {passwordError && <p className="text-red-500">{passwordError}</p>}
           </div>
           <div className="mb-5">
             <label htmlFor="confirm" className="block text-white mb-2">비밀번호 확인</label>
-            <input id="confirm" name="confirm" type="password" value={confirm} onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="confirm" name="confirm" type="password" value={confirm} required onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
             {confirmError && <p className="text-red-500">{confirmError}</p>}
           </div>
           <div className="mb-5">
             <label htmlFor="nickname" className="block text-white mb-2">닉네임</label>
-            <input id="nickname" name="nickname" type="text" value={nickname} onChange={onChangeNicknameHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="nickname" name="nickname" type="text" value={nickname} required onChange={onChangeNicknameHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
             {nicknameError && <p className="text-red-500">{nicknameError}</p>}
+          </div>
+          <div className="mb-5">
+            <label htmlFor="phone" className="block text-white mb-2">전화번호</label>
+            <input id="phone" name="phone" type="text" value={phoneNumber} onChange={onChangePhoneNumberHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
           </div>
           <button type="submit" className="bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300 disabled:border-gray-200 disabled:shadow-none disabled:scale-100 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
             disabled=
-            {    !isEmailChecked 
-              || !isEmailAvailable 
-              || password.trim() === '' 
-              || password !== confirm 
+            {!isEmailChecked
+              || !isEmailAvailable
+              || password.trim() === ''
+              || password !== confirm
               || !isNicknameChecked
               || !isNicknameAvailable
             }
