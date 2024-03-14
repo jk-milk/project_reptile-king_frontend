@@ -9,6 +9,7 @@ import BoardDetail from './Pages/BoardDetail'
 import SignUp from './Pages/SignUp'
 import SignIn from './Pages/SignIn'
 import PasswordResetPage from './Pages/PasswordResetPage'
+import Profile from './Pages/Profile'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path='signup' element={<SignUp />} />
         <Route path='login' element={<SignIn />} />
         <Route path='reset-password' element={<PasswordResetPage />} />
+        <Route path='mypage' element={<Profile />} />
       </Route>
     </Routes>
   )

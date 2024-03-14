@@ -9,6 +9,7 @@ const pageTitles: { [key: string]: string[] } = {
   "signup": ["파충KING", "회원가입"],
   "login": ["파충KING", "로그인"],
   "reset-password": ["파충KING", "비밀번호 찾기"],
+  "mypage": ["마이페이지"],
 }
 
 const Layout = () => {
