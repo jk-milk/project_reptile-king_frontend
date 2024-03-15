@@ -57,9 +57,9 @@ function Board() {
   }
 
   return (
-    <div className="w-body m-auto flex">
+    <div className="laptop:w-[75rem] w-body m-auto flex">
       <BoardCategory categories={categories} selectedSubCategory={selectedSubCategory} setSelectedSubCategory={setSelectedSubCategory} />
-      <div className="w-mainContent">
+      <div className="laptop:w-[47.6875rem] w-[59.75rem]">
         <h1 className="text-white text-2xl mt-5 pb-5">
           {selectedSubCategory}
         </h1>
