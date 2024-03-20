@@ -53,18 +53,19 @@ const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
   // return true;
 }
 
-const register = async (name: string, email: string, password: string, passwordConfirm:string, nickname:string, phoneNumber:string): Promise<boolean> => {
+const register = async (name: string, email: string, password: string, password_confirmation:string, nickname:string, phone:string): Promise<boolean> => {
   try {
+    console.log(password_confirmation);
     const response = await axios.post('http://localhost:8000/api/register', {
       name,
       email,
       password,
-      passwordConfirm,
+      password_confirmation,
       nickname,
-      phoneNumber,
+      phone,
     });
     // 회원가입 성공 시
-    if (response.status === 200)
+    if (response.status === 201)
       return true;
     else {
       throw new Error('알 수 없는 응답입니다.'); // 에러 처리
@@ -135,13 +136,13 @@ function Signup() {
   };
 
   const onChangePasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { id, value } = e.target;
 
-    if (name === "password") {
+    if (id === "password") {
       setPassword(value);
       // 비밀번호 변경 시 검증 로직 실행
       validatePassword(value, confirm);
-    } else if (name === "confirm") {
+    } else if (id === "confirm") {
       setConfirm(value);
       // 비밀번호 확인 변경 시 검증 로직 실행
       validatePassword(password, value);
@@ -232,7 +233,7 @@ function Signup() {
           </div>
           <div className="mb-5">
             <label htmlFor="confirm" className="block text-white mb-2">비밀번호 확인</label>
-            <input id="confirm" name="confirm" type="password" value={confirm} required onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="confirm" name="password_confirmation" type="password" value={confirm} required onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
             {confirmError && <p className="text-red-500">{confirmError}</p>}
           </div>
           <div className="mb-5">
