@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { PostCategory } from '../../types/Board';
 
 type BoardCategoryProps = {
@@ -7,6 +8,14 @@ type BoardCategoryProps = {
 }
 
 const BoardCategory = ({ categories, selectedSubCategory, setSelectedSubCategory }: BoardCategoryProps) => {
+  const navigate = useNavigate();
+
+  // 세부 카테고리 설정 후, 글 목록 페이지로 이동
+  const handleSetSubCategory = (subCategory: string) => {
+    setSelectedSubCategory(subCategory);
+    navigate(`/board?subCategory=${subCategory}`); // 쿼리 파라미터
+  };
+
   return (
     <div className="w-44 mr-20">
       <div className="mt-28">
@@ -26,7 +35,7 @@ const BoardCategory = ({ categories, selectedSubCategory, setSelectedSubCategory
                         ? "ps-2 py-0.5 text-white font-bold hover:underline"
                         : "ps-2 py-0.5 text-white hover:font-bold hover:underline"
                     }
-                    onClick={() => setSelectedSubCategory(subCategory.title)}
+                    onClick={() => handleSetSubCategory(subCategory.title)}
                   >
                     {subCategory.title}
                   </button>
