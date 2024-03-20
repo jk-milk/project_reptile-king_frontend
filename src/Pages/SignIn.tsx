@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-// import axios from 'axios';
+import axios from 'axios';
 
 function SignIn() {
   // 상태 관리
@@ -18,36 +18,38 @@ function SignIn() {
   const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // try {
-    //   // 서버로 로그인 요청
-    //   const response = await axios.post('http://localhost:8080/api/login', {
-    //     email,
-    //     password,
-    //   });
+    try {
+      // 서버로 로그인 요청
+      const response = await axios.post('http://localhost:8000/api/login', {
+        email,
+        password,
+      });
 
-    //   // 로그인 성공 시, JWT 토큰 저장
-    //   localStorage.setItem('jwt', response.data.access_token);
+      // 로그인 성공 시, JWT 토큰 저장
+      localStorage.setItem('jwt', response.data.access_token);
 
-    //   // 로그인 성공 후 필요한 로직 처리, 예: 페이지 이동
-    //   setEmail('');
-    //   setPassword('');
-    //   setLoginError('');
+      // 로그인 성공 후 필요한 로직 처리, 예: 페이지 이동
+      setEmail('');
+      setPassword('');
+      setLoginError('');
 
-    // } catch (error) {
-    //   if (error instanceof Error) {
-    //     setLoginError('이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.');
-    //     console.error(error.message); // 나중에 지울 것
-    //   } else {
-    //     // error가 Error 타입이 아닐 때의 처리
-    //     setLoginError('알 수 없는 에러가 발생했습니다.');
-    //   }
-    // }
-    if (email === "test12@gmail.com" && password === "12345678") // 테스트
-      alert("로그인 성공")
-    else {
-      alert("로그인 실패")
-      setLoginError("이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.")
+    } catch (error) {
+      if (error instanceof Error) {
+        setLoginError('이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.');
+        console.error(error.message); // 나중에 지울 것
+      } else {
+        // error가 Error 타입이 아닐 때의 처리
+        setLoginError('알 수 없는 에러가 발생했습니다.');
+      }
     }
+
+    // 테스트
+    // if (email === "test12@gmail.com" && password === "12345678")
+    //   alert("로그인 성공")
+    // else {
+    //   alert("로그인 실패")
+    //   setLoginError("이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.")
+    // }
   }
 
 
