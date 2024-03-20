@@ -200,7 +200,7 @@ function Signup() {
 
   return (
     <div className="flex justify-center py-20">
-      <div className="bg-[#284420] min-w-[61.75rem] max-w-[61.75rem] p-10 rounded-md">
+      <div className="bg-[#284420] laptop:min-w-[49.4rem] laptop:max-w-[49.4rem] min-w-[61.75rem] max-w-[61.75rem] p-10 rounded-md">
         <form onSubmit={signupHandler}>
           <div className="mb-5">
             <label htmlFor="email" className="block text-white mb-2">이메일</label>
