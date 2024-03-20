@@ -53,18 +53,19 @@ const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
   // return true;
 }
 
-const register = async (name: string, email: string, password: string, passwordConfirm:string, nickname:string, phoneNumber:string): Promise<boolean> => {
+const register = async (name: string, email: string, password: string, password_confirmation:string, nickname:string, phone:string): Promise<boolean> => {
   try {
+    console.log(password_confirmation);
     const response = await axios.post('http://localhost:8000/api/register', {
       name,
       email,
       password,
-      passwordConfirm,
+      password_confirmation,
       nickname,
-      phoneNumber,
+      phone,
     });
     // 회원가입 성공 시
-    if (response.status === 200)
+    if (response.status === 201)
       return true;
     else {
       throw new Error('알 수 없는 응답입니다.'); // 에러 처리
