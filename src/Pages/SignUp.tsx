@@ -1,73 +1,79 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// import axios from 'axios';
+import axios from 'axios';
 
 // 이메일 중복 검사 
 const emailDuplicateCheck = async (email: string): Promise<boolean> => {
-  // try {
-  //   const response = await axios.post('http://localhost:8080/api/register/check-email', {
-  //     email,
-  //   });
+  try {
+    const response = await axios.post('http://localhost:8000/api/register/check-email', {
+      email,
+    });
 
-  //   // 서버로부터의 응답 메시지에 따라 중복 여부를 반환
-  //   if (response.data.msg === "중복") {
-  //     return false; // 중복일 경우 false 반환
-  //   } else if (response.data.msg === "가능") {
-  //     return true; // 사용 가능할 경우 true 반환
-  //   } else {
-  //     throw new Error('알 수 없는 응답입니다.'); // 에러 처리
-  //   }
-  // } catch (error) {
-  //   console.error('이메일 중복 검사 중 오류:', error);
-  //   throw new Error('이메일 중복 검사 중 오류');
-  // }
-  if (email === "test@gmail.com") // 임시 중복 체크
-    return false;
-  return true;
+    // 서버로부터의 응답 메시지에 따라 중복 여부를 반환
+    if (response.data.msg === "중복") {
+      return false; // 중복일 경우 false 반환
+    } else if (response.data.msg === "가능") {
+      return true; // 사용 가능할 경우 true 반환
+    } else {
+      throw new Error('알 수 없는 응답입니다.'); // 에러 처리
+    }
+  } catch (error) {
+    console.error('이메일 중복 검사 중 오류:', error);
+    throw new Error('이메일 중복 검사 중 오류');
+  }
+
+  // 임시 중복 체크
+  // if (email === "test@gmail.com")
+  //   return false;
+  // return true;
 }
 
 const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
-  // try {
-  //   const response = await axios.post('http://localhost:8080/api/register/check-nickname', {
-  //     email,
-  //   });
+  try {
+    const response = await axios.post('http://localhost:8000/api/register/check-nickname', {
+      nickname,
+    });
 
-  //   // 서버로부터의 응답 메시지에 따라 중복 여부를 반환
-  //   if (response.data.msg === "중복") {
-  //     return false; // 중복일 경우 false 반환
-  //   } else if (response.data.msg === "가능") {
-  //     return true; // 사용 가능할 경우 true 반환
-  //   } else {
-  //     throw new Error('알 수 없는 응답입니다.'); // 에러 처리
-  //   }
-  // } catch (error) {
-  //   console.error('이메일 중복 검사 중 오류:', error);
-  //   throw new Error('이메일 중복 검사 중 오류');
-  // }
-  if (nickname === "test") // 임시 중복 체크
-    return false;
-  return true;
+    // 서버로부터의 응답 메시지에 따라 중복 여부를 반환
+    if (response.data.msg === "중복") {
+      return false; // 중복일 경우 false 반환
+    } else if (response.data.msg === "가능") {
+      return true; // 사용 가능할 경우 true 반환
+    } else {
+      throw new Error('알 수 없는 응답입니다.'); // 에러 처리
+    }
+  } catch (error) {
+    console.error('닉네임 중복 검사 중 오류:', error);
+    throw new Error('닉네임 중복 검사 중 오류');
+  }
+
+  // 임시 중복 체크
+  // if (nickname === "test")
+  //   return false;
+  // return true;
 }
 
 const register = async (email: string, password: string): Promise<boolean> => {
-  // try {
-  //   const response = await axios.post('http://localhost:8080/api/register', {
-  //     email,
-  //     password,
-  //   });
-  //   // 회원가입 성공 시
-  //   if (response.status === 200)
-  //     return true;
-  //   else {
-  //     throw new Error('알 수 없는 응답입니다.'); // 에러 처리
-  //   }
-  // } catch (error) {
-  //   console.error('회원가입:', error);
-  //   throw new Error('회원가입');
-  // }
-  if (email === "test12@gmail.com" && password === "12345678") // 임시 회원가입 체크
-    return true;
-  return false;
+  try {
+    const response = await axios.post('http://localhost:8000/api/register', {
+      email,
+      password,
+    });
+    // 회원가입 성공 시
+    if (response.status === 200)
+      return true;
+    else {
+      throw new Error('알 수 없는 응답입니다.'); // 에러 처리
+    }
+  } catch (error) {
+    console.error('회원가입:', error);
+    throw new Error('회원가입');
+  }
+
+  // 임시 회원가입 체크
+  // if (email === "test12@gmail.com" && password === "12345678") 
+  //   return true;
+  // return false;
 }
 
 function Signup() {
@@ -224,7 +230,7 @@ function Signup() {
           </div>
           <div className="mb-5">
             <label htmlFor="phone" className="block text-white mb-2">전화번호</label>
-            <input id="phone" name="phone" type="text" value={phoneNumber} onChange={onChangePhoneNumberHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="phone" name="phone" type="tel" value={phoneNumber} onChange={onChangePhoneNumberHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
           </div>
           <div className="flex justify-center">
             <button type="submit" className="bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300 disabled:border-gray-200 disabled:shadow-none disabled:scale-100 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
