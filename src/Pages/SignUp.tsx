@@ -135,13 +135,13 @@ function Signup() {
   };
 
   const onChangePasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { id, value } = e.target;
 
-    if (name === "password") {
+    if (id === "password") {
       setPassword(value);
       // 비밀번호 변경 시 검증 로직 실행
       validatePassword(value, confirm);
-    } else if (name === "confirm") {
+    } else if (id === "confirm") {
       setConfirm(value);
       // 비밀번호 확인 변경 시 검증 로직 실행
       validatePassword(password, value);
@@ -232,7 +232,7 @@ function Signup() {
           </div>
           <div className="mb-5">
             <label htmlFor="confirm" className="block text-white mb-2">비밀번호 확인</label>
-            <input id="confirm" name="confirm" type="password" value={confirm} required onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="confirm" name="password_confirmation" type="password" value={confirm} required onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
             {confirmError && <p className="text-red-500">{confirmError}</p>}
           </div>
           <div className="mb-5">
