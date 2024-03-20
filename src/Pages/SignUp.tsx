@@ -53,11 +53,15 @@ const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
   // return true;
 }
 
-const register = async (email: string, password: string): Promise<boolean> => {
+const register = async (name: string, email: string, password: string, passwordConfirm:string, nickname:string, phoneNumber:string): Promise<boolean> => {
   try {
     const response = await axios.post('http://localhost:8000/api/register', {
+      name,
       email,
       password,
+      passwordConfirm,
+      nickname,
+      phoneNumber,
     });
     // 회원가입 성공 시
     if (response.status === 200)
@@ -79,6 +83,7 @@ const register = async (email: string, password: string): Promise<boolean> => {
 function Signup() {
   const navigate = useNavigate();
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -95,6 +100,9 @@ function Signup() {
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
 
+  const onChangeNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
 
   const onChangeEmailHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value;
@@ -140,25 +148,6 @@ function Signup() {
     }
   };
 
-  const validatePassword = (password: string, confirm: string) => {
-    const passwordRegex = /^[a-z\d!@*&-_]{8,16}$/;
-    if (password === '') {
-      setPasswordError('비밀번호를 입력해주세요.');
-      return;
-    } else if (!passwordRegex.test(password)) {
-      setPasswordError('비밀번호는 8~16자의 영소문자, 숫자, !@*&-_만 입력 가능합니다.');
-      return;
-    } else {
-      setPasswordError('');
-    }
-
-    if (confirm !== password) {
-      setConfirmError('비밀번호가 일치하지 않습니다.');
-    } else {
-      setConfirmError('');
-    }
-  };
-
   const onChangeNicknameHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newNickname = e.target.value;
     setNickname(newNickname);
@@ -192,9 +181,28 @@ function Signup() {
     setPhoneNumber(e.target.value);
   };
 
+  const validatePassword = (password: string, confirm: string) => {
+    const passwordRegex = /^[a-z\d!@*&-_]{8,16}$/;
+    if (password === '') {
+      setPasswordError('비밀번호를 입력해주세요.');
+      return;
+    } else if (!passwordRegex.test(password)) {
+      setPasswordError('비밀번호는 8~16자의 영소문자, 숫자, !@*&-_만 입력 가능합니다.');
+      return;
+    } else {
+      setPasswordError('');
+    }
+
+    if (confirm !== password) {
+      setConfirmError('비밀번호가 일치하지 않습니다.');
+    } else {
+      setConfirmError('');
+    }
+  };
+
   const signupHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await register(email, password);
+    const response = await register(name, email, password, confirm, nickname, phoneNumber);
     if (response) {
       alert('회원가입 성공!');
       navigate('/login');
@@ -208,6 +216,10 @@ function Signup() {
     <div className="flex justify-center py-20">
       <div className="bg-[#284420] laptop:min-w-[49.4rem] laptop:max-w-[49.4rem] min-w-[61.75rem] max-w-[61.75rem] p-10 rounded-md">
         <form onSubmit={signupHandler}>
+          <div className="mb-5">
+            <label htmlFor="name" className="block text-white mb-2">이름</label>
+            <input id="name" name="name" type="text" value={name} required onChange={onChangeNameHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          </div>
           <div className="mb-5">
             <label htmlFor="email" className="block text-white mb-2">이메일</label>
             <input id="email" name="email" type="email" value={email} required onChange={onChangeEmailHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
