@@ -12,6 +12,7 @@ export default {
       },
       width:{
         body: '93.75rem',
+        mainContent: '59.75rem',
       },
       screens: {
         'laptop': {'max': '1536px'},
