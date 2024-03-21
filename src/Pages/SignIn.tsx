@@ -30,16 +30,17 @@ function SignIn() {
       // 로그인 성공 시, JWT 토큰 저장
       localStorage.setItem('jwt', response.data.access_token);
 
-      // 로그인 성공 후 필요한 로직 처리, 예: 페이지 이동
+      // 로그인 성공 후 로직 처리
       setEmail('');
       setPassword('');
       setLoginError('');
+      alert('로그인 성공!');
       navigate('/');
 
     } catch (error) {
       if (error instanceof Error) {
         setLoginError('이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.');
-        console.error(error.message); // 나중에 지울 것
+        console.error(error.message);
       } else {
         // error가 Error 타입이 아닐 때의 처리
         setLoginError('알 수 없는 에러가 발생했습니다.');
