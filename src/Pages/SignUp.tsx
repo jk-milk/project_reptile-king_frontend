@@ -19,7 +19,7 @@ const emailDuplicateCheck = async (email: string): Promise<boolean> => {
     }
   } catch (error) {
     console.error('이메일 중복 검사 중 오류:', error);
-    throw new Error('이메일 중복 검사 중 오류');
+    return false;
   }
 
   // 임시 중복 체크
@@ -44,7 +44,7 @@ const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
     }
   } catch (error) {
     console.error('닉네임 중복 검사 중 오류:', error);
-    throw new Error('닉네임 중복 검사 중 오류');
+    return false;
   }
 
   // 임시 중복 체크
@@ -55,8 +55,7 @@ const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
 
 const register = async (name: string, email: string, password: string, password_confirmation:string, nickname:string, phone:string): Promise<boolean> => {
   try {
-    console.log(password_confirmation);
-    const response = await axios.post('http://localhost:8000/api/register', {
+    const response = await axios.post('http://localhost:8000/api/registerㅇ', {
       name,
       email,
       password,
@@ -72,7 +71,7 @@ const register = async (name: string, email: string, password: string, password_
     }
   } catch (error) {
     console.error('회원가입:', error);
-    throw new Error('회원가입');
+    return false;
   }
 
   // 임시 회원가입 체크
@@ -183,12 +182,13 @@ function Signup() {
   };
 
   const validatePassword = (password: string, confirm: string) => {
-    const passwordRegex = /^[a-z\d!@*&-_]{8,16}$/;
+    // eslint-disable-next-line no-useless-escape
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%^&*\(\)_+-=]).{8,}$/;
     if (password === '') {
       setPasswordError('비밀번호를 입력해주세요.');
       return;
     } else if (!passwordRegex.test(password)) {
-      setPasswordError('비밀번호는 8~16자의 영소문자, 숫자, !@*&-_만 입력 가능합니다.');
+      setPasswordError('비밀번호는 8자 이상, 대소문자, 숫자, 특수문자가 포함되어야 합니다.');
       return;
     } else {
       setPasswordError('');
@@ -209,7 +209,7 @@ function Signup() {
       navigate('/login');
     } else {
       alert('회원가입 실패');
-      window.location.reload();
+      // window.location.reload();
     }
   }
 
