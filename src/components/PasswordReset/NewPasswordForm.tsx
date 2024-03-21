@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function NewPasswordForm({ onNewPasswordSubmit }: {onNewPasswordSubmit: (password: string) => void}) {
+function NewPasswordForm({ onNewPasswordSubmit }: {onNewPasswordSubmit: (password: string, password_confirmation:string) => void}) {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -41,7 +41,7 @@ function NewPasswordForm({ onNewPasswordSubmit }: {onNewPasswordSubmit: (passwor
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    onNewPasswordSubmit(password);
+    onNewPasswordSubmit(password, confirm);
   }
 
   return (
