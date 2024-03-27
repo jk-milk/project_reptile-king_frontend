@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function VerificationCodeInput({ onCodeSubmit }: { onCodeSubmit: (code: string) => void }) {
+  const navigate = useNavigate();
   const [code, setCode] = useState('');
   const [timer, setTimer] = useState(180); // 180초 (3분) 제한으로 시작
 
@@ -27,6 +29,7 @@ function VerificationCodeInput({ onCodeSubmit }: { onCodeSubmit: (code: string) 
       onCodeSubmit(code);
     } else {
       alert('인증 코드의 유효 시간이 만료되었습니다. 다시 시도해주세요.');
+      navigate("/login");
     }
   }
 
@@ -44,7 +47,7 @@ function VerificationCodeInput({ onCodeSubmit }: { onCodeSubmit: (code: string) 
             className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-red-500">
-            {timer > 0 ? `${minutes}:${seconds.toString().padStart(2, '0')}` : '시간 만료'} {/*초가 한 자릿수일 경우 앞에 0을 붙여 두 자릿수로 표시*/}
+            {timer > 0 ? `${minutes}:${seconds.toString().padStart(2, '0')}` : '시간 초과. 다시 시도해 주세요.'} {/*초가 한 자릿수일 경우 앞에 0을 붙여 두 자릿수로 표시*/}
           </span>
         </div>
       </div>
