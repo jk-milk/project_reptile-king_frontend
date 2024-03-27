@@ -16,10 +16,6 @@ const Home = () => {
     navigate(path);
   };
 
-  const onPageChange = (page: number) => {
-    console.log(`Current page is ${page}`);
-  };
-
   const scrollDown = () => {
     const pageHeight = outerDivRef.current?.children.item(0)?.clientHeight; // 내부 페이지 높이를 계산
 
@@ -40,8 +36,6 @@ const Home = () => {
       if (currentPage < outerDivRef.current.childElementCount - 1)
         // 현재 페이지가 전체 페이지 인덱스보다 작을 경우에만 현재 페이지를 1 증가
         setCurrentPage(currentPage + 1);
-
-      onPageChange(currentPage);
     }
   };
 
@@ -61,8 +55,6 @@ const Home = () => {
       }, 500);
 
       setCurrentPage(currentPage - 1);
-
-      onPageChange(currentPage);
     }
   };
 
@@ -95,7 +87,6 @@ const Home = () => {
       }, 500);
   
       setCurrentPage(index);
-      onPageChange(currentPage);
     }
   };
 
