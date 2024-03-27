@@ -11,6 +11,7 @@ import SignIn from './Pages/SignIn'
 import PasswordResetPage from './Pages/PasswordResetPage'
 import Profile from './Pages/Profile'
 import PostWrite from './Pages/PostWrite'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 
 function App() {
   return (
@@ -22,11 +23,13 @@ function App() {
         <Route path='cage' element={<Cage />} />
         <Route path='board' element={<Board />} />
         <Route path='board/:detailId' element={<BoardDetail />} />
-        <Route path='board/write' element={<PostWrite />} />
         <Route path='signup' element={<SignUp />} />
         <Route path='login' element={<SignIn />} />
         <Route path='reset-password' element={<PasswordResetPage />} />
-        <Route path='mypage' element={<Profile />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path='mypage' element={<Profile />} />
+          <Route path='board/write' element={<PostWrite />} />
+        </Route>
       </Route>
     </Routes>
   )
