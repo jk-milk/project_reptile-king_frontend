@@ -32,7 +32,6 @@ export const AuthContext = createContext<{
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case 'LOGIN':
-      console.log(action.token)
       localStorage.setItem('token', action.token!);
       return {
         ...state,
