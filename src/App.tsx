@@ -10,6 +10,7 @@ import SignUp from './Pages/SignUp'
 import SignIn from './Pages/SignIn'
 import PasswordResetPage from './Pages/PasswordResetPage'
 import Profile from './Pages/Profile'
+import PostWrite from './Pages/PostWrite'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path='cage' element={<Cage />} />
         <Route path='board' element={<Board />} />
         <Route path='board/:detailId' element={<BoardDetail />} />
+        <Route path='board/write' element={<PostWrite />} />
         <Route path='signup' element={<SignUp />} />
         <Route path='login' element={<SignIn />} />
         <Route path='reset-password' element={<PasswordResetPage />} />
