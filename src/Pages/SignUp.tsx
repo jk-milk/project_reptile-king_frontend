@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API } from '../config';
 
 // 이메일 중복 검사 
 const emailDuplicateCheck = async (email: string): Promise<boolean> => {
   try {
-    const response = await axios.post('http://localhost:8000/api/register/check-email', {
+    const response = await axios.post(API+"/register/check-email", {
       email,
     });
 
@@ -19,7 +20,7 @@ const emailDuplicateCheck = async (email: string): Promise<boolean> => {
     }
   } catch (error) {
     console.error('이메일 중복 검사 중 오류:', error);
-    return false;
+    throw new Error('이메일 중복 검사 중 오류');
   }
 
   // 임시 중복 체크
@@ -30,7 +31,7 @@ const emailDuplicateCheck = async (email: string): Promise<boolean> => {
 
 const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
   try {
-    const response = await axios.post('http://localhost:8000/api/register/check-nickname', {
+    const response = await axios.post(API+'/register/check-nickname', {
       nickname,
     });
 
@@ -44,7 +45,8 @@ const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
     }
   } catch (error) {
     console.error('닉네임 중복 검사 중 오류:', error);
-    return false;
+    throw new Error('닉네임 중복 검사 중 오류');
+
   }
 
   // 임시 중복 체크
@@ -55,7 +57,7 @@ const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
 
 const register = async (name: string, email: string, password: string, password_confirmation:string, nickname:string, phone:string): Promise<boolean> => {
   try {
-    const response = await axios.post('http://localhost:8000/api/registerㅇ', {
+    const response = await axios.post(API+'/register', {
       name,
       email,
       password,
@@ -71,7 +73,7 @@ const register = async (name: string, email: string, password: string, password_
     }
   } catch (error) {
     console.error('회원가입:', error);
-    return false;
+    throw new Error('회원가입 중 오류'); // 에러 처리
   }
 
   // 임시 회원가입 체크
@@ -153,8 +155,10 @@ function Signup() {
     setNickname(newNickname);
 
     // 닉네임 유효성 검사 (길이 제한)
+    
     if (newNickname.length >= 2 && newNickname.length <= 12) {
       try {
+        console.log(newNickname)
         // 닉네임 중복 체크를 비동기로 수행
         const isAvailable = await nicknameDuplicateCheck(newNickname);
         if (isAvailable) {
@@ -215,7 +219,7 @@ function Signup() {
 
   return (
     <div className="flex justify-center py-20">
-      <div className="bg-[#284420] laptop:min-w-[49.4rem] laptop:max-w-[49.4rem] min-w-[61.75rem] max-w-[61.75rem] p-10 rounded-md">
+      <div className="bg-[#284420] laptop:min-w-[30rem] laptop:max-w-[30rem] min-w-[35rem] max-w-[35rem] p-10 rounded-md">
         <form onSubmit={signupHandler}>
           <div className="mb-5">
             <label htmlFor="name" className="block text-white mb-2">이름</label>
