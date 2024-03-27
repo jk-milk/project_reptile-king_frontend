@@ -28,7 +28,7 @@ function Navbar() {
         </div>
         <div className="order-2 md:order-3 flex flex-wrap items-center justify-end mr-0 md:mr-4" id="nav-content">
           <div className="auth flex items-center w-full md:w-full">
-            <Link to="/login" className="text-gray-400 text-lg p-2 mr-4 hover:text-green-800 transition-colors duration-300 cursor-pointer">
+            <Link to="/login" className="text-gray-400 text-lg mr-4 hover:text-green-800 transition-colors duration-300 cursor-pointer">
               <FaCircleUser size="40" />
             </Link>
             <IoMdNotifications size="40" className="text-gray-800 hover:text-green-800 transition-colors duration-300 cursor-pointer" />
