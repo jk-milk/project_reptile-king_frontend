@@ -17,7 +17,7 @@ const BoardCategory = ({ categories, selectedSubCategory, setSelectedSubCategory
   };
 
   return (
-    <div className="w-44 mr-20">
+    <div className="w-52 mr-20">
       <div className="mt-28">
         {categories.map((category) => (
           <div key={category.id} className="w-full p-2">
@@ -26,7 +26,7 @@ const BoardCategory = ({ categories, selectedSubCategory, setSelectedSubCategory
                 {category.category}
               </p>
             </div>
-            <ul className="w-full">
+            <ul className="w-full pt-2 pb-4">
               {category.subCategories.map((subCategory) => (
                 <li key={subCategory.title}>
                   <button
