@@ -4,6 +4,7 @@ import EmailInput from '../components/PasswordReset/EmailInput';
 import VerificationCodeInput from '../components/PasswordReset/VerificationCodeInput';
 import NewPasswordForm from '../components/PasswordReset/NewPasswordForm';
 import axios from 'axios';
+import { API } from '../config';
 
 function PasswordResetPage() {
   const navigate = useNavigate();
@@ -14,9 +15,11 @@ function PasswordResetPage() {
     setEmail(email);
     try {
       // 서버에 이메일 전송, 인증코드 요청 로직
-      const response = await axios.post('http://localhost:8000/api/forget-password', {
+      // const response = await axios.post(API+'forget-password', {
+      const response = await axios.post('http://54.180.158.4:8000/api/forget-password', {
         email,
       });
+      // 로딩중 로직 추가 할 것
       if (response.status === 200)
         setStep(2); // 성공 시 다음 단계
     } catch (error) {
@@ -27,7 +30,7 @@ function PasswordResetPage() {
   const handleCodeSubmit = async (authCode: string) => {
     try {
       // 인증 코드 확인 로직
-      const response = await axios.post('http://localhost:8000/api/forget-password/verify-auth', {
+      const response = await axios.post(API+'forget-password/verify-auth', {
         email,
         authCode,
       });
@@ -41,7 +44,7 @@ function PasswordResetPage() {
   const handleNewPasswordSubmit = async (password: string, password_confirmation:string) => {
     try {
       // 새 비밀번호 설정 로직
-      const response = await axios.patch('http://localhost:8000/api/forget-password/change-password', {
+      const response = await axios.patch(API+'forget-password/change-password', {
         email,
         password,
         password_confirmation,
@@ -58,7 +61,7 @@ function PasswordResetPage() {
 
   return (
     <div className="flex justify-center py-20">
-      <div className="bg-[#284420] min-w-[61.75rem] max-w-[61.75rem] p-10 rounded-md">
+      <div className="bg-[#284420] min-w-[35rem] max-w-[35rem] p-10 rounded-md">
         {step === 1 && <EmailInput onEmailSubmit={handleEmailSubmit} />}
         {step === 2 && <VerificationCodeInput onCodeSubmit={handleCodeSubmit} />}
         {step === 3 && <NewPasswordForm onNewPasswordSubmit={handleNewPasswordSubmit} />}
