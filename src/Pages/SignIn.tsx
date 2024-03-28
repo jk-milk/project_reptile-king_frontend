@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../components/auth/useAuth';
+import { API } from '../config';
 
 function SignIn() {
 
   const navigate = useNavigate();
+  const { dispatch } = useAuth();
   // 상태 관리
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,24 +25,25 @@ function SignIn() {
 
     try {
       // 서버로 로그인 요청
-      const response = await axios.post('http://localhost:8000/api/login', {
+      const response = await axios.post(API+'login', {
         email,
         password,
       });
 
       // 로그인 성공 시, JWT 토큰 저장
-      localStorage.setItem('jwt', response.data.access_token);
+      dispatch({ type: 'LOGIN', token: response.data.accessToken });
 
-      // 로그인 성공 후 필요한 로직 처리, 예: 페이지 이동
+      // 로그인 성공 후 로직 처리
       setEmail('');
       setPassword('');
       setLoginError('');
+      alert('로그인 성공!');
       navigate('/');
 
     } catch (error) {
       if (error instanceof Error) {
         setLoginError('이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.');
-        console.error(error.message); // 나중에 지울 것
+        console.error(error.message);
       } else {
         // error가 Error 타입이 아닐 때의 처리
         setLoginError('알 수 없는 에러가 발생했습니다.');
@@ -59,7 +63,7 @@ function SignIn() {
 
   return (
     <div className="flex justify-center py-20">
-      <div className="bg-[#284420] laptop:min-w-[49.4rem] laptop:max-w-[49.4rem] min-w-[61.75rem] max-w-[61.75rem] p-10 rounded-md">
+      <div className="bg-[#284420] laptop:min-w-[30rem] laptop:max-w-[30rem] min-w-[35rem] max-w-[35rem] p-10 rounded-md">
         <form onSubmit={loginHandler}>
           <div className="mb-5">
             <label htmlFor="email" className="block text-white mb-2">이메일</label>

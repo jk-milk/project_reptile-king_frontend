@@ -15,6 +15,8 @@ import ProductDetails from './Pages/ProductDetails'
 import MarketCart from './Pages/MarketCart'
 import MarketPay from './Pages/MarketPay'
 import MarketPaySuccess from './Pages/MarketPaySuccess'
+import PostWrite from './Pages/PostWrite'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 
 function App() {
   return (
@@ -27,7 +29,10 @@ function App() {
         <Route path='signup' element={<SignUp />} />
         <Route path='login' element={<SignIn />} />
         <Route path='reset-password' element={<PasswordResetPage />} />
-        <Route path='mypage' element={<Profile />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path='mypage' element={<Profile />} />
+          <Route path='board/write' element={<PostWrite />} />
+        </Route>
       </Route>
       <Route element={<MarketLayout />}>
         <Route path='market' element={<Market />} />
