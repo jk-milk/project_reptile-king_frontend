@@ -232,7 +232,7 @@ function Signup() {
           </div>
           <div className="mb-5">
             <label htmlFor="password" className="block text-white mb-2">비밀번호</label>
-            <input id="password" name="password" type="password" value={password} required onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="password" name="password" type="password" value={password} required placeholder="비밀번호는 8자 이상, 대소문자, 숫자, 특수문자가 포함됩니다." onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
             {passwordError && <p className="text-red-500">{passwordError}</p>}
           </div>
           <div className="mb-5">
@@ -242,7 +242,7 @@ function Signup() {
           </div>
           <div className="mb-5">
             <label htmlFor="nickname" className="block text-white mb-2">닉네임</label>
-            <input id="nickname" name="nickname" type="text" value={nickname} required onChange={onChangeNicknameHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="nickname" name="nickname" type="text" value={nickname} required placeholder="닉네임은 2자 이상, 12자 이하로 구성되어야 합니다." onChange={onChangeNicknameHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
             {nicknameError && <p className="text-red-500">{nicknameError}</p>}
           </div>
           <div className="mb-5">
