@@ -6,7 +6,7 @@ import { API } from '../config';
 // 이메일 중복 검사 
 const emailDuplicateCheck = async (email: string): Promise<boolean> => {
   try {
-    const response = await axios.post(API+"/register/check-email", {
+    const response = await axios.post(API+"register/check-email", {
       email,
     });
 
@@ -31,7 +31,7 @@ const emailDuplicateCheck = async (email: string): Promise<boolean> => {
 
 const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
   try {
-    const response = await axios.post(API+'/register/check-nickname', {
+    const response = await axios.post(API+'register/check-nickname', {
       nickname,
     });
 
@@ -57,7 +57,7 @@ const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
 
 const register = async (name: string, email: string, password: string, password_confirmation:string, nickname:string, phone:string): Promise<boolean> => {
   try {
-    const response = await axios.post(API+'/register', {
+    const response = await axios.post(API+'register', {
       name,
       email,
       password,
