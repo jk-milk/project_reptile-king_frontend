@@ -90,7 +90,9 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [nickname, setNickname] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber1, setPhoneNumber1] = useState('');
+  const [phoneNumber2, setPhoneNumber2] = useState('');
+  const [phoneNumber3, setPhoneNumber3] = useState('');
 
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -181,8 +183,14 @@ function Signup() {
     }
   }
 
-  const onChangePhoneNumberHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber(e.target.value);
+  const onChangePhoneNumber1Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhoneNumber1(e.target.value);
+  };
+  const onChangePhoneNumber2Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhoneNumber2(e.target.value);
+  };
+  const onChangePhoneNumber3Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhoneNumber3(e.target.value);
   };
 
   const validatePassword = (password: string, confirm: string) => {
@@ -207,6 +215,7 @@ function Signup() {
 
   const signupHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const phoneNumber = phoneNumber1+phoneNumber2+phoneNumber3;
     const response = await register(name, email, password, confirm, nickname, phoneNumber);
     if (response) {
       alert('회원가입 성공!');
@@ -232,7 +241,7 @@ function Signup() {
           </div>
           <div className="mb-5">
             <label htmlFor="password" className="block text-white mb-2">비밀번호</label>
-            <input id="password" name="password" type="password" value={password} required placeholder="비밀번호는 8자 이상, 대소문자, 숫자, 특수문자가 포함됩니다." onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="password" name="password" type="password" value={password} required placeholder="8자 이상, 대소문자, 숫자, 특수문자 포함" onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
             {passwordError && <p className="text-red-500">{passwordError}</p>}
           </div>
           <div className="mb-5">
@@ -242,12 +251,18 @@ function Signup() {
           </div>
           <div className="mb-5">
             <label htmlFor="nickname" className="block text-white mb-2">닉네임</label>
-            <input id="nickname" name="nickname" type="text" value={nickname} required placeholder="닉네임은 2자 이상, 12자 이하로 구성되어야 합니다." onChange={onChangeNicknameHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="nickname" name="nickname" type="text" value={nickname} required placeholder="2자 이상, 12자 이하" onChange={onChangeNicknameHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
             {nicknameError && <p className="text-red-500">{nicknameError}</p>}
           </div>
-          <div className="mb-5">
-            <label htmlFor="phone" className="block text-white mb-2">전화번호</label>
-            <input id="phone" name="phone" type="tel" value={phoneNumber} onChange={onChangePhoneNumberHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <label htmlFor="phone1" className="block text-white mb-2">전화번호</label>
+          <div className="mb-5 flex items-center">
+            <input id="phone1" name="phone1" type="tel" value={phoneNumber1} onChange={onChangePhoneNumber1Handler} className="bg-white border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-400 w-1/3" />
+            <span className="mx-2 text-white">-</span>
+            <label htmlFor="phone2" className="block text-white mb-2"></label>
+            <input id="phone2" name="phone2" type="tel" value={phoneNumber2} onChange={onChangePhoneNumber2Handler} className="bg-white border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-400 w-1/3" />
+            <span className="mx-2 text-white">-</span>
+            <label htmlFor="phone3" className="block text-white mb-2"></label>
+            <input id="phone3" name="phone3" type="tel" value={phoneNumber3} onChange={onChangePhoneNumber3Handler} className="bg-white border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-400 w-1/3" />
           </div>
           <div className="flex justify-center">
             <button type="submit" className="bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300 disabled:border-gray-200 disabled:shadow-none disabled:scale-100 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
