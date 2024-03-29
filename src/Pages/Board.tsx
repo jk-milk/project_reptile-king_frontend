@@ -12,7 +12,7 @@ function Board() {
 
   const { link } = useParams();
   console.log(link);
-  const [title, setTitle] = useState(link? link : "전체 게시글");
+  const [title, setTitle] = useState(link ? link : "전체 게시글");
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [filter, setFilter] = useState("전체글"); // 전체글, 인기글 필터
@@ -21,15 +21,15 @@ function Board() {
 
   const LIKES_NUMBER = 5; // 인기글 조건: 좋아요 수 LIKES_NUMBER 이상인 글들이 인기글
 
-  useEffect(()=>{
+  useEffect(() => {
     // link에 맞춰서 title 변경하도록 서버와 연결
-    setTitle(link? link : "전체 게시글"); // 임시로 타이틀은 link로 설정
+    setTitle(link ? link : "전체 게시글"); // 임시로 타이틀은 link로 설정
   }, [link])
 
   useEffect(() => {
     const fetchPosts = async () => {
       // 게시글 가져올 때 link에 맞는 게시글만 가져오도록 수정
-      
+
       // const postsResponse = await axios.get(API+'posts'); // 실제 api
       const postsResponse = await axios.get('http://localhost:3300/posts'); // json server
 
@@ -74,7 +74,7 @@ function Board() {
             setDropdownOpen={setDropdownOpen}
           >
           </FilterButtons>
-          <Link to={`write`}>
+          <Link to={`/board/write`}>
             <button className="text-gray-900 border border-gray-100 rounded-full focus:outline-none bg-white  hover:bg-gray-100 focus:ring-1 focus:ring-gray-300 font-semibold text-sm pl-2 pr-2 py-1.5">
               <RiFileList2Line className="inline-block pe-1 pb-1" />
               글쓰기
