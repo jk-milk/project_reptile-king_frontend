@@ -32,7 +32,7 @@ const PopularPosts = () => {
             .slice(0, 5)
             .map((post) => (
               <div key={post.id} className="p-3 text-sm">
-                <Link to={`/board/${post.id}`}>{post.title}</Link>
+                <Link to={`/board/post/${post.id}`}>{post.title}</Link>
               </div>
             ))}
         </div>
