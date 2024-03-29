@@ -1,44 +1,45 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { RiFileList2Line } from "react-icons/ri";
 import PostList from '../components/Board/PostList';
-import { Post, PostCategory } from '../types/Board';
+import { Post } from '../types/Board';
 import BoardCategory from '../components/Board/BoardCategory';
 import FilterButtons from '../components/Board/FilterButtons';
 import PopularPosts from '../components/Board/PopularPosts';
 
 function Board() {
 
-  const [categories, setCategories] = useState<PostCategory[]>([]);
+  const { link } = useParams();
+  console.log(link);
+  const [title, setTitle] = useState(link? link : "전체 게시글");
+
   const [posts, setPosts] = useState<Post[]>([]);
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>("전체 게시글"); // 선택된 세부 카테고리
   const [filter, setFilter] = useState("전체글"); // 전체글, 인기글 필터
   const [sort, setSort] = useState("등록순"); // 정렬 방식
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const LIKES_NUMBER = 5; // 인기글 조건: 좋아요 수 LIKES_NUMBER 이상인 글들이 인기글
 
+  useEffect(()=>{
+    // link에 맞춰서 title 변경하도록 서버와 연결
+    setTitle(link? link : "전체 게시글"); // 임시로 타이틀은 link로 설정
+  }, [link])
+
   useEffect(() => {
     const fetchPosts = async () => {
-      // const categoriesResponse = await axios.get('http://localhost:8080/categories'); // 실제 api
-      // const postsResponse = await axios.get('http://localhost:8080/api/posts');
-      const categoriesResponse = await axios.get('http://localhost:3300/categories'); // json server
-      const postsResponse = await axios.get('http://localhost:3300/posts');
+      // 게시글 가져올 때 link에 맞는 게시글만 가져오도록 수정
+      
+      // const postsResponse = await axios.get(API+'posts'); // 실제 api
+      const postsResponse = await axios.get('http://localhost:3300/posts'); // json server
 
-      setCategories(categoriesResponse.data);
       setPosts(postsResponse.data);
     };
 
     fetchPosts();
   }, []);
 
-  // 선택된 세부 카테고리에 따라 게시물 필터링
-  let filteredPosts = selectedSubCategory
-    ? (selectedSubCategory === "전체 게시글" // 전체 게시글 카테고리일 경우 전체 출력
-      ? posts
-      : posts.filter(post => post.category === selectedSubCategory))
-    : posts; // 아무것도 선택되지 않았을 경우
+  let filteredPosts = posts;
 
   // 전체글, 인기글 필터링
   if (filter === '인기글') {
@@ -59,10 +60,10 @@ function Board() {
 
   return (
     <div className="laptop:w-[75rem] w-body m-auto flex">
-      <BoardCategory categories={categories} selectedSubCategory={selectedSubCategory} setSelectedSubCategory={setSelectedSubCategory} />
+      <BoardCategory />
       <div className="laptop:w-[47.6875rem] w-mainContent">
         <h1 className="text-white text-2xl mt-5 pb-5">
-          {selectedSubCategory}
+          {title}
         </h1>
         <div className="pb-3 flex justify-between">
           <FilterButtons
@@ -82,9 +83,9 @@ function Board() {
         </div>
         <PostList posts={filteredPosts} />
       </div>
-      <PopularPosts posts={posts} />
+      <PopularPosts />
     </div>
   )
 }
 
-export default Board
+export default Board;

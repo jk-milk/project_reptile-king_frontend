@@ -1,19 +1,31 @@
 import { useNavigate } from 'react-router-dom';
 import { PostCategory } from '../../types/Board';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+// import { API } from '../../config';
 
-type BoardCategoryProps = {
-  categories: PostCategory[];
-  selectedSubCategory: string;
-  setSelectedSubCategory: (value: string) => void;
-}
+const BoardCategory = () => {
 
-const BoardCategory = ({ categories, selectedSubCategory, setSelectedSubCategory }: BoardCategoryProps) => {
+  const [categories, setCategories] = useState<PostCategory[]>([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>("전체 게시글"); // 선택된 세부 카테고리
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      // const categoriesResponse = await axios.get(API+'categories'); // 실제 api
+      const categoriesResponse = await axios.get('http://localhost:3300/categories'); // json server
+
+      setCategories(categoriesResponse.data);
+    };
+
+    fetchCategories();
+  }, []);
+
   const navigate = useNavigate();
 
-  // 세부 카테고리 설정 후, 글 목록 페이지로 이동
-  const handleSetSubCategory = (subCategory: string) => {
-    setSelectedSubCategory(subCategory);
-    navigate(`/board?subCategory=${subCategory}`); // 쿼리 파라미터
+  // 세부 카테고리 설정 후 이동
+  const handleSetSubCategory = (link: string) => {
+    setSelectedSubCategory(link);
+    navigate(`/board/category/${link}`);
   };
 
   return (
@@ -35,7 +47,7 @@ const BoardCategory = ({ categories, selectedSubCategory, setSelectedSubCategory
                         ? "ps-2 py-0.5 text-white font-bold hover:underline"
                         : "ps-2 py-0.5 text-white hover:font-bold hover:underline"
                     }
-                    onClick={() => handleSetSubCategory(subCategory.title)}
+                    onClick={() => handleSetSubCategory(subCategory.link)}
                   >
                     {subCategory.title}
                   </button>
