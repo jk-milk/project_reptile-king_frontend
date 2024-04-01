@@ -1,42 +1,35 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Post, PostCategory } from '../types/Board';
+import { Post } from '../types/Board';
 import BoardCategory from '../components/Board/BoardCategory';
 import PopularPosts from '../components/Board/PopularPosts';
-import PostDetail from '../components/Board/PostDetail';
+import BoardDetailMainContent from '../components/Board/BoardDetailMainContent';
 
 function BoardDetail() {
-  const [categories, setCategories] = useState<PostCategory[]>([]);
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>("전체 게시글"); // 선택된 세부 카테고리
-  const [posts, setPosts] = useState<Post[]>([]);
-
-  const { detailId } = useParams<{ detailId: string }>();
+  const { postId } = useParams();
   const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      // const categoriesResponse = await axios.get('http://localhost:8080/categories'); // 실제 api
-      // const postsResponse = await axios.get('http://localhost:8080/api/posts');
-      const categoriesResponse = await axios.get('http://localhost:3300/categories'); // json server
-      const postsResponse = await axios.get('http://localhost:3300/posts');
+      // const postsResponse = await axios.get('http://localhost:8080/api/posts'); // 실제 api
+      const postsResponse = await axios.get(`http://localhost:3300/posts/${postId}`); // json server
 
-      setCategories(categoriesResponse.data);
-      setPosts(postsResponse.data);
-      const postDetail = postsResponse.data.find((post: Post) => post.id === Number(detailId));
+      // const postDetail = postsResponse.data.find((post: Post) => post.id === Number(postId));
+      const postDetail = postsResponse.data;
       setPost(postDetail);
     };
 
     fetchPosts();
-  }, [detailId]);
+  }, [postId]);
 
   return (
     <div className="laptop:w-[75rem] w-body m-auto flex">
-      <BoardCategory categories={categories} selectedSubCategory={selectedSubCategory} setSelectedSubCategory={setSelectedSubCategory} />
+      <BoardCategory />
       <div className="laptop:w-[47.6875rem] w-mainContent">
-        <PostDetail post={post} />
+        <BoardDetailMainContent post={post} />
       </div>
-      <PopularPosts posts={posts} />
+      <PopularPosts />
     </div>
   )
 }

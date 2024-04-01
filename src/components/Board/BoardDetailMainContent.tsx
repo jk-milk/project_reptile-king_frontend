@@ -1,6 +1,7 @@
 import { Post } from "../../types/Board"
 
-const PostList = ({ post }: { post: Post | null }) => {
+const BoardDetailMainContent = ({ post }: { post: Post | null }) => {
+  console.log(post)
   return (
     <div className="bg-gray-200 px-5 mb-5 rounded">
       {post ? (
@@ -14,4 +15,4 @@ const PostList = ({ post }: { post: Post | null }) => {
     </div>
   )
 }
-export default PostList
+export default BoardDetailMainContent;
