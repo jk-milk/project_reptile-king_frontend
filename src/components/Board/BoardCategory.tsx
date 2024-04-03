@@ -36,7 +36,7 @@ function BoardCategory() {
 
   return (
     <div className="w-52 mr-20">
-      <div className="mt-28">
+      <div className="mt-4">
         {mainCategories.map((mainCategory) => (
           <div key={mainCategory.id} className="w-full p-2">
             <div className="border-b-2 pb-2">
