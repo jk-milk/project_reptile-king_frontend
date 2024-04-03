@@ -70,10 +70,10 @@ const PostList = ({ posts }: { posts: Post[] }) => {
             <div key={post.id} className="py-4 flex justify-between">
               <div className="w-full">
                 <div className="text-lg font-bold">
-                  <Link to={`/board/post/${post.id}`}>{post.title}</Link>
+                  <Link to={`/board/view/?id=${post.id}`}>{post.title}</Link>
                 </div>
                 <div className="text-gray-600 pt-2">
-                  <Link to={`/board/post/${post.id}`}>{cutText(htmlToText(post.content))}</Link>
+                  <Link to={`/board/view/?id=${post.id}`}>{cutText(htmlToText(post.content))}</Link>
                 </div>
                 <div className="pt-4">
                   <span className="text-gray-400">by </span>

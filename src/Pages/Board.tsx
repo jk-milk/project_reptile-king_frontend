@@ -1,18 +1,21 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from 'react';
+import { Link , useSearchParams } from "react-router-dom";
 import { RiFileList2Line } from "react-icons/ri";
 import PostList from '../components/Board/PostList';
 import { Post } from '../types/Board';
-import BoardCategory from '../components/Board/BoardCategory';
+// import BoardCategory from '../components/Board/BoardCategory';
 import FilterButtons from '../components/Board/FilterButtons';
 import PopularPosts from '../components/Board/PopularPosts';
+import { API } from '../config';
 
 function Board() {
-
-  const { link } = useParams();
-  console.log(link);
-  const [title, setTitle] = useState(link ? link : "전체 게시글");
+  // const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const linkRef = useRef(searchParams.get("category"));
+  console.log(linkRef.current)
+  
+  const [title, setTitle] = useState<string>();
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [filter, setFilter] = useState("전체글"); // 전체글, 인기글 필터
@@ -22,18 +25,50 @@ function Board() {
   const LIKES_NUMBER = 5; // 인기글 조건: 좋아요 수 LIKES_NUMBER 이상인 글들이 인기글
 
   useEffect(() => {
+    if (linkRef.current === null) {
+      linkRef.current = "all";
+    }
+    if (linkRef.current === "all") {
+      setTitle("전체 게시글");
+      return;
+    }
     // link에 맞춰서 title 변경하도록 서버와 연결
-    setTitle(link ? link : "전체 게시글"); // 임시로 타이틀은 link로 설정
-  }, [link])
+    // const linkToTitle = async () => {
+    //   try {
+    //     const category = await axios.get(`http://localhost:3300/categories?link=${linkRef.current}`); // json server
+    //     setTitle(category.data[0].title);
+    //   } catch(err) {
+    //     // 잘못된 경로일 시 (예: /board/category/dsaf) 게시판 메인 페이지로 이동
+    //     navigate("/board");
+    //   }
+    // }
+    // linkToTitle();
+  // }, [link,navigate])
+  }, [])
 
   useEffect(() => {
     const fetchPosts = async () => {
       // 게시글 가져올 때 link에 맞는 게시글만 가져오도록 수정
+      // 카테고리가 전체일 경우 전체 글 가져오기
+      if (linkRef.current === "all") {
+        // const postsResponse = await axios.get('http://localhost:3300/posts'); // json server   
+        const postsResponse = await axios.get(API+'posts'); // API
+        console.log(postsResponse);
+        
+        setPosts(postsResponse.data);
+        return;
+      }
 
-      // const postsResponse = await axios.get(API+'posts'); // 실제 api
-      const postsResponse = await axios.get('http://localhost:3300/posts'); // json server
+      // 카테고리가 전체가 아닐 경우: 지정되어 있을 경우
+      // 카테고리 아이디 검색
+      // const category = await axios.get(`http://localhost:3300/categories?link=${linkRef.current}`); // json server
+      // console.log(category.data[0].id);
+      // const category_id = category.data[0].id;
+      
+      // // 검색한 카테고리 아이디를 이용하여 글 목록에서 해당 카테고리 글만 인출
+      // const postsResponse = await axios.get(`http://localhost:3300/posts?category_id=${category_id}`); // json server
 
-      setPosts(postsResponse.data);
+      // setPosts(postsResponse.data);
     };
 
     fetchPosts();
@@ -60,7 +95,7 @@ function Board() {
 
   return (
     <div className="laptop:w-[75rem] w-body m-auto flex">
-      <BoardCategory />
+      {/* <BoardCategory /> */}
       <div className="laptop:w-[47.6875rem] w-mainContent">
         <h1 className="text-white text-2xl mt-5 pb-5">
           {title}

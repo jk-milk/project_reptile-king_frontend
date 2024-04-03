@@ -1,24 +1,26 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { Post } from '../types/Board';
-import BoardCategory from '../components/Board/BoardCategory';
+// import BoardCategory from '../components/Board/BoardCategory';
 import PopularPosts from '../components/Board/PopularPosts';
 import { BiSolidLike } from 'react-icons/bi';
 import { FaCommentDots } from 'react-icons/fa6';
 import { MdRemoveRedEye } from 'react-icons/md';
 import QuillEditorReader from '../components/Board/QuillEditorReader';
+import { API } from '../config';
 
 function BoardDetail() {
   const navigate = useNavigate();
-  const { postId } = useParams();
+  const [searchParams] = useSearchParams();
+  const postId = searchParams.get("id");
   const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        // const postsResponse = await axios.get('http://localhost:8080/api/posts'); // 실제 api
-        const postsResponse = await axios.get(`http://localhost:3300/posts/${postId}`); // json server
+        const postsResponse = await axios.get(API+`posts/${postId}`); // json server
+        console.log(postsResponse.data)
         setPost(postsResponse.data);
       } catch (err) {
         alert("잘못된 경로입니다!");
@@ -33,7 +35,7 @@ function BoardDetail() {
     <div className="laptop:w-[75rem] w-body m-auto flex min-h-dvh">
       {post ? (
         <>
-          <BoardCategory />
+          {/* <BoardCategory /> */}
           <div className="laptop:w-[47.6875rem] w-mainContent">
             <div className="bg-gray-200 px-5 mt-28 mb-5 rounded">
               <div className="pb-4">

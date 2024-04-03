@@ -25,8 +25,8 @@ function App() {
       <Route path='/' element={<Layout />}>
         <Route path='cage' element={<Cage />} />
         <Route path='board' element={<Board />} />
-        <Route path="board/category/:link" element={<Board />} />
-        <Route path='board/post/:postId' element={<BoardDetail />} />
+        <Route path='board/lists' element={<Board />} />
+        <Route path='/board/view' element={<BoardDetail />} />
         <Route path='signup' element={<SignUp />} />
         <Route path='login' element={<SignIn />} />
         <Route path='reset-password' element={<PasswordResetPage />} />
