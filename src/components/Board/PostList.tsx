@@ -49,6 +49,16 @@ const PostList = ({ posts }: { posts: Post[] }) => {
     return content.replace(reg, '');
   }
 
+  // 글 내용이 82자 이상이면 잘라서 반환하는 함수
+  function cutText(content: string){
+    const maxLength = 82;
+    if (content.length >= maxLength) {
+      return content.substring(0, maxLength) + "...";
+    } else {
+      return content;
+    }
+  }
+
   return (
     <div className="bg-gray-200 px-5 mb-5 rounded">
       {posts.map((post) => (
@@ -58,7 +68,7 @@ const PostList = ({ posts }: { posts: Post[] }) => {
               <Link to={`/board/post/${post.id}`}>{post.title}</Link>
             </div>
             <div className="text-gray-600 pt-2">
-              <Link to={`/board/post/${post.id}`}>{htmlToText(post.content)}</Link>
+              <Link to={`/board/post/${post.id}`}>{cutText(htmlToText(post.content))}</Link>
             </div>
             <div className="pt-4">
               <span className="text-gray-400">by </span>
