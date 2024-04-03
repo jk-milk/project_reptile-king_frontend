@@ -3,7 +3,7 @@ export type Post = {
   user_id: number;
   title: string;
   content: string;
-  category: string;
+  category_id: number;
   img_urls: { [key: string]: string };
   views: number;
   likes: number;
@@ -13,11 +13,9 @@ export type Post = {
 
 export type PostCategory = {
   id: number;
-  category: string;
-  subCategories: {
-    title: string;
-    link: string;
-  }[];
+  title: string;
+  link: string | null;
+  main_category: number | null;
 }
 
 export type Comment = {
