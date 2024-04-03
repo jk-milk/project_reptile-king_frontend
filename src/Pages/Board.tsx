@@ -9,6 +9,7 @@ import FilterButtons from '../components/Board/FilterButtons';
 import PopularPosts from '../components/Board/PopularPosts';
 import { API } from '../config';
 import { FaSearch } from 'react-icons/fa';
+import Pagination from '../components/Board/Pagination';
 
 function Board() {
   const navigate = useNavigate();
@@ -25,6 +26,9 @@ function Board() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const LIKES_NUMBER = 5; // 인기글 조건: 좋아요 수 LIKES_NUMBER 이상인 글들이 인기글
+  const POSTS_PER_PAGE = 3; // 한 페이지에 보여줄 게시글 수
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPosts, setTotalPosts] = useState(0); // 게시판에 표시되어야 할 전체 게시글 수
 
   // 링크 설정
   useEffect(() => {
@@ -35,6 +39,12 @@ function Board() {
     }
     setCategory(category)
   }, [searchParams])
+
+  // 글 페이지 설정
+  useEffect(() => {
+    const page = searchParams.get("page");
+    setCurrentPage(page ? parseInt(page) : 1);
+  }, [searchParams]);
 
   // 카테고리에 맞춰서 게시판 상단 문자열 변경
   useEffect(() => {
@@ -47,7 +57,7 @@ function Board() {
         const categoryData = await axios.get(`${API}categories?link=${category}`);
         setTitle(categoryData.data[0].title);
       } catch (err) {
-        // 잘못된 경로일 시 (예: /board/category/dsaf) 게시판 메인 페이지로 이동
+        // 잘못된 경로일 시 게시판 메인 페이지로 이동
         navigate("/board");
       }
     }
@@ -62,36 +72,44 @@ function Board() {
       if (searchWordFromURL) {
         searchWordDecoded = decodeURIComponent(searchWordFromURL);
       }
-      let postsResponse;
+      let url = `${API}posts?`;
+
+      // 카테고리 필터링
+      // 카테고리가 전체일 경우 url에 아무것도 추가하지 않으므로 전체 글 가져오기
+      // 카테고리가 undefined가 아니고 전체가 아닐 경우: 지정되어 있을 경우
+      if (category && category !== "all") {
+        // 카테고리 아이디 검색
+        const categoryData = await axios.get(`${API}categories?link=${category}`);
+        const category_id = categoryData.data[0].id;
+        // 검색한 카테고리 아이디를 이용하여 글 목록에서 해당 카테고리 글만 인출
+        url += `category_id=${category_id}&`;
+      }
+
+      // 검색어가 있을 경우, 검색어로 필터링
+      if (searchWordDecoded) {
+        url += `title_like=${searchWordDecoded}&`;
+      }
+
+      // 출력해야 할 전체 게시물 수 저장
       try {
-        // 카테고리가 전체일 경우 전체 글 가져오기
-        if (category === "all") {
-          postsResponse = await axios.get(API + 'posts');
-        } else {
-          // 카테고리가 전체가 아닐 경우: 지정되어 있을 경우
-          // 카테고리 아이디 검색
-          const categoryData = await axios.get(`${API}categories?link=${category}`);
+        const postsResponse = await axios.get(url);
+        setTotalPosts(postsResponse.data.length);
+      } catch (err) {
+        console.error(err);
+      }
 
-          // 검색한 카테고리 아이디를 이용하여 글 목록에서 해당 카테고리 글만 인출
-          const category_id = categoryData.data[0].id;
-          postsResponse = await axios.get(`${API}posts?category_id=${category_id}`);
-        }
+      // 페이지네이션 적용
+      url += `_page=${currentPage}&_limit=${POSTS_PER_PAGE}`;
 
-        // 검색어가 있을 경우, 검색어로 필터링
-        let filteredData = postsResponse.data;
-        if (searchWordDecoded) {
-          filteredData = filteredData.filter((post: { title: string; }) =>
-            post.title.toLowerCase().includes(searchWordDecoded.toLowerCase())
-          );
-        }
-        setPosts(filteredData);
+      try {
+        const postsResponse = await axios.get(url);
+        setPosts(postsResponse.data);
       } catch (err) {
         console.error(err);
       }
     };
-
     fetchPosts();
-  }, [category, searchParams]);
+  }, [category, currentPage, searchParams]);
 
   // 전체글, 인기글 필터링
   if (filter === '인기글') {
@@ -115,11 +133,17 @@ function Board() {
     navigate(`/board?searchWord=${encodeURIComponent(searchWord)}`);
   };
 
+  // 페이지네이션 클릭했을 때 페이지 이동 함수
+  const paginate = (pageNumber:number) => {
+    setCurrentPage(pageNumber);
+    navigate(`?page=${pageNumber}`);
+};  
+
   return (
     <div className="laptop:w-[75rem] w-body m-auto flex">
       <div>
         <div className="mt-28">
-          <FaSearch className="inline-block text-white ml-2"/>
+          <FaSearch className="inline-block text-white ml-2" />
           <input
             type="text"
             placeholder="Search"
@@ -158,6 +182,12 @@ function Board() {
           </Link>
         </div>
         <PostList posts={filteredPosts} />
+        <Pagination
+          totalPosts={totalPosts}
+          postsPerPage={POSTS_PER_PAGE}
+          currentPage={currentPage}
+          paginate={paginate}
+        />
       </div>
       <PopularPosts />
     </div>

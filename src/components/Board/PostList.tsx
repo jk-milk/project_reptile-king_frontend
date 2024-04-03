@@ -60,7 +60,7 @@ const PostList = ({ posts }: { posts: Post[] }) => {
   }
 
   return (
-    <div className="bg-gray-200 px-5 mb-5 rounded min-h-[50rem]">
+    <div className="bg-[#f9f9f9] px-5 min-h-[50rem]">
       {posts.length === 0 ?
         <div className="min-h-96">
           글이 없습니다.
