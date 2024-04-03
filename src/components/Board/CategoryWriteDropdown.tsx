@@ -27,7 +27,7 @@ function CategoryWriteDropdown({ setSubCategory, setDropdownOpen }: CategoryWrit
 
 
   return (
-    <div className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow mt-1 w-44">
+    <div className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow mt-1 ml-2 w-44">
       <ul className="py-2 text-sm text-gray-700">
         {subCategoryTitles.map((title, index) => (
           <li key={index}>
