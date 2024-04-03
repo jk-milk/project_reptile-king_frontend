@@ -43,7 +43,9 @@ function PostWrite() {
 
   return (
     <div className="laptop:w-[75rem] w-body m-auto flex">
-      <BoardCategory />
+      <div className="mt-20">
+        <BoardCategory />
+      </div>
       <div className="laptop:w-[47.6875rem] w-mainContent">
         <h1 className="text-white text-2xl mt-5 pb-5">
           글쓰기

@@ -26,7 +26,7 @@ function Board() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const LIKES_NUMBER = 5; // 인기글 조건: 좋아요 수 LIKES_NUMBER 이상인 글들이 인기글
-  const POSTS_PER_PAGE = 3; // 한 페이지에 보여줄 게시글 수
+  const POSTS_PER_PAGE = 6; // 한 페이지에 보여줄 게시글 수
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPosts, setTotalPosts] = useState(0); // 게시판에 표시되어야 할 전체 게시글 수
 
@@ -88,6 +88,7 @@ function Board() {
       // 검색어가 있을 경우, 검색어로 필터링
       if (searchWordDecoded) {
         url += `title_like=${searchWordDecoded}&`;
+        setTitle("검색 결과")
       }
 
       // 출력해야 할 전체 게시물 수 저장

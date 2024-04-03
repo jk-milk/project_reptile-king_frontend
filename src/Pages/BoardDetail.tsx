@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { Post } from '../types/Board';
-// import BoardCategory from '../components/Board/BoardCategory';
+import BoardCategory from '../components/Board/BoardCategory';
 import PopularPosts from '../components/Board/PopularPosts';
 import { BiSolidLike } from 'react-icons/bi';
 import { FaCommentDots } from 'react-icons/fa6';
@@ -35,9 +35,11 @@ function BoardDetail() {
     <div className="laptop:w-[75rem] w-body m-auto flex min-h-dvh">
       {post ? (
         <>
-          {/* <BoardCategory /> */}
+          <div className="mt-20">
+            <BoardCategory />
+          </div>
           <div className="laptop:w-[47.6875rem] w-mainContent">
-            <div className="bg-gray-200 px-5 mt-28 mb-5 rounded">
+            <div className="bg-gray-200 px-5 mt-20 mb-5 rounded">
               <div className="pb-4">
                 <button className="mt-2 mb-4" onClick={() => navigate(-1)}>← Go back</button>
                 <div className="mb-4 flex justify-between">
