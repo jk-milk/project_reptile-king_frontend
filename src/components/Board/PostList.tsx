@@ -64,7 +64,7 @@ const PostList = ({ posts }: { posts: Post[] }) => {
       {posts.length === 0 ?
         <div className="min-h-96">
           글이 없습니다.
-        </div> : 
+        </div> :
         <>
           {posts.map((post) => (
             <div key={post.id} className="py-4 flex justify-between">

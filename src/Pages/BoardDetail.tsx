@@ -19,7 +19,7 @@ function BoardDetail() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const postsResponse = await axios.get(API+`posts/${postId}`); // json server
+        const postsResponse = await axios.get(API + `posts/${postId}`); // json server
         console.log(postsResponse.data)
         setPost(postsResponse.data);
       } catch (err) {

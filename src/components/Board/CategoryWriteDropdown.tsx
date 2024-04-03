@@ -13,7 +13,7 @@ function CategoryWriteDropdown({ setCategory, setDropdownOpen }: CategoryWriteDr
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const categoriesResponse = await axios.get(API+'categories');
+      const categoriesResponse = await axios.get(API + 'categories');
       const filteredData = categoriesResponse.data.filter((category: { main_category: number | null; }) => category.main_category !== null);
       setCategories(filteredData);
     };
@@ -21,12 +21,9 @@ function CategoryWriteDropdown({ setCategory, setDropdownOpen }: CategoryWriteDr
     fetchCategories();
   }, []);
 
-  console.log(categories);
-  
   const categoryTitles = categories.map(category =>
     category.title
   ).slice(1);
-
 
   return (
     <div className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow mt-1 ml-2 w-44">

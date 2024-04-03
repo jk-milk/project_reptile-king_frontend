@@ -11,7 +11,7 @@ function BoardCategory() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const categoriesResponse = await axios.get(API+'categories');
+      const categoriesResponse = await axios.get(API + 'categories');
 
       setCategories(categoriesResponse.data);
     };

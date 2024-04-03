@@ -135,10 +135,10 @@ function Board() {
   };
 
   // 페이지네이션 클릭했을 때 페이지 이동 함수
-  const paginate = (pageNumber:number) => {
+  const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     navigate(`?page=${pageNumber}`);
-};  
+  };
 
   return (
     <div className="laptop:w-[75rem] w-body m-auto flex">

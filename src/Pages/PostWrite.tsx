@@ -22,7 +22,7 @@ function PostWrite() {
       alert("제목을 입력해 주세요!")
       return;
     }
-      
+
     const postData = {
       category,
       title,
@@ -30,7 +30,7 @@ function PostWrite() {
     };
 
     try {
-      const response = await axios.post(API+"posts", postData);
+      const response = await axios.post(API + "posts", postData);
       console.log(response.data);
       // response로 카테고리 링크를 받아와야 함
       alert("글 작성 완료!");
@@ -69,14 +69,13 @@ function PostWrite() {
           </div>
           <QuillEditor setContent={setContent} />
           <div className="flex">
-
-          <button
-            className="mt-8 mb-4 ml-auto mr-2 p-1 w-20 rounded border border-gray-500 text-gray-900 bg-white focus:ring-2 focus:outline-none"
-            onClick={handleSubmit}
+            <button
+              className="mt-8 mb-4 ml-auto mr-2 p-1 w-20 rounded border border-gray-500 text-gray-900 bg-white focus:ring-2 focus:outline-none"
+              onClick={handleSubmit}
             >
-            등록
-          </button>
-            </div>
+              등록
+            </button>
+          </div>
         </div>
       </div>
       <PopularPosts />
