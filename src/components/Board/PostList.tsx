@@ -43,6 +43,12 @@ const PostList = ({ posts }: { posts: Post[] }) => {
     }
   }
 
+  // html 태그를 제외하고 순수 텍스트만 추출하는 함수
+  function htmlToText(content: string){
+    const reg = /<[^>]*>?/g; // html 태그 정규식
+    return content.replace(reg, '');
+  }
+
   return (
     <div className="bg-gray-200 px-5 mb-5 rounded">
       {posts.map((post) => (
@@ -52,7 +58,7 @@ const PostList = ({ posts }: { posts: Post[] }) => {
               <Link to={`/board/post/${post.id}`}>{post.title}</Link>
             </div>
             <div className="text-gray-600 pt-2">
-              <Link to={`/board/post/${post.id}`}>{post.content}</Link>
+              <Link to={`/board/post/${post.id}`}>{htmlToText(post.content)}</Link>
             </div>
             <div className="pt-4">
               <span className="text-gray-400">by </span>
