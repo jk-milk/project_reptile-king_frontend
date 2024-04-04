@@ -8,6 +8,8 @@ import SignUp from './Pages/SignUp'
 import SignIn from './Pages/SignIn'
 import PasswordResetPage from './Pages/PasswordResetPage'
 import Profile from './Pages/Profile'
+import MypageOrder from './Pages/MypageOrder'
+import MypageOrderDetail from './Pages/MypageOrderDetail'
 import MarketLayout from './components/Layout/MarketLayout'
 import Market from './Pages/Market'
 import Product from './Pages/Product'
@@ -26,12 +28,14 @@ function App() {
         <Route path='cage' element={<Cage />} />
         <Route path='board' element={<Board />} />
         <Route path='board/lists' element={<Board />} />
-        <Route path='/board/view' element={<BoardDetail />} />
+        <Route path='/board/view' element={<BoardDetail />} />        
         <Route path='signup' element={<SignUp />} />
         <Route path='login' element={<SignIn />} />
         <Route path='reset-password' element={<PasswordResetPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path='mypage' element={<Profile />} />
+          <Route path='mypage/order' element={<MypageOrder />} />
+          <Route path='mypage/order/detail' element={<MypageOrderDetail />} />
           <Route path='board/write' element={<PostWrite />} />
         </Route>
       </Route>
