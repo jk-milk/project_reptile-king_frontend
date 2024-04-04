@@ -16,7 +16,7 @@ function PasswordResetPage() {
     try {
       // 서버에 이메일 전송, 인증코드 요청 로직
       // const response = await axios.post(API+'forget-password', {
-      const response = await axios.post('http://54.180.158.4:8000/api/forget-password', {
+      const response = await axios.post(API+'forget-password', {
         email,
       });
       // 로딩중 로직 추가 할 것
@@ -54,7 +54,10 @@ function PasswordResetPage() {
         navigate('/login'); // 성공 시 알림 띄우고 로그인 페이지로 이동
       }
     } catch (error) {
-      alert('비밀번호 재설정에 실패했습니다. 다시 시도해주세요.'); // 실패 시 알림
+      if (axios.isAxiosError(error)) {
+        console.error(error.response?.data.msg);
+        alert(error.response?.data.msg+". 다시 시도해주세요.");
+      }
     }
   };
 
