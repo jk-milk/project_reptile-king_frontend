@@ -40,7 +40,7 @@ function CommentForm({ postId, parentCommentId = null, onCommentPosted }: Commen
         onChange={(e) => setContent(e.target.value)}
         placeholder="댓글"
       />
-      <button type="submit" className="bg-blue-500 text-white p-2 mt-2">
+      <button type="submit" className="p-2 mt-2">
         댓글 작성
       </button>
     </form>
