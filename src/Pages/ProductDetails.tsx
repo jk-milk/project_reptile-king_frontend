@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ProductDescription from '../components/Market/ProductDescription';
 import ProductReviews from '../components/Market/ProductReviews';
 import StarRating from "../components/Market/StarRating";
@@ -8,12 +8,24 @@ import { FiShoppingCart } from 'react-icons/fi';
 import { products } from './Product';
 import { categories } from '../components/Market/MarketCategoryList';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function ProductDetails() {
+  const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [selectedTab, setSelectedTab] = useState("details"); // 탭 선택 상태
+  const [selectedTab, setSelectedTab] = useState("details");
   const pricePerProduct = 24000;
   const rating = 4;
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/api/goods/1')
+      .then(response => {
+        setProduct(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching product data:', error);
+      });
+  }, []);
 
   // 상품 개수 변경
   const handleQuantityChange = (value: number) => {
@@ -35,7 +47,7 @@ function ProductDetails() {
 
   return (
     <>
-      <div className="pt-12 pb-12 mx-auto max-w-screen-xl">
+      <div className="pt-12 pb-12 mx-auto max-w-screen-lg">
         <p className="text-xl text-white font-bold mb-4">카테고리</p>
         <div className="flex flex-wrap gap-2 mb-10">
           {categories.map((category) => (
@@ -52,7 +64,7 @@ function ProductDetails() {
           ))}
         </div>
       </div>
-      <div className="mx-auto max-w-screen-lg">
+      <div className="mx-auto max-w-screen-md pb-10">
         <div className="grid grid-cols-12 gap-4">
           {/* 상품 이미지 */}
           <div className="col-span-12 md:col-span-6 lg:col-span-5">

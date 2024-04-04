@@ -25,7 +25,7 @@ function Product() {
 
   useEffect(() => {
     const fetchTotalProducts = async () => {
-      const total = await fetch("API_URL_HERE");
+      const total = await fetch("http://localhost:8000/api/goods");
       const totalProducts = await total.json();
       setTotalProducts(totalProducts);
     };
@@ -63,7 +63,7 @@ function Product() {
   };
 
   return (
-    <div className="pt-12 pb-24 mx-auto max-w-screen-xl">
+    <div className="pt-12 pb-24 mx-auto max-w-screen-lg">
       <div className="mb-20">
         <p className="text-xl text-white font-bold mb-4">카테고리</p>
         <div className="flex flex-wrap gap-2">

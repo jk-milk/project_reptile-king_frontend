@@ -53,11 +53,7 @@ function MarketPay() {
               <tr>
                 <td className="pb-4 pr-4">전화번호</td>
                 <td>
-                  <input type="tel" className="bg-green-700 border border-lime-300 rounded text-white w-20 px-1 py-1 focus:outline-none mb-4 mr-1" />
-                  <span>-</span>
-                  <input type="tel" className="bg-green-700 border border-lime-300 rounded text-white w-20 px-1 py-1 focus:outline-none mb-4 mr-1 ml-1" />
-                  <span>-</span>
-                  <input type="tel" className="bg-green-700 border border-lime-300 rounded text-white w-20 px-1 py-1 focus:outline-none mb-4 ml-1" />
+                  <input type="tel" className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 mr-1" />
                 </td>
               </tr>
             </tbody>

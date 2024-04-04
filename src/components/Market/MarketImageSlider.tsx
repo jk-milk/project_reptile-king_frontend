@@ -8,7 +8,7 @@ import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 const ImageSlider: React.FC = () => {
   return (
     <div className="flex justify-center">
-      <div className="max-w-5xl mx-auto mt-10 mb-10">
+      <div className="max-w-3xl mx-auto mt-10 mb-10">
       <Swiper
         centeredSlides={true}
         autoplay={{
