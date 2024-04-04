@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 import Layout from './components/Layout/Layout'
 import Home from './Pages/Home'
 import Cage from './Pages/Cage'
@@ -18,8 +19,7 @@ import ProductDetails from './Pages/ProductDetails'
 import MarketCart from './Pages/MarketCart'
 import MarketPay from './Pages/MarketPay'
 import MarketPaySuccess from './Pages/MarketPaySuccess'
-import PostWrite from './Pages/PostWrite'
-import ProtectedRoute from './components/auth/ProtectedRoute'
+import BoardWrite from './Pages/BoardWrite'
 
 function App() {
   return (
@@ -37,7 +37,7 @@ function App() {
           <Route path='mypage' element={<Profile />} />
           <Route path='mypage/order' element={<MypageOrder />} />
           <Route path='mypage/order/detail' element={<MypageOrderDetail />} />
-          <Route path='board/write' element={<PostWrite />} />
+          <Route path='board/write' element={<BoardWrite />} />
           <Route path='board/modify' element={<BoardModify />} />
         </Route>
       </Route>

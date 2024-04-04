@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API } from "../config";
 import axios from "axios";
@@ -7,12 +7,28 @@ import PopularPosts from "../components/Board/PopularPosts";
 import QuillEditor from "../components/Board/QuillEditor";
 import CategoryWriteDropdown from "../components/Board/CategoryWriteDropdown";
 
-function PostWrite() {
+function BoardWrite() {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [category, setCategory] = useState("카테고리 선택");
+  const [category_id, setCategory_id] = useState<number>();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const categoryResponse = await axios.get(`${API}categories/${title}`);
+        console.log(categoryResponse);
+        
+        setCategory_id(categoryResponse.data.id)
+      } catch(err) {
+        console.error();
+      }
+    }
+
+    fetchCategory();
+  },[category, title])
 
   const handleSubmit = async () => {
     if (category === "카테고리 선택") {
@@ -24,7 +40,7 @@ function PostWrite() {
     }
 
     const postData = {
-      category,
+      category_id,
       title,
       content,
     };
@@ -83,4 +99,4 @@ function PostWrite() {
   )
 }
 
-export default PostWrite;
+export default BoardWrite;
