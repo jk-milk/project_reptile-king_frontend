@@ -14,7 +14,7 @@ import Pagination from '../components/Board/Pagination';
 function Board() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [category, setCategory] = useState<string>();
+  const [category, setCategory] = useState<string>(); // 현재 카테고리
   const [title, setTitle] = useState<string>(); // 게시글 상단 문자열
 
   const [posts, setPosts] = useState<Post[]>([]);

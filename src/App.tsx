@@ -4,6 +4,7 @@ import Home from './Pages/Home'
 import Cage from './Pages/Cage'
 import Board from './Pages/Board'
 import BoardDetail from './Pages/BoardDetail'
+import BoardModify from './Pages/BoardModify'
 import SignUp from './Pages/SignUp'
 import SignIn from './Pages/SignIn'
 import PasswordResetPage from './Pages/PasswordResetPage'
@@ -26,13 +27,14 @@ function App() {
         <Route path='cage' element={<Cage />} />
         <Route path='board' element={<Board />} />
         <Route path='board/lists' element={<Board />} />
-        <Route path='/board/view' element={<BoardDetail />} />
+        <Route path='board/view' element={<BoardDetail />} />
         <Route path='signup' element={<SignUp />} />
         <Route path='login' element={<SignIn />} />
         <Route path='reset-password' element={<PasswordResetPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path='mypage' element={<Profile />} />
           <Route path='board/write' element={<PostWrite />} />
+          <Route path='board/modify' element={<BoardModify />} />
         </Route>
       </Route>
       <Route element={<MarketLayout />}>
