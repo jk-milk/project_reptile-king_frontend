@@ -26,7 +26,6 @@ function App() {
     <Routes>
       <Route index element={<Home />} />
       <Route path='/' element={<Layout />}>
-        <Route path='cage' element={<Cage />} />
         <Route path='board' element={<Board />} />
         <Route path='board/lists' element={<Board />} />
         <Route path='board/view' element={<BoardDetail />} />
@@ -34,6 +33,7 @@ function App() {
         <Route path='login' element={<SignIn />} />
         <Route path='reset-password' element={<PasswordResetPage />} />
         <Route element={<ProtectedRoute />}>
+          <Route path='mycage' element={<Cage />} />
           <Route path='mypage' element={<Profile />} />
           <Route path='mypage/order' element={<MypageOrder />} />
           <Route path='mypage/order/detail' element={<MypageOrderDetail />} />

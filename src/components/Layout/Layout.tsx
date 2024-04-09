@@ -12,6 +12,7 @@ const pageTitles: { [key: string]: string[] } = {
   "mypage": ["마이페이지"],
   "mypage/order": ["주문내역"],
   "mypage/order/detail": ["주문내역"],
+  "mycage": ["MY 사육장"],
 }
 
 const Layout = () => {
