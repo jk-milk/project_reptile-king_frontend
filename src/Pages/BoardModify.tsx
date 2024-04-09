@@ -5,7 +5,7 @@ import BoardCategory from "../components/Board/BoardCategory";
 import PopularPosts from "../components/Board/PopularPosts";
 import QuillEditor from "../components/Board/QuillEditor";
 import CategoryWriteDropdown from "../components/Board/CategoryWriteDropdown";
-import { apiWithAuth, apiWithoutAuth } from "../api/axios";
+import { apiWithAuth, apiWithoutAuth } from "../components/common/axios";
 
 function BoardModify() {
   const navigate = useNavigate();

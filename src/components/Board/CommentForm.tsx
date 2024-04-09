@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { API } from '../../config';
-import { apiWithAuth } from '../../api/axios';
+import { apiWithAuth } from '../common/axios';
 
 interface CommentFormProps {
   postId: number;

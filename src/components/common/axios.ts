@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API } from "../config";
+import { API } from "../../config";
 
 // 로그인이 필요한 요청용 axios 인스턴스
 const apiWithAuth = axios.create({

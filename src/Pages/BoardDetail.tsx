@@ -9,7 +9,7 @@ import { MdRemoveRedEye } from 'react-icons/md';
 import QuillEditorReader from '../components/Board/QuillEditorReader';
 import { API } from '../config';
 import CommentForm from '../components/Board/CommentForm';
-import { apiWithoutAuth } from '../api/axios';
+import { apiWithoutAuth } from '../components/common/axios';
 
 function BoardDetail() {
   const navigate = useNavigate();

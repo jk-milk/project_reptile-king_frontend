@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Post } from '../../types/Board';
 import { useState, useEffect } from 'react';
 import { API } from '../../config';
-import { apiWithoutAuth } from '../../api/axios';
+import { apiWithoutAuth } from '../common/axios';
 
 const PopularPosts = () => {
   const [posts, setPosts] = useState<Post[]>([]);

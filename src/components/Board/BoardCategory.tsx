@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { PostCategory } from '../../types/Board';
 import { useEffect, useState } from 'react';
 import { API } from '../../config';
-import { apiWithoutAuth } from '../../api/axios';
+import { apiWithoutAuth } from '../common/axios';
 
 function BoardCategory() {
   const navigate = useNavigate();

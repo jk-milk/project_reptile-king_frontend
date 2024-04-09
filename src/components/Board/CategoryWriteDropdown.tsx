@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { PostCategory } from "../../types/Board";
 import { API } from "../../config";
-import { apiWithoutAuth } from "../../api/axios";
+import { apiWithoutAuth } from "../common/axios";
 
 interface CategoryWriteDropdownProps {
   setCategory: (category: string) => void;

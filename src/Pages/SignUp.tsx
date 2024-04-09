@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { API } from '../config';
-import { apiWithoutAuth } from '../api/axios';
+import { apiWithoutAuth } from '../components/common/axios';
 
 // 이메일 중복 검사 
 const emailDuplicateCheck = async (email: string): Promise<boolean> => {

@@ -5,7 +5,7 @@ import VerificationCodeInput from '../components/PasswordReset/VerificationCodeI
 import NewPasswordForm from '../components/PasswordReset/NewPasswordForm';
 import axios from 'axios';
 import { API } from '../config';
-import { apiWithoutAuth } from '../api/axios';
+import { apiWithoutAuth } from '../components/common/axios';
 
 function PasswordResetPage() {
   const navigate = useNavigate();

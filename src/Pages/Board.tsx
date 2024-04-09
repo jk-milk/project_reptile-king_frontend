@@ -9,7 +9,7 @@ import PopularPosts from '../components/Board/PopularPosts';
 import { API } from '../config';
 import { FaSearch } from 'react-icons/fa';
 import Pagination from '../components/Board/Pagination';
-import { apiWithoutAuth } from '../api/axios';
+import { apiWithoutAuth } from '../components/common/axios';
 
 function Board() {
   const navigate = useNavigate();
