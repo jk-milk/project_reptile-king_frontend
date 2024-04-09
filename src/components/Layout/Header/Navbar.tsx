@@ -1,10 +1,11 @@
 import { IoMdNotifications } from "react-icons/io";
 import { FaCircleUser } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/useAuth";
 import { useState, useRef, useEffect } from "react";
 
 function Navbar() {
+  const navigate = useNavigate();
   const { state, dispatch } = useAuth();
   const { isAuthenticated } = state;
   const [isHovered, setIsHovered] = useState(false);
@@ -27,6 +28,11 @@ function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
+
+  const handleLogout = () => {
+    dispatch({type: 'LOGOUT', token: null});
+    navigate('/');
+  };
 
   return (
     <nav className="w-full z-30 bg-white shadow-xl fixed top-0">
@@ -66,7 +72,7 @@ function Navbar() {
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20">
                     <Link to="/mypage" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">마이 페이지</Link>
-                    <button onClick={() => {dispatch({type: 'LOGOUT', token: null}) }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">로그아웃</button>
+                    <button onClick={handleLogout} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">로그아웃</button>
                   </div>
                 )}
               </div>
