@@ -54,6 +54,7 @@ function PasswordResetPage() {
         navigate('/login'); // 성공 시 알림 띄우고 로그인 페이지로 이동
       }
     } catch (error) {
+      // 비밀번호가 기존과 동일할 경우 알림 처리
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data.msg);
         alert(error.response?.data.msg+". 다시 시도해주세요.");
