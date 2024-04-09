@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Post } from '../../types/Board';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { API } from '../../config';
+import { apiWithoutAuth } from '../../api/axios';
 
 const PopularPosts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -10,7 +10,7 @@ const PopularPosts = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       // 전체 카테고리 인기글 출력을 위해 전체 글을 받아오고 클라이언트에서 정렬하는 방식
-      const postsResponse = await axios.get(API+'posts');
+      const postsResponse = await apiWithoutAuth.get(API+'posts');
 
       setPosts(postsResponse.data);
     };

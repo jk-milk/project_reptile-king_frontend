@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { RiFileList2Line } from "react-icons/ri";
@@ -10,6 +9,7 @@ import PopularPosts from '../components/Board/PopularPosts';
 import { API } from '../config';
 import { FaSearch } from 'react-icons/fa';
 import Pagination from '../components/Board/Pagination';
+import { apiWithoutAuth } from '../api/axios';
 
 function Board() {
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ function Board() {
     }
     const categoryToTitle = async () => {
       try {
-        const categoryData = await axios.get(`${API}categories?link=${category}`);
+        const categoryData = await apiWithoutAuth.get(`${API}categories?link=${category}`);
         setTitle(categoryData.data[0].title);
       } catch (err) {
         // 잘못된 경로일 시 게시판 메인 페이지로 이동
@@ -79,7 +79,7 @@ function Board() {
       // 카테고리가 undefined가 아니고 전체가 아닐 경우: 지정되어 있을 경우
       if (category && category !== "all") {
         // 카테고리 아이디 검색
-        const categoryData = await axios.get(`${API}categories?link=${category}`);
+        const categoryData = await apiWithoutAuth.get(`${API}categories?link=${category}`);
         const category_id = categoryData.data[0].id;
         // 검색한 카테고리 아이디를 이용하여 글 목록에서 해당 카테고리 글만 인출
         url += `category_id=${category_id}&`;
@@ -93,7 +93,7 @@ function Board() {
 
       // 출력해야 할 전체 게시물 수 저장
       try {
-        const postsResponse = await axios.get(url);
+        const postsResponse = await apiWithoutAuth.get(url);
         setTotalPosts(postsResponse.data.length);
       } catch (err) {
         console.error(err);
@@ -103,7 +103,7 @@ function Board() {
       url += `_page=${currentPage}&_limit=${POSTS_PER_PAGE}`;
 
       try {
-        const postsResponse = await axios.get(url);
+        const postsResponse = await apiWithoutAuth.get(url);
         setPosts(postsResponse.data);
       } catch (err) {
         console.error(err);

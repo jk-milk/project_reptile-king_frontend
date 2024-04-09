@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { API } from '../config';
+import { apiWithoutAuth } from '../api/axios';
 
 // 이메일 중복 검사 
 const emailDuplicateCheck = async (email: string): Promise<boolean> => {
   try {
-    const response = await axios.post(API+"register/check-email", {
+    const response = await apiWithoutAuth.post(API+"register/check-email", {
       email,
     });
 
@@ -31,7 +31,7 @@ const emailDuplicateCheck = async (email: string): Promise<boolean> => {
 
 const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
   try {
-    const response = await axios.post(API+'register/check-nickname', {
+    const response = await apiWithoutAuth.post(API+'register/check-nickname', {
       nickname,
     });
 
@@ -57,7 +57,7 @@ const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
 
 const register = async (name: string, email: string, password: string, password_confirmation:string, nickname:string, phone:string): Promise<boolean> => {
   try {
-    const response = await axios.post(API+'register', {
+    const response = await apiWithoutAuth.post(API+'register', {
       name,
       email,
       password,
@@ -160,7 +160,6 @@ function Signup() {
     
     if (newNickname.length >= 2 && newNickname.length <= 12) {
       try {
-        console.log(newNickname)
         // 닉네임 중복 체크를 비동기로 수행
         const isAvailable = await nicknameDuplicateCheck(newNickname);
         if (isAvailable) {

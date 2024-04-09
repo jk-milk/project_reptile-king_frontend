@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { API } from '../../config';
+import { apiWithAuth } from '../../api/axios';
 
 interface CommentFormProps {
   postId: number;
@@ -14,7 +14,7 @@ function CommentForm({ postId, parentCommentId = null, onCommentPosted }: Commen
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API}comments`, {
+      const response = await apiWithAuth.post(`${API}comments`, {
         user_id: 1, // 임시 하드코딩 jwt토큰넘길것
         post_id: postId,
         content: content,

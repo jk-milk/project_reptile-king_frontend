@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
 import { Post, Comment } from '../types/Board';
 import BoardCategory from '../components/Board/BoardCategory';
 import PopularPosts from '../components/Board/PopularPosts';
@@ -10,6 +9,7 @@ import { MdRemoveRedEye } from 'react-icons/md';
 import QuillEditorReader from '../components/Board/QuillEditorReader';
 import { API } from '../config';
 import CommentForm from '../components/Board/CommentForm';
+import { apiWithoutAuth } from '../api/axios';
 
 function BoardDetail() {
   const navigate = useNavigate();
@@ -21,11 +21,10 @@ function BoardDetail() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const postsResponse = await axios.get(API + `posts/${postId}`); // json server
-        console.log(postsResponse.data)
+        const postsResponse = await apiWithoutAuth.get(`${API}posts/${postId}`);
         setPost(postsResponse.data);
 
-        const commentsResponse = await axios.get(`${API}comments?post_id=${postId}`);
+        const commentsResponse = await apiWithoutAuth.get(`${API}comments?post_id=${postId}`);
         setComments(commentsResponse.data);
       } catch (err) {
         alert("잘못된 경로입니다!");
@@ -57,7 +56,7 @@ function BoardDetail() {
 
   // 댓글 목록을 다시 가져오는 함수
   const onCommentPosted = async () => {
-    const commentsResponse = await axios.get(`${API}comments?post_id=${postId}`);
+    const commentsResponse = await apiWithoutAuth.get(`${API}comments?post_id=${postId}`);
     setComments(commentsResponse.data);
   };
 
@@ -82,6 +81,13 @@ function BoardDetail() {
                   {/* 사용자 프로필 사진 서버에서 가져오기 */}
                   <img src="/src/assets/profile.png" alt="프로필 사진" className="w-12 h-12" />
                 </div>
+                <div>
+                  {/* 글 작성자일 경우에만 렌더링 */}
+                  <button onClick={() => navigate(`/board/modify?category=${post.category_id}&id=${post.id}`)}>수정</button>
+                  {/* 글 작성자나 관리자일 경우에만 렌더링 */}
+                  <button>삭제</button>
+                </div>
+                
                 <QuillEditorReader post={post} />
               </div>
               <div>
