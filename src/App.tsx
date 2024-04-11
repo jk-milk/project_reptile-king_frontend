@@ -21,6 +21,13 @@ import MarketPaySuccess from './Pages/MarketPaySuccess'
 import BoardWrite from './Pages/BoardWrite'
 import MyCage from './Pages/MyCage'
 import MyCageDetail from './Pages/MyCageDetail'
+import MypageOrderReview from './Pages/MypageOrderReview'
+import MypageHelp from './Pages/MypageHelp'
+import MypageOrderReviewCreate from './Pages/MypageOrderReviewCreate'
+import MypageOrderReviewEdit from './Pages/MypageOrderReviewEdit'
+import MypageHelpCreate from './Pages/MypageHelpCreate'
+import MypageHelpEdit from './Pages/MypageHelpEdit'
+import MypageHelpDetail from './Pages/MypageHelpDetail'
 
 function App() {
   return (
@@ -39,6 +46,13 @@ function App() {
           <Route path='mypage' element={<Profile />} />
           <Route path='mypage/order' element={<MypageOrder />} />
           <Route path='mypage/order/detail' element={<MypageOrderDetail />} />
+          <Route path='mypage/order/review' element={<MypageOrderReview />} />
+          <Route path='mypage/order/review/create' element={<MypageOrderReviewCreate />} />
+          <Route path='mypage/order/review/edit' element={<MypageOrderReviewEdit />} />
+          <Route path='mypage/help' element={<MypageHelp />} />
+          <Route path='mypage/help/create' element={<MypageHelpCreate />} />
+          <Route path='mypage/help/edit' element={<MypageHelpEdit />} />
+          <Route path='mypage/help/detail' element={<MypageHelpDetail />} />
           <Route path='board/write' element={<BoardWrite />} />
           <Route path='board/modify' element={<BoardModify />} />
         </Route>
