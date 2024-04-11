@@ -14,6 +14,7 @@ interface Order {
   productName: string;
   productPrice: number;
   productQuantity: number;
+  deliveryRequest: string;
 }
 
 interface Props {
