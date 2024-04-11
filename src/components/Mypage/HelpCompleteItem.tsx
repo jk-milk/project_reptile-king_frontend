@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
 import { orders } from '../../Pages/MypageOrder';
-import StarRating from '../Market/StarRating';
 import { Link } from 'react-router-dom';
 
-export const reviews = [
+export const inquiry = [
   {
     id: 1,
-    rating: 3,
-    reviewDate: "2023.02.02",
-    reviewTitle: "영양가 풍부한 도마뱀 사료, 가격은 조금 아쉬움",
-    reviewContent: "크레 슈퍼푸드 도마뱀 사료를 구매해봤는데, 도마뱀이 좋아해서 기뻤어요. 영양도 풍부하고 소화도 잘 되어서 건강에 도움이 될 것 같아요. 다만 가격이 좀 비싸서 아쉬웠어요."
+    inquiryDate: "2023.02.05",
+    inquiryTitle: "취소신청",
+    inquiryContent: "단순변심으로 인한 취소",
+    inquiryStatus: "답변완료",
+    inquiryImage : "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTAzMTBfMTc5%2FMDAxNjE1Mzc3NDk5MzA0.Lu9lqAAV8vtMXs1zTa2VnbhUNQh2S2YSq2hJSJGxVogg.MqldOIKHkE4sA31aBhzCPIBkaegNJ_UBSpaOgvgMKK4g.JPEG.rock5484%2FKakaoTalk_20210310_203932747_05.jpg&type=sc960_832"
   },
   {
     id: 2,
-    rating: 5,
-    reviewDate: "2023.02.05",
-    reviewTitle: "가성비 좋은 튼튼한 먹이그릇이네요. 모양도 이뻐요^^",
-    reviewContent: "크기는 성인여성 손바닥만 합니다. 생각보다 좀 커서 놀랐지만 큰 사육장에 넉넉히 들어가요. 크레스티드 게코 슈퍼푸드 자율 급여용으로 좋아요."
+    inquiryDate: "2023.02.08",
+    inquiryTitle: "교환신청",
+    inquiryContent: "상품 불량",
+    inquiryStatus: "답변확인중"
   },
 ];
 
-const ReviewCompleteItem: React.FC = () => {
+const HelpCompleteItem: React.FC = () => {
   const [reviewItems, setReviewItems] = useState(orders);
 
   const handleDelete = (id) => {
-    const confirmDelete = window.confirm("리뷰를 삭제하시겠습니까?");
+    const confirmDelete = window.confirm("문의를 삭제하시겠습니까?");
     if (confirmDelete) {
       setReviewItems(reviewItems.filter(item => item.id !== id));
     }
@@ -33,10 +33,10 @@ const ReviewCompleteItem: React.FC = () => {
   return (
     <div>
       {reviewItems.length === 0 ? (
-        <div className="text-center text-gray-600 text-lg mt-3">작성한 리뷰가 없습니다.</div>
+        <div className="text-center text-gray-600 text-lg mt-3">작성한 문의가 없습니다.</div>
       ) : (
         reviewItems.map((order) => {
-          const matchingReview = reviews.find(review => review.id === order.id);
+          const matchingInquiry = inquiry.find(inquiry => inquiry.id === order.id);
 
           return (
             <div className="border-2 rounded items-center mt-2 px-4 py-3" key={order.id}>
@@ -50,13 +50,18 @@ const ReviewCompleteItem: React.FC = () => {
                   <div className="ml-4 text-lg">
                     <div>{order.productName}</div>
                     <div className="flex items-center">
-                      {matchingReview && <StarRating rating={matchingReview.rating} />}
-                      <div className="ml-2 text-gray-500 text-base">{matchingReview && matchingReview.reviewDate}</div>
+                      <div className="text-gray-500 text-base">{matchingInquiry.inquiryDate}</div>
                     </div>
                   </div>
+
                 </div>
                 <div>
-                  <Link to="/mypage/order/review/edit">
+                  <Link to="/mypage/help/detail">
+                    <button className="hover:bg-gray-300 bg-gray-500 text-white font-bold py-1 px-4 rounded mr-2 self-center">
+                      상세보기
+                    </button>
+                  </Link>
+                  <Link to="/mypage/help/edit">
                     <button className="hover:bg-blue-200 bg-blue-500 text-white font-bold py-1 px-4 rounded mr-2 self-center">
                       수정
                     </button>
@@ -67,10 +72,10 @@ const ReviewCompleteItem: React.FC = () => {
                 </div>
               </div>
               <div className="font-bold text-xl mt-2">
-                {matchingReview.reviewTitle}
+                {matchingInquiry.inquiryTitle}
               </div>
               <div className="mt-1">
-                {matchingReview?.reviewContent}
+                {matchingInquiry.inquiryContent}
               </div>
             </div>
           );
@@ -80,4 +85,4 @@ const ReviewCompleteItem: React.FC = () => {
   );
 };
 
-export default ReviewCompleteItem;
+export default HelpCompleteItem;
