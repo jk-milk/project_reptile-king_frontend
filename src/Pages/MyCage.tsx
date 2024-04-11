@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const cage = [
   {
     id: 1,
@@ -67,9 +69,11 @@ function MyCage() {
                   <div className="text-lg font-semibold mb-2">{cageItem.cageName}</div>
                   <div className="text-gray-600 mb-2">온도 : {cageItem.cageTemperature}°C</div>
                   <div className="text-gray-600 mb-2">습도 : {cageItem.cageHumidity}%</div>
-                  <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
-                    사육장 상세보기
-                  </button>
+                  <Link to={`/my-cage/${cageItem.id}`}>
+                    <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
+                      사육장 상세보기
+                    </button>
+                  </Link>
                 </div>
               </div>
             )
