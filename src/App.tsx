@@ -2,7 +2,6 @@ import { Route, Routes } from 'react-router-dom'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import Layout from './components/Layout/Layout'
 import Home from './Pages/Home'
-import Cage from './Pages/MyCage'
 import Board from './Pages/Board'
 import BoardDetail from './Pages/BoardDetail'
 import BoardModify from './Pages/BoardModify'
@@ -20,6 +19,8 @@ import MarketCart from './Pages/MarketCart'
 import MarketPay from './Pages/MarketPay'
 import MarketPaySuccess from './Pages/MarketPaySuccess'
 import BoardWrite from './Pages/BoardWrite'
+import MyCage from './Pages/MyCage'
+import MyCageDetail from './Pages/MyCageDetail'
 
 function App() {
   return (
@@ -33,7 +34,8 @@ function App() {
         <Route path='login' element={<SignIn />} />
         <Route path='reset-password' element={<PasswordResetPage />} />
         <Route element={<ProtectedRoute />}>
-          <Route path='mycage' element={<Cage />} />
+          <Route path='my-cage' element={<MyCage />} />
+          <Route path='my-cage/:id' element={<MyCageDetail />} />
           <Route path='mypage' element={<Profile />} />
           <Route path='mypage/order' element={<MypageOrder />} />
           <Route path='mypage/order/detail' element={<MypageOrderDetail />} />
