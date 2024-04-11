@@ -64,20 +64,21 @@ function ProductDetails() {
           ))}
         </div>
       </div>
+      
       <div className="mx-auto max-w-screen-md pb-10">
         <div className="grid grid-cols-12 gap-4">
           {/* 상품 이미지 */}
-          <div className="col-span-12 md:col-span-6 lg:col-span-5">
+          <div className="col-span-12 lg:col-span-5">
             <div className="h-80 w-full flex justify-center items-center">
               <img src={products[0].imageUrl} alt="상품 이미지" className="object-cover h-full w-full" />
             </div>
           </div>
           {/* 상품 정보 */}
-          <div className="col-span-12 md:col-span-6 lg:col-span-7">
+          <div className="col-span-12 lg:col-span-7">
             <div className="mb-2">
               <div className="flex justify-between mb-3">
                 <div>
-                  <h2 className="text-3xl font-bold text-white mb-1">{products[0].name}</h2>
+                  <div className="text-3xl font-bold text-white mb-1">{products[0].name}</div>
                   <div className="mb-1 flex">
                     <StarRating rating={rating} />
                     <span className="text-white ml-2">({products[0].reviewCount})</span>

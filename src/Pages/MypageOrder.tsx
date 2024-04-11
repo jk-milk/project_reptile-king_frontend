@@ -32,6 +32,11 @@ export const orders = [
     productName: '먹이그릇',
     productPrice: 5000,
     productQuantity: 1,
+    paymentMethod : "농협은행",
+    receiverName: "유재경",
+    receiverPhone: "010-1234-5678",
+    receiverAddress : "(39866) 경상북도 칠곡군 지천면 금송로 60 글로벌캠퍼스 A동",
+    deliveryRequest : "그 외 장소",
   },
 ];
 
@@ -58,7 +63,7 @@ function MypageOrder() {
       <div className="w-3/4 px-4">
         <div className="bg-gray-200 rounded px-5 py-4">
           <div className="font-bold text-2xl mb-3">주문내역</div>
-          <div className="bg-white rounded px-5 py-4">
+          <div className="bg-white rounded px-5 py-4">            
             {/* Orders */}
             {orders.map((order, index) => (
               <div key={order.id}>

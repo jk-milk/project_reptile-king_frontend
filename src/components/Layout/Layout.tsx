@@ -12,7 +12,17 @@ const pageTitles: { [key: string]: string[] } = {
   "mypage": ["마이페이지"],
   "mypage/order": ["주문내역"],
   "mypage/order/detail": ["주문내역"],
-  "mycage": ["MY 사육장"],
+  "mypage/order/contact": ["취소/반품/교환/환불내역"],
+  "mypage/order/contact/detail": ["취소/반품/교환/환불내역"],
+  "mypage/order/review": ["리뷰관리"],
+  "mypage/order/review/create": ["리뷰관리"],
+  "mypage/order/review/edit": ["리뷰관리"],
+  "mypage/help": ["Q & A"],
+  "mypage/help/create": ["Q & A"],
+  "mypage/help/edit": ["Q & A"],
+  "mypage/help/detail": ["Q & A"],
+  "my-cage": ["MY 사육장"],
+  "my-cage/:id": ["MY 사육장"],
 }
 
 const Layout = () => {

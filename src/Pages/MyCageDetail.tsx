@@ -2,17 +2,22 @@ import { SetStateAction, useState } from 'react';
 import { cage, reptile } from './MyCage';
 import { FaRegCirclePlay } from "react-icons/fa6";
 import { IoArrowForwardCircleOutline } from "react-icons/io5";
+import { Link } from 'react-router-dom';
 
 function MyCageDetail() {
   const firstCage = cage[0];
   const firstReptile = reptile[0];
+
   const handleEditCage = () => {
-    window.confirm('사육장을 수정하시겠습니까?');
+    window.confirm('사육장 정보를 수정하시겠습니까?');
   };
   const [selectedOption, setSelectedOption] = useState('option1');
 
   const handleOptionChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setSelectedOption(event.target.value);
+  };
+  const handleSaveMemo = () => {
+    alert(`메모가 저장되었습니다.`);
   };
 
   return (
@@ -68,7 +73,7 @@ function MyCageDetail() {
               </tbody>
             </table>
 
-            <div className="font-bold text-3xl mt-20 mb-3">현재 온습도 / 설정 온습도</div>
+            <div className="font-bold text-3xl mt-20 mb-3">현재 온·습도 / 설정 온·습도</div>
             <hr className="border-t border-gray-400 mb-2" />
             <div className="flex justify-between mt-3">
               <div className="bg-gray-300 rounded-lg shadow-md py-3 px-4 w-1/2 h-28 text-center text-4xl font-bold flex justify-center items-center">
@@ -97,8 +102,11 @@ function MyCageDetail() {
           className="w-full h-40 border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
           placeholder="메모를 입력하세요..."
         ></textarea>
+        <div className="flex justify-end">
+          <button onClick={handleSaveMemo} className="bg-green-600 hover:bg-green-400 text-white font-semibold py-1 px-4 rounded transition duration-300 mt-1">저장</button>
+        </div>
         <div className="flex justify-center">
-          <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-10 transition duration-300">목록으로 돌아가기</button>
+          <Link to="/my-cage" className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-16 transition duration-300">목록으로 돌아가기</Link>
         </div>
       </div>
     </div>

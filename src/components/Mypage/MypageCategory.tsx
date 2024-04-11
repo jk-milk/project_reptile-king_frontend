@@ -27,13 +27,13 @@ const categories = [
         title: "취소/반품/교환/환불내역"
       },
       {
+        title: "리뷰관리"
+      },
+      {
         title: "문의하기"
       },
       {
-        title: "문의내역 확인"
-      },
-      {
-        title: "리뷰관리"
+        title: "문의내역"
       },
     ],
   },
