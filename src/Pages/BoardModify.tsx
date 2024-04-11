@@ -1,36 +1,59 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { API } from "../config";
-import axios from "axios";
 import BoardCategory from "../components/Board/BoardCategory";
 import PopularPosts from "../components/Board/PopularPosts";
 import QuillEditor from "../components/Board/QuillEditor";
 import CategoryWriteDropdown from "../components/Board/CategoryWriteDropdown";
+import { apiWithAuth, apiWithoutAuth } from "../components/common/axios";
 
-function PostWrite() {
+function BoardModify() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const postId = searchParams.get("id");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [category, setCategory] = useState("카테고리 선택");
+  const category_id = searchParams.get("category");
+  const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const handleSubmit = async () => {
-    if (category === "카테고리 선택") {
-      alert("카테고리를 선택해 주세요!")
+  useEffect(() => {
+    if (category_id === null || postId === null) {
+      alert("잘못된 접근입니다!");
+      navigate("/board");
       return;
-    } else if (!title) {
+    }
+
+    const fetchPosts = async () => {
+      try {
+        const postResponse = await apiWithoutAuth.get(`${API}posts/${postId}`);
+        setTitle(postResponse.data.title);
+        setContent(postResponse.data.content);
+        const categoryResponse = await apiWithoutAuth.get(`${API}categories/${category_id}`);
+        setCategory(categoryResponse.data.title);
+      } catch (err) {
+        alert("잘못된 경로입니다!");
+        navigate("/board");
+      }
+    };
+
+    fetchPosts();
+  },[category_id, postId, navigate]);
+
+  const handleSubmit = async () => {
+    if (!title) {
       alert("제목을 입력해 주세요!")
       return;
     }
 
     const postData = {
-      category,
+      category_id,
       title,
       content,
     };
 
     try {
-      const response = await axios.post(API + "posts", postData);
+      const response = await apiWithAuth.patch(API + "posts", postData);
       console.log(response.data);
       // response로 카테고리 링크를 받아와야 함
       alert("글 작성 완료!");
@@ -83,4 +106,4 @@ function PostWrite() {
   )
 }
 
-export default PostWrite;
+export default BoardModify;

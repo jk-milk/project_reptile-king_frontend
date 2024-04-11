@@ -1,9 +1,10 @@
 import { Route, Routes } from 'react-router-dom'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 import Layout from './components/Layout/Layout'
 import Home from './Pages/Home'
-import Cage from './Pages/Cage'
 import Board from './Pages/Board'
 import BoardDetail from './Pages/BoardDetail'
+import BoardModify from './Pages/BoardModify'
 import SignUp from './Pages/SignUp'
 import SignIn from './Pages/SignIn'
 import PasswordResetPage from './Pages/PasswordResetPage'
@@ -17,36 +18,29 @@ import ProductDetails from './Pages/ProductDetails'
 import MarketCart from './Pages/MarketCart'
 import MarketPay from './Pages/MarketPay'
 import MarketPaySuccess from './Pages/MarketPaySuccess'
-import PostWrite from './Pages/PostWrite'
-import ProtectedRoute from './components/auth/ProtectedRoute'
-import MypageOrderContact from './Pages/MypageOrderContact'
-import MypageOrderContactDetail from './Pages/MypageOrderContactDetail'
-import MypageOrderReview from './Pages/MypageOrderReview'
-import MypageOrderReviewCreate from './Pages/MypageOrderReviewCreate'
-import MypageOrderReviewEdit from './Pages/MypageOrderReviewEdit'
+import BoardWrite from './Pages/BoardWrite'
+import MyCage from './Pages/MyCage'
+import MyCageDetail from './Pages/MyCageDetail'
 
 function App() {
   return (
     <Routes>
       <Route index element={<Home />} />
       <Route path='/' element={<Layout />}>
-        <Route path='cage' element={<Cage />} />
         <Route path='board' element={<Board />} />
         <Route path='board/lists' element={<Board />} />
-        <Route path='/board/view' element={<BoardDetail />} />        
+        <Route path='board/view' element={<BoardDetail />} />
         <Route path='signup' element={<SignUp />} />
         <Route path='login' element={<SignIn />} />
         <Route path='reset-password' element={<PasswordResetPage />} />
         <Route element={<ProtectedRoute />}>
+          <Route path='my-cage' element={<MyCage />} />
+          <Route path='my-cage/:id' element={<MyCageDetail />} />
           <Route path='mypage' element={<Profile />} />
           <Route path='mypage/order' element={<MypageOrder />} />
           <Route path='mypage/order/detail' element={<MypageOrderDetail />} />
-          <Route path='mypage/order/contact' element={<MypageOrderContact />} />
-          <Route path='mypage/order/contact/detail' element={<MypageOrderContactDetail />} />
-          <Route path='mypage/order/review' element={<MypageOrderReview />} />
-          <Route path='mypage/order/review/create' element={<MypageOrderReviewCreate />} />
-          <Route path='mypage/order/review/edit' element={<MypageOrderReviewEdit />} />
-          <Route path='board/write' element={<PostWrite />} />
+          <Route path='board/write' element={<BoardWrite />} />
+          <Route path='board/modify' element={<BoardModify />} />
         </Route>
       </Route>
       <Route element={<MarketLayout />}>

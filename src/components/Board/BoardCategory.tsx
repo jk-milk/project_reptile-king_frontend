@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { PostCategory } from '../../types/Board';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { API } from '../../config';
+import { apiWithoutAuth } from '../common/axios';
 
 function BoardCategory() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ function BoardCategory() {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const categoriesResponse = await axios.get(API + 'categories');
+      const categoriesResponse = await apiWithoutAuth.get(API + 'categories');
 
       setCategories(categoriesResponse.data);
     };

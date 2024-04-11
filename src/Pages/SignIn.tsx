@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../components/auth/useAuth';
 import { API } from '../config';
+import { apiWithoutAuth } from '../components/common/axios';
 
 function SignIn() {
 
@@ -25,7 +25,7 @@ function SignIn() {
 
     try {
       // 서버로 로그인 요청
-      const response = await axios.post(API+'login', {
+      const response = await apiWithoutAuth.post(API+'login', {
         email,
         password,
       });

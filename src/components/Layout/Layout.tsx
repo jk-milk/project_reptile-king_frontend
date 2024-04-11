@@ -16,6 +16,7 @@ const pageTitles: { [key: string]: string[] } = {
   "mypage/order/contact/detail": ["취소/반품/교환/환불내역"],
   "mypage/order/review": ["리뷰관리"],
   "mypage/order/review/create": ["리뷰관리"],
+  "my-cage": ["MY 사육장"],
 }
 
 const Layout = () => {

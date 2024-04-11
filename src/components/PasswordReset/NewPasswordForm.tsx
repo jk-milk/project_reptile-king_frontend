@@ -21,12 +21,13 @@ function NewPasswordForm({ onNewPasswordSubmit }: {onNewPasswordSubmit: (passwor
   };
 
   const validatePassword = (password: string, confirm: string) => {
-    const passwordRegex = /^[a-z\d!@*&-_]{8,16}$/;
+    // eslint-disable-next-line no-useless-escape
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%^&*\(\)_+-=]).{8,}$/;
     if (password === '') {
       setPasswordError('비밀번호를 입력해주세요.');
       return;
     } else if (!passwordRegex.test(password)) {
-      setPasswordError('비밀번호는 8~16자의 영소문자, 숫자, !@*&-_만 입력 가능합니다.');
+      setPasswordError('비밀번호는 8자 이상, 대소문자, 숫자, 특수문자가 포함되어야 합니다.');
       return;
     } else {
       setPasswordError('');
@@ -73,7 +74,9 @@ function NewPasswordForm({ onNewPasswordSubmit }: {onNewPasswordSubmit: (passwor
         {confirmError && <p className="text-red-500">{confirmError}</p>}
       </div>
       <div className="flex justify-center mt-16">
-        <button type="submit" className="bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300 disabled:border-gray-200 disabled:shadow-none disabled:scale-100 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">비밀번호 재설정</button>
+        <button type="submit" className="bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300 disabled:border-gray-200 disabled:shadow-none disabled:scale-100 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+        disabled={passwordError !== '' || confirmError !== ''}
+        >비밀번호 재설정</button>
       </div>
     </form>
   );

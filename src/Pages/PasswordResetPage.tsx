@@ -5,6 +5,7 @@ import VerificationCodeInput from '../components/PasswordReset/VerificationCodeI
 import NewPasswordForm from '../components/PasswordReset/NewPasswordForm';
 import axios from 'axios';
 import { API } from '../config';
+import { apiWithoutAuth } from '../components/common/axios';
 
 function PasswordResetPage() {
   const navigate = useNavigate();
@@ -15,8 +16,7 @@ function PasswordResetPage() {
     setEmail(email);
     try {
       // 서버에 이메일 전송, 인증코드 요청 로직
-      // const response = await axios.post(API+'forget-password', {
-      const response = await axios.post('http://54.180.158.4:8000/api/forget-password', {
+      const response = await apiWithoutAuth.post(API+'forget-password', {
         email,
       });
       // 로딩중 로직 추가 할 것
@@ -30,7 +30,7 @@ function PasswordResetPage() {
   const handleCodeSubmit = async (authCode: string) => {
     try {
       // 인증 코드 확인 로직
-      const response = await axios.post(API+'forget-password/verify-auth', {
+      const response = await apiWithoutAuth.post(API+'forget-password/verify-auth', {
         email,
         authCode,
       });
@@ -44,7 +44,7 @@ function PasswordResetPage() {
   const handleNewPasswordSubmit = async (password: string, password_confirmation:string) => {
     try {
       // 새 비밀번호 설정 로직
-      const response = await axios.patch(API+'forget-password/change-password', {
+      const response = await apiWithoutAuth.patch(API+'forget-password/change-password', {
         email,
         password,
         password_confirmation,
@@ -54,7 +54,11 @@ function PasswordResetPage() {
         navigate('/login'); // 성공 시 알림 띄우고 로그인 페이지로 이동
       }
     } catch (error) {
-      alert('비밀번호 재설정에 실패했습니다. 다시 시도해주세요.'); // 실패 시 알림
+      // 비밀번호가 기존과 동일할 경우, 유효성 검사 오류 경우 알림 처리
+      if (axios.isAxiosError(error)) {
+        console.error(error.response?.data.msg);
+        alert(error.response?.data.msg+". 다시 시도해주세요.");
+      }
     }
   };
 

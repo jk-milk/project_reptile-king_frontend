@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { PostCategory } from "../../types/Board";
-import axios from "axios";
 import { API } from "../../config";
+import { apiWithoutAuth } from "../common/axios";
 
 interface CategoryWriteDropdownProps {
   setCategory: (category: string) => void;
@@ -13,7 +13,7 @@ function CategoryWriteDropdown({ setCategory, setDropdownOpen }: CategoryWriteDr
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const categoriesResponse = await axios.get(API + 'categories');
+      const categoriesResponse = await apiWithoutAuth.get(API + 'categories');
       const filteredData = categoriesResponse.data.filter((category: { main_category: number | null; }) => category.main_category !== null);
       setCategories(filteredData);
     };
