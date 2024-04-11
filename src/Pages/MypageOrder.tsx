@@ -58,7 +58,7 @@ function MypageOrder() {
       <div className="w-3/4 px-4">
         <div className="bg-gray-200 rounded px-5 py-4">
           <div className="font-bold text-2xl mb-3">주문내역</div>
-          <div className="bg-white rounded px-5 py-4">
+          <div className="bg-white rounded px-5 py-4">            
             {/* Orders */}
             {orders.map((order, index) => (
               <div key={order.id}>
