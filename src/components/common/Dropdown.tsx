@@ -1,12 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 
+interface Item {
+  id: number | null;
+  name: string;
+}
 interface DropdownProps {
-  items: string[];
-  selectedItem: string;
-  setSelectedItem: (item: string) => void;
+  items: Item[];
+  selectedItem: Item;
+  setSelectedItem: (item: Item) => void;
+  disabled?: boolean;
 }
 
-function Dropdown({ items, selectedItem, setSelectedItem }: DropdownProps) {
+function Dropdown({ items, selectedItem, setSelectedItem, disabled = false }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -25,15 +30,19 @@ function Dropdown({ items, selectedItem, setSelectedItem }: DropdownProps) {
   }, []);
 
   return (
-    <div className="w-48" ref={dropdownRef} >
-      <button className="m-2 p-2 w-44 border border-gray-400 text-gray-900 bg-white focus:ring-2 focus:outline-none focus:ring-gray-300 font-semibold rounded inline-flex items-center justify-between" onClick={() => setIsOpen(!isOpen)}>
-        {selectedItem}
+    <div className="w-96" ref={dropdownRef} >
+      <button 
+        className={`m-2 p-2 w-80 border border-gray-400 text-gray-900 bg-white focus:ring-2 focus:outline-none focus:ring-gray-300 font-semibold rounded inline-flex items-center justify-between ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        disabled={disabled}
+      >
+        {selectedItem.name}
         <svg className="w-2.5 h-2.5 ms-1 mt-0.5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
           <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
         </svg>
       </button>
-      {isOpen && (
-        <ul className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow mt-1 ml-2 w-44">
+      {isOpen && !disabled && ( // 열려 있지 않거나 disabled 상태에서는 드롭다운 목록 표시 x
+        <ul className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow mt-1 ml-2 w-80">
           {items.map((item, index) => (
             <li
               key={index}
@@ -43,7 +52,7 @@ function Dropdown({ items, selectedItem, setSelectedItem }: DropdownProps) {
                 setIsOpen(false);
               }}
             >
-              {item}
+              {item.name}
             </li>
           ))}
         </ul>
