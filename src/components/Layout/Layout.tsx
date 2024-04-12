@@ -22,7 +22,6 @@ const pageTitles: { [key: string]: string[] } = {
   "mypage/help/edit": ["Q & A"],
   "mypage/help/detail": ["Q & A"],
   "my-cage": ["MY 사육장"],
-  "my-cage/:id": ["MY 사육장"],
 }
 
 const Layout = () => {
