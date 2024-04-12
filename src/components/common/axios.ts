@@ -9,7 +9,9 @@ const apiWithAuth = axios.create({
 // 인터셉터를 사용해 토큰 추가
 apiWithAuth.interceptors.request.use(function(config) {
   const token = localStorage.getItem('token');
-  config.headers.Authorization = token ? `Bearer ${token}` : '';
+  config.headers.Authorization = token ? `${token}` : '';
+  console.log(config.headers.Authorization);
+  
   return config;
 });
 
