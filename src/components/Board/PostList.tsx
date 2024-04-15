@@ -63,7 +63,12 @@ const PostList = ({ posts }: { posts: Post[] }) => {
     <div className="bg-[#f9f9f9] px-5 min-h-[50rem]">
       {posts.length === 0 ?
         <div className="min-h-96">
-          글이 없습니다.
+          <p className="pt-20 flex justify-center font-bold text-2xl">
+            아직 작성된 글이 없습니다.  
+          </p>
+          <p className="pt-10 flex justify-center">
+            첫 번째 글을 작성해 주세요!
+          </p>
         </div> :
         <>
           {posts.map((post) => (
