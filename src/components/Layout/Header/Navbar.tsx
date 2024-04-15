@@ -1,7 +1,7 @@
 import { IoMdNotifications } from "react-icons/io";
 import { FaCircleUser } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../auth/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 import { useState, useRef, useEffect } from "react";
 import { API } from "../../../config";
 import { apiWithAuth } from "../../common/axios";

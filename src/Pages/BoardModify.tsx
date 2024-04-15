@@ -4,14 +4,12 @@ import { API } from "../config";
 import BoardCategory from "../components/Board/BoardCategory";
 import PopularPosts from "../components/Board/PopularPosts";
 import QuillEditor from "../components/Board/QuillEditor";
-import CategoryWriteDropdown from "../components/Board/CategoryWriteDropdown";
 import { apiWithAuth, apiWithoutAuth } from "../components/common/axios";
 
 function BoardModify() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const postId = searchParams.get("id");
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const category_id = searchParams.get("category");
   const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
@@ -38,7 +36,7 @@ function BoardModify() {
     };
 
     fetchPosts();
-  },[category_id, postId, navigate]);
+  }, [category_id, postId, navigate]);
 
   const handleSubmit = async () => {
     if (!title) {
@@ -74,13 +72,6 @@ function BoardModify() {
           글쓰기
         </h1>
         <div className="mb-4 p-2 min-h-[35rem] bg-gray-200 rounded">
-          <button className="m-2 p-2 w-44 border border-gray-400 text-gray-900 bg-white focus:ring-2 focus:outline-none focus:ring-gray-300 font-semibold rounded inline-flex items-center justify-between" onClick={() => { setDropdownOpen(!dropdownOpen) }}>
-            {category}
-            <svg className="w-2.5 h-2.5 ms-1 mt-0.5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-            </svg>
-          </button>
-          {dropdownOpen && <CategoryWriteDropdown setCategory={setCategory} setDropdownOpen={setDropdownOpen} />}
           <div className="my-4 mx-2">
             <input
               className="p-2 w-full border border-gray-400 text-gray-900 bg-white focus:ring-2 focus:outline-none focus:ring-gray-300 rounded inline-flex items-center"
