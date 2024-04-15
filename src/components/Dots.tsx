@@ -10,7 +10,7 @@ const Dots = ({ numberOfPages, currentPage, movePageTo }: DotsProps) => {
       {[...Array(numberOfPages)].map((_, index) => (
         <div
           key={index}
-          className={`w-5 h-5 rounded-full ${index === currentPage ? 'bg-black' : 'bg-white'} my-4 cursor-pointer`}
+          className={`w-5 h-5 rounded-full ${index === currentPage ? 'bg-white' : 'bg-gray-200 bg-opacity-60'} my-4 cursor-pointer`}
           onClick={() => movePageTo(index)}
         />
       ))}
