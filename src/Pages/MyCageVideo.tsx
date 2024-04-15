@@ -34,7 +34,7 @@ function MyCageVideo() {
           <FaRegCirclePlay className="text-8xl text-gray-700" />
         </div>
         <div className="flex justify-center">
-          <Link to="/my-cage" className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-8 transition duration-300">목록으로 돌아가기</Link>
+          <Link to="/my-cage/:id" className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-8 transition duration-300">상세정보로 돌아가기</Link>
         </div>
       </div>
     </div>
