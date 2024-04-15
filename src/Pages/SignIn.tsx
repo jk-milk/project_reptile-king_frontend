@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../components/auth/useAuth';
+import { useAuth } from '../hooks/useAuth';
 import { API } from '../config';
 import { apiWithoutAuth } from '../components/common/axios';
 
