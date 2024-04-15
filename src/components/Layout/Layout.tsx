@@ -22,6 +22,13 @@ const pageTitles: { [key: string]: string[] } = {
   "mypage/help/edit": ["Q & A"],
   "mypage/help/detail": ["Q & A"],
   "my-cage": ["MY 사육장"],
+  "my-cage/:id": ["MY 사육장"],
+  "my-cage/:id/video": ["MY 사육장"],
+  "my-cage/add": ["MY 사육장"],
+  "my-cage/edit": ["MY 사육장"],
+  "my-cage/reptile": ["MY 사육장"],
+  "my-cage/reptile/edit": ["MY 사육장"],
+  "my-cage/reptile/add": ["MY 사육장"],
 }
 
 const Layout = () => {
