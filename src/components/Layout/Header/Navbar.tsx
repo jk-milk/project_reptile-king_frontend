@@ -1,11 +1,12 @@
 import { IoMdNotifications } from "react-icons/io";
 import { FaCircleUser } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/useAuth";
 import { useState, useRef, useEffect } from "react";
+import { API } from "../../../config";
+import { apiWithAuth } from "../../common/axios";
 
 function Navbar() {
-  const navigate = useNavigate();
   const { state, dispatch } = useAuth();
   const { isAuthenticated } = state;
   const [isHovered, setIsHovered] = useState(false);
@@ -29,9 +30,16 @@ function Navbar() {
     };
   }, [dropdownRef]);
 
-  const handleLogout = () => {
-    dispatch({type: 'LOGOUT', token: null});
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      const response = await apiWithAuth.post(API + "logout");
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      dispatch({type: 'LOGOUT', token: null});
+      location.replace("/");
+    }
   };
 
   return (

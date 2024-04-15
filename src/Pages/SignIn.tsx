@@ -31,7 +31,8 @@ function SignIn() {
       });
 
       // 로그인 성공 시, JWT 토큰 저장
-      dispatch({ type: 'LOGIN', token: response.data.accessToken });
+      const accessToken = response.headers['authorization'];
+      dispatch({ type: 'LOGIN', token: accessToken });
 
       // 로그인 성공 후 로직 처리
       setEmail('');

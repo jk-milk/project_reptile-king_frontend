@@ -28,6 +28,7 @@ import MypageOrderReviewEdit from './Pages/MypageOrderReviewEdit'
 import MypageHelpCreate from './Pages/MypageHelpCreate'
 import MypageHelpEdit from './Pages/MypageHelpEdit'
 import MypageHelpDetail from './Pages/MypageHelpDetail'
+import MyCageVideo from './Pages/MyCageVideo'
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path='my-cage' element={<MyCage />} />
           <Route path='my-cage/:id' element={<MyCageDetail />} />
+          <Route path='my-cage/:id/video' element={<MyCageVideo />} />
           <Route path='mypage' element={<Profile />} />
           <Route path='mypage/order' element={<MypageOrder />} />
           <Route path='mypage/order/detail' element={<MypageOrderDetail />} />
