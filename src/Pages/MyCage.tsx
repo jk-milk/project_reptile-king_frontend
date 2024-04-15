@@ -9,6 +9,7 @@ export const cage = [
     cageHumidity: 20,
     cageSetHumidity: 30,
     cageVideo: "",
+    cageMemo: "은별이랑 미란이집",
     cageImage: "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjA1MzFfMjE5%2FMDAxNjUzOTU2OTI3NjQ1.AMLOgtUX_iqkt_xkFX97KiHUMkgplwQ4HSYV9tMH4kYg.eZI6QxK18ync5XPrBfqOS7IlNiBs8lRfe-jeZrCTit0g.JPEG.thgml9341%2FIMG_4906.jpg&type=sc960_832"
   },
   {
@@ -42,10 +43,18 @@ export const reptile = [
 
 function MyCage() {
   const handleAddCage = () => {
-    window.confirm('사육장을 추가하시겠습니까?');
+    const confirmSubmit = window.confirm('사육장을 추가하시겠습니까?');
+    if (confirmSubmit) {
+      window.location.href = '/my-cage/add';
+    }
   };
+
   const handleAddReptile = () => {
-    window.confirm('파충류를 추가하시겠습니까?');
+    const confirmSubmit = window.confirm('파충류를 추가하시겠습니까?');
+    if (confirmSubmit) {
+      window.location.href = '/my-cage/reptile/add'
+    }
+    
   };
 
   return (
@@ -102,9 +111,11 @@ function MyCage() {
                 <div className="text-lg font-semibold mb-2">{repItem.repName}</div>
                 <div className="text-gray-600 mb-2">{repItem.repType}</div>
                 <div className="text-gray-600 mb-2">나이 : {repItem.repAge}</div>
-                <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
-                  파충류 상세보기
-                </button>
+                <Link to="/my-cage/reptile">
+                  <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
+                    파충류 상세보기
+                  </button>
+                </Link>
               </div>
             </div>
           ))}
