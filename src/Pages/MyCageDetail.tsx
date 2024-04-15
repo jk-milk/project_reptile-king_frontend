@@ -9,13 +9,18 @@ function MyCageDetail() {
   const firstReptile = reptile[0];
 
   const handleEditCage = () => {
-    window.confirm('사육장 정보를 수정하시겠습니까?');
+    const confirmSubmit = window.confirm('사육장 정보를 수정하시겠습니까?');
+    if (confirmSubmit) {
+      window.location.href = '/my-cage/edit';
+    }
   };
+
   const [selectedOption, setSelectedOption] = useState('option1');
 
   const handleOptionChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setSelectedOption(event.target.value);
   };
+  
   const handleSaveMemo = () => {
     alert(`메모가 저장되었습니다.`);
   };
@@ -93,14 +98,17 @@ function MyCageDetail() {
           <FaRegCirclePlay className="text-8xl text-gray-700" />
         </div>
         <div className="flex items-center justify-end mt-1">
-          <span className='font-semibold text-xl'>CCTV 확인하러 가기</span><IoArrowForwardCircleOutline className="ml-1 text-3xl" />
+          <Link to="/my-cage/video" className="flex items-center">
+            <span className='font-semibold text-xl mr-1'>CCTV 확인하러 가기</span>
+            <IoArrowForwardCircleOutline className="text-3xl" />
+          </Link>
         </div>
 
         <div className="font-bold text-3xl mt-20">메모</div>
         <hr className="border-t border-gray-400 mt-3 mb-3" />
         <textarea
-          className="w-full h-40 border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
-          placeholder="메모를 입력하세요..."
+          className="w-full h-40 border border-gray-300 rounded-md p-2 focus:outline-none"
+          placeholder="메모를 입력해 주세요..."
         ></textarea>
         <div className="flex justify-end">
           <button onClick={handleSaveMemo} className="bg-green-600 hover:bg-green-400 text-white font-semibold py-1 px-4 rounded transition duration-300 mt-1">저장</button>
