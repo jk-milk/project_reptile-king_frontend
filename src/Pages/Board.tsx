@@ -1,20 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { RiFileList2Line } from "react-icons/ri";
 import PostList from '../components/Board/PostList';
-import { Post } from '../types/Board';
 import BoardCategory from '../components/Board/BoardCategory';
 import FilterButtons from '../components/Board/FilterButtons';
 import PopularPosts from '../components/Board/PopularPosts';
-import { API } from '../config';
-import { FaSearch } from 'react-icons/fa';
 import Pagination from '../components/Board/Pagination';
-import { apiWithoutAuth } from '../components/common/axios';
+import { apiWithAuth, apiWithoutAuth } from '../components/common/axios';
+import { RiFileList2Line } from "react-icons/ri";
+import { FaSearch } from 'react-icons/fa';
+import { API } from '../config';
+import { Post } from '../types/Board';
+import { PostCategory } from '../types/Board';
+import { SelectedCategory } from '../types/Board';
+import { Category } from '../types/Category';
 
 function Board() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [category, setCategory] = useState<string>(); // 현재 카테고리
+  const [categories, setCategories] = useState<PostCategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<SelectedCategory>({ name: "전체 게시글", id: null }); // 선택된 세부 카테고리
   const [title, setTitle] = useState<string>(); // 게시글 상단 문자열
 
   const [posts, setPosts] = useState<Post[]>([]);
@@ -26,18 +30,51 @@ function Board() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const LIKES_NUMBER = 5; // 인기글 조건: 좋아요 수 LIKES_NUMBER 이상인 글들이 인기글
-  const POSTS_PER_PAGE = 6; // 한 페이지에 보여줄 게시글 수
+  const POSTS_PER_PAGE = 10; // 한 페이지에 보여줄 게시글 수
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [totalPosts, setTotalPosts] = useState(0); // 게시판에 표시되어야 할 전체 게시글 수
 
+  // 카테고리 가져오기  
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await apiWithoutAuth.get(API + 'categories');
+      // posts만 뽑기
+      const posts = response.data.filter((data: Category) => data.division === 'posts');
+
+      // 각 post에 속하는 subPosts를 찾아서 연결
+      const postsWithSubPosts = posts.map((post: Category) => {
+        const subPosts = response.data.filter((data: Category) => Number(data.parent_id) === post.id);
+        return { ...post, subPosts };
+      });
+
+      // console.log(postsWithSubPosts);
+      setCategories(postsWithSubPosts);
+    };
+
+    fetchCategories();
+  }, []);
+
+  // 카테고리를 선택하면 이동
+  const selectCategoryAndNavigate = (id: number) => {
+    const category = categories.find((category) => category.id === id);
+
+    if (category) {
+      setSelectedCategory({ name: category.name, id: category.id });
+      navigate(`/board/lists?category=${id}`);
+    }
+  };
+
+  // url과 일치하는 카테고리 id를 찾아서 name을 게시판 상단에 출력
+  // url과 일치하는 카테고리의 글만 가져오기 - 카테고리, 검색어가 쿼리스트링으로 주어짐 + 정렬기준 + 페이지네이션
+  
   // 링크 설정
   useEffect(() => {
-    const category = searchParams.get("category")
-    if (category === null) {
-      setCategory("all");
+    const selectedCategory = searchParams.get("selectedCategory")
+    if (selectedCategory === null) {
+      setSelectedCategory({ name: "전체 게시글", id: null });
       return;
     }
-    setCategory(category)
+    setSelectedCategory({ name: selectedCategory, id: null })
   }, [searchParams])
 
   // 글 페이지 설정
@@ -48,21 +85,23 @@ function Board() {
 
   // 카테고리에 맞춰서 게시판 상단 문자열 변경
   useEffect(() => {
-    if (category === "all") {
+    if (selectedCategory.name === "all") {
       setTitle("전체 게시글");
       return;
     }
     const categoryToTitle = async () => {
       try {
-        const categoryData = await apiWithoutAuth.get(`${API}categories?link=${category}`);
-        setTitle(categoryData.data[0].title);
+        const categoryData = await apiWithAuth.get(`${API}categories?name=${selectedCategory}`);
+        // console.log(categoryData.data);
+        
+        setTitle(categoryData.data[0].name);
       } catch (err) {
-        // 잘못된 경로일 시 게시판 메인 페이지로 이동
+        // 잘못된 경로일 시 게시판 메인 페이지로 이동 
         navigate("/board");
       }
     }
     categoryToTitle();
-  }, [category, navigate]);
+  }, [selectedCategory, navigate]);
 
   // 쿼리스트링의 카테고리에 맞는 게시글만 가져오기
   useEffect(() => {
@@ -77,9 +116,9 @@ function Board() {
       // 카테고리 필터링
       // 카테고리가 전체일 경우 url에 아무것도 추가하지 않으므로 전체 글 가져오기
       // 카테고리가 undefined가 아니고 전체가 아닐 경우: 지정되어 있을 경우
-      if (category && category !== "all") {
+      if (selectedCategory && selectedCategory.name !== "all") {
         // 카테고리 아이디 검색
-        const categoryData = await apiWithoutAuth.get(`${API}categories?link=${category}`);
+        const categoryData = await apiWithoutAuth.get(`${API}categories?link=${selectedCategory.id}`);
         const category_id = categoryData.data[0].id;
         // 검색한 카테고리 아이디를 이용하여 글 목록에서 해당 카테고리 글만 인출
         url += `category_id=${category_id}&`;
@@ -110,7 +149,7 @@ function Board() {
       }
     };
     fetchPosts();
-  }, [category, currentPage, searchParams]);
+  }, [selectedCategory, currentPage, searchParams]);
 
   // 전체글, 인기글 필터링
   if (filter === '인기글') {
@@ -159,7 +198,7 @@ function Board() {
             검색
           </button>
         </div>
-        <BoardCategory />
+        <BoardCategory categories={categories} selectedCategory={selectedCategory} onSelectCategory={selectCategoryAndNavigate} />
       </div>
       <div className="laptop:w-[47.6875rem] w-mainContent">
         <h1 className="text-white text-2xl mt-5 pb-5">
