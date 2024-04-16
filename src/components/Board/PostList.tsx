@@ -60,7 +60,7 @@ const PostList = ({ posts }: { posts: Post[] }) => {
   }
 
   return (
-    <div className="bg-[#f9f9f9] px-5 min-h-[50rem]">
+    <div className="bg-[#f9f9f9] px-5 min-h-[50rem] border-t border-black">
       {posts.length === 0 ?
         <div className="min-h-96">
           <p className="pt-20 flex justify-center font-bold text-2xl">
