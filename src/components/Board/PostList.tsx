@@ -6,7 +6,7 @@ import { Post } from "../../types/Board";
 // import { FaCommentDots } from "react-icons/fa";
 import { BiSolidLike } from "react-icons/bi";
 
-const PostList = ({ posts }: { posts: Post[] }) => {
+const PostList = ({ posts }: { posts: Post[] | null }) => {
   // 실제 api와 연결해서 댓글 수 출력하는 코드 임시
   // const [comments, setComments] = useState<{ [key: number]: Comment[] }>({});
 
@@ -59,11 +59,27 @@ const PostList = ({ posts }: { posts: Post[] }) => {
     }
   }
 
+  // posts가 null일 때 == 아직 서버에서 응답이 오지 않았을 때 로딩 화면을 출력
+  if (posts === null) {
+    return (
+      <div className="bg-[#f9f9f9] pt-20 px-5 min-h-[50rem] border-t border-black flex justify-center">
+        <div>
+          <p className="text-xl font-semibold">로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-[#f9f9f9] px-5 min-h-[50rem]">
+    <div className="bg-[#f9f9f9] px-5 min-h-[50rem] border-t border-black">
       {posts.length === 0 ?
         <div className="min-h-96">
-          글이 없습니다.
+          <p className="pt-20 flex justify-center font-bold text-2xl">
+            아직 작성된 글이 없습니다.  
+          </p>
+          <p className="pt-10 flex justify-center">
+            첫 번째 글을 작성해 주세요!
+          </p>
         </div> :
         <>
           {posts.map((post) => (
