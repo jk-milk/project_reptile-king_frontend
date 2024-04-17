@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { apiWithAuth } from '../components/common/axios';
 import { API } from '../config';
+import { useNavigate } from 'react-router-dom';
 
 function MyReptileAdd() {
+  const navigate = useNavigate();
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [reptileName, setReptileName] = useState('');
   const [species, setSpecies] = useState('');
@@ -27,12 +29,13 @@ function MyReptileAdd() {
   };
 
   const handleCancel = () => {
-    window.location.href = '/my-cage';
+    const confirmSubmit = confirm('파충류 등록을 취소하시겠습니까?');
+    if (confirmSubmit)
+      navigate('/my-cage');
   };
 
   const handleSubmit = async () => {
-    const confirmSubmit = window.confirm('파충류 등록을 완료하시겠습니까?');
-    console.log(uploadedImages);
+    const confirmSubmit = confirm('파충류 등록을 완료하시겠습니까?');
     
     if (confirmSubmit) {
       const formData = new FormData();
@@ -46,16 +49,14 @@ function MyReptileAdd() {
       });
 
       try {
-        const response = await apiWithAuth.post(API+'reptiles', formData, {
+        await apiWithAuth.post(API+'reptiles', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log(response);
-        
-        
+
         alert('파충류가 성공적으로 등록되었습니다.');
-        // window.location.href = '/my-cage';
+        navigate('/my-cage');
       } catch (error) {
         console.error(error);
         alert('파충류 등록에 실패했습니다.');
