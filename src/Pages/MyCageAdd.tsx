@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { apiWithAuth } from '../components/common/axios';
 import { API } from '../config';
 import { Reptile } from '../types/Cage';
+import { useNavigate } from 'react-router-dom';
 
 function MyCageAdd() {
+  const navigate = useNavigate();
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [cageName, setCageName] = useState('');
   const [memo, setMemo] = useState('');
@@ -51,7 +53,9 @@ function MyCageAdd() {
   };
 
   const handleCancel = () => {
-    window.location.href = '/my-cage';
+    const confirmCancel = window.confirm('사육장 등록을 취소하시겠습니까?');
+    if (confirmCancel)
+      navigate('/my-cage');
   };
 
   const handleSubmit = async () => {
@@ -80,7 +84,7 @@ function MyCageAdd() {
         console.log(response);
 
         alert('사육장이 성공적으로 등록되었습니다.');
-        // window.location.href = '/my-cage';
+        navigate('/my-cage');
       } catch (error) {
         console.error(error);
         alert('사육장 등록에 실패했습니다.');
@@ -116,14 +120,16 @@ function MyCageAdd() {
                   <td>
                     {reptiles === null ? (
                       // 로딩 중인 경우
-                      <p className="w-1/6 h-10 p-2 border border-gray-300 rounded mb-2 text-center">로딩 중...</p>
+                      <p className="w-fit h-10 p-2 border border-gray-300 rounded mb-2 text-center">로딩 중...</p>
                     ) : reptiles.length === 0 ? (
                       // 데이터가 없는 경우
-                      <div className="w-1/6 h-10 p-2 border border-gray-300 rounded mb-2 text-center">
-                        <p>데이터가 없습니다.</p>
+                      <div className='flex h-10 mb-2'>
+                        <div className="w-fit p-2 border border-gray-300 rounded text-center">
+                          <p>등록된 파충류가 없습니다.</p>
+                        </div>
                         <button
-                          onClick={() => window.location.href = '/reptiles/add'}
-                          className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
+                          onClick={() => navigate('/my-cage/reptile/add')}
+                          className="ms-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
                         >
                           파충류 추가하기
                         </button>
@@ -139,7 +145,7 @@ function MyCageAdd() {
                         className="w-1/6 h-10 p-2 border border-gray-300 rounded mb-2">
                         <option value="" disabled>파충류 선택</option>
                         {reptiles.map((reptile) => (
-                          <option key={reptile.name} value={reptile.name}>{reptile.name}</option>
+                          <option key={reptile.name} value={reptile.serial_code}>{reptile.name}</option>
                         ))}
                       </select>
                     )}
