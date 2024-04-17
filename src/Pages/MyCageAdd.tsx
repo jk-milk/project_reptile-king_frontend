@@ -1,7 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { apiWithAuth } from '../components/common/axios';
+import { API } from '../config';
+import { Reptile } from '../types/Cage';
 
 function MyCageAdd() {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [cageName, setCageName] = useState('');
+  const [memo, setMemo] = useState('');
+  const [temp, setTemp] = useState<number>(20);
+  const [hum, setHum] = useState<number>(20);
+  const [serialCode, setSerialCode] = useState('');
+  const [reptiles, setReptiles] = useState<Reptile[] | null>(null);
+  const [reptileSerialCode, setReptileSerialCode] = useState('');
+
+  // 사용자의 파충류 목록 가져오기
+  useEffect(() => {
+    const fetchReptiles = async () => {
+      try {
+        const response = await apiWithAuth.get(API + "reptiles");
+        // console.log(response);
+        // setCategories(postsCategories);
+        if (response.data.msg === "데이터 없음") {
+          setReptiles([]);
+        } else {
+          setReptiles(response.data.reptiles);
+        }
+      } catch {
+        console.error("서버 오류");
+        alert("서버 오류! 잠시 후 다시 시도해 주세요.");
+      }
+    };
+
+    fetchReptiles();
+  }, []);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -23,10 +54,37 @@ function MyCageAdd() {
     window.location.href = '/my-cage';
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const confirmSubmit = window.confirm('사육장 등록을 완료하시겠습니까?');
+    console.log(uploadedImages);
+
     if (confirmSubmit) {
-      window.location.href = '/my-cage';
+      const formData = new FormData();
+      formData.append('name', cageName);
+      formData.append('setTemp', temp.toString());
+      formData.append('setHum', hum.toString());
+      formData.append('serialCode', serialCode);
+      formData.append('memo', memo);
+      formData.append('reptileSerialCode', reptileSerialCode);
+
+      uploadedImages.forEach(image => {
+        formData.append('images[]', image);
+      });
+
+      try {
+        const response = await apiWithAuth.post(API + 'cages', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log(response);
+
+        alert('사육장이 성공적으로 등록되었습니다.');
+        // window.location.href = '/my-cage';
+      } catch (error) {
+        console.error(error);
+        alert('사육장 등록에 실패했습니다.');
+      }
     }
   };
 
@@ -47,6 +105,7 @@ function MyCageAdd() {
                       type="text"
                       className="w-full h-10 p-2 border border-gray-300 rounded mt-2 mb-2"
                       placeholder="사육장 이름을 입력해 주세요..."
+                      onChange={(e) => setCageName(e.target.value)}
                     ></input>
                   </td>
                 </tr>
@@ -55,10 +114,35 @@ function MyCageAdd() {
                     파충류 선택
                   </td>
                   <td>
-                    <select className="w-1/6 h-10 p-2 border border-gray-300 rounded mb-2">
-                      <option>은별이</option>
-                      <option>미란이</option>
-                    </select>
+                    {reptiles === null ? (
+                      // 로딩 중인 경우
+                      <p className="w-1/6 h-10 p-2 border border-gray-300 rounded mb-2 text-center">로딩 중...</p>
+                    ) : reptiles.length === 0 ? (
+                      // 데이터가 없는 경우
+                      <div className="w-1/6 h-10 p-2 border border-gray-300 rounded mb-2 text-center">
+                        <p>데이터가 없습니다.</p>
+                        <button
+                          onClick={() => window.location.href = '/reptiles/add'}
+                          className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
+                        >
+                          파충류 추가하기
+                        </button>
+                      </div>
+                    ) : (
+                      // 데이터가 있는 경우, select와 options를 표시
+                      <select
+                        value={reptileSerialCode}
+                        onChange={(event) => {
+                          setReptileSerialCode(event.target.value);
+                          console.log(event.target.value); // 선택된 값 출력
+                        }}
+                        className="w-1/6 h-10 p-2 border border-gray-300 rounded mb-2">
+                        <option value="" disabled>파충류 선택</option>
+                        {reptiles.map((reptile) => (
+                          <option key={reptile.name} value={reptile.name}>{reptile.name}</option>
+                        ))}
+                      </select>
+                    )}
                   </td>
                 </tr>
                 <tr>
@@ -80,13 +164,52 @@ function MyCageAdd() {
                       multiple
                     />
                     <span className="ml-6">{uploadedImages.length}/3</span>
-                    <span className="text-gray-400 text-sm ml-6">사진은 최대 20MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
-
+                    <span className="text-gray-400 text-sm ml-6">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="w-1/4 text-lg text-center">
+                    설정 온도
                   </td>
+                  <td>
+                    <input
+                      type="number"
+                      className="w-full h-10 p-2 border border-gray-300 rounded mt-2 mb-2"
+                      placeholder="온도를 입력해 주세요..."
+                      value={temp}
+                      onChange={(e) => setTemp(Number(e.target.value))}
+                    ></input>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="w-1/4 text-lg text-center">
+                    설정 습도
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      className="w-full h-10 p-2 border border-gray-300 rounded mt-2 mb-2"
+                      placeholder="습도를 입력해 주세요..."
+                      value={hum}
+                      onChange={(e) => setHum(Number(e.target.value))}
+                    ></input>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="w-1/4 text-lg text-center">
+                    시리얼 코드
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      className="w-full h-10 p-2 border border-gray-300 rounded mt-2 mb-2"
+                      placeholder="시리얼 코드를 입력해 주세요..."
+                      value={serialCode}
+                      onChange={(e) => setSerialCode(e.target.value)}
+                    ></input>
+                  </td>
+                </tr>
+                <tr>
                   <td>
                     {uploadedImages.length > 0 && (
                       <div className="flex mt-3">
@@ -103,6 +226,7 @@ function MyCageAdd() {
                     <textarea
                       className="w-full h-40 border border-gray-300 rounded-md p-2 focus:outline-none mt-3 mb-3"
                       placeholder="메모를 입력해 주세요..."
+                      onChange={(e) => setMemo(e.target.value)}
                     ></textarea>
                   </td>
                 </tr>
