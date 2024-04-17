@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import ReactSelect from 'react-select';
-import ProductItem from "../components/Market/ProductItem";
-import { categories } from '../components/Market/MarketCategoryList';
+import StarRating from "../components/Market/StarRating";
+import axios from "axios";
+import { GoodsCategory } from '../types/Market';
+import { ProductItem } from "../types/Market";
+import { MdArrowForwardIos } from "react-icons/md";
+import { MdArrowBackIosNew } from "react-icons/md";
+
+const itemsPerPage = 10;
 
 export const products = [
   { id: 1, name: "소형 케이지", price: 10000, imageUrl: "https://via.placeholder.com/150", rating: 2, reviewCount: 22 },
@@ -17,74 +23,122 @@ export const products = [
   { id: 10, name: "소형 케이지", price: 98000, imageUrl: "https://via.placeholder.com/150", rating: 3, reviewCount: 15 },
 ];
 
-function Product() {
-  const [totalProducts, setTotalProducts] = useState(products.length);
-  const [sortOption, setSortOption] = useState("latest");
-  const [sortedProducts, setSortedProducts] = useState([...products]);
-  const { categoryName } = useParams();
+const Product: React.FC = () => {
+  const [totalProducts, setTotalProducts] = useState<ProductItem[]>([]);
+  const [sortOption, setSortOption] = useState<string>("latest");
+  const [sortedProducts, setSortedProducts] = useState<ProductItem[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const { categoryId } = useParams();
+  const [categoryName, setCategoryName] = useState<string>("");
+  const [categories, setCategories] = useState<GoodsCategory[]>([]);
 
   useEffect(() => {
-    const fetchTotalProducts = async () => {
-      const total = await fetch("http://localhost:8000/api/goods");
-      const totalProducts = await total.json();
-      setTotalProducts(totalProducts);
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://54.180.158.4:8000/api/categories");
+        const goods = response.data.filter((data: GoodsCategory) => data.division === 'goods');
+        setCategories(goods);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
     };
 
-    fetchTotalProducts();
+    fetchCategories();
   }, []);
 
-  const sortProducts = (option: string) => {
-    const sorted = [...products];
-    switch (option) {
-      case "latest":
-        sorted.sort((a, b) => b.id - a.id);
-        break;
-      case "lowPrice":
-        sorted.sort((a, b) => a.price - b.price);
-        break;
-      case "highPrice":
-        sorted.sort((a, b) => b.price - a.price);
-        break;
-      case "highReview":
-        sorted.sort((a, b) => b.reviewCount - a.reviewCount);
-        break;
-      default:
-        break;
+  useEffect(() => {
+    const category = categories.find(category => String(category.id) === String(categoryId));
+    if (category) {
+      setCategoryName(category.name);
     }
-    setSortedProducts(sorted);
-  };
+  }, [categoryId, categories]);
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://54.180.158.4:8000/api/goods");
+        const productsWithThumbnail = response.data.map((product: ProductItem) => ({
+          ...product,
+          imageUrl: JSON.parse(product.img_urls).thumbnail,
+        }));
+        const categoryIdNumber = categoryId ? parseInt(categoryId) : undefined;
+        const categoryProduct = productsWithThumbnail.filter((product: ProductItem) => {
+          return product.category_id === categoryIdNumber;
+        });
+        setTotalProducts(categoryProduct);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [categoryId]);
+
+  useEffect(() => {
+    const sortProducts = (option: string) => {
+      const sorted = [...totalProducts];
+      switch (option) {
+        case "latest":
+          sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+          break;
+        case "lowPrice":
+          sorted.sort((a, b) => a.price - b.price);
+          break;
+        case "highPrice":
+          sorted.sort((a, b) => b.price - a.price);
+          break;
+        case "highReview":
+          sorted.sort((a, b) => b.reviewCount - a.reviewCount);
+          break;
+        default:
+          break;
+      }
+      setSortedProducts(sorted);
+    };
+
     sortProducts(sortOption);
-  }, [sortOption]);
+  }, [sortOption, totalProducts]);
 
   const handleSortOptionChange = (option: string) => {
     setSortOption(option);
   };
 
+  // 페이지별 상품 목록 가져오기
+  const getPaginatedProducts = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedProducts.slice(startIndex, endIndex);
+  };
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
-    <div className="pt-12 pb-24 mx-auto max-w-screen-lg">
+    <div className="pt-12 pb-10 mx-auto max-w-screen-lg">
       <div className="mb-20">
         <p className="text-xl text-white font-bold mb-4">카테고리</p>
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
             <Link
-              key={category.title}
-              to={category.path}
+              key={category.id}
+              to={`/market/${category.id}`}
               className="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-500 transition-colors duration-300 flex items-center justify-center"
             >
               <span className="mr-2">
-                <img src={category.image} className="h-6 w-6" />
+                <img src={category.img_url} className="h-6 w-6" />
               </span>
-              <span>{category.title}</span>
+              <span>{category.name}</span>
             </Link>
           ))}
         </div>
       </div>
+
       <p className="text-3xl text-white font-bold flex justify-center pb-10">{categoryName}</p>
       <div className="flex justify-between items-center mb-10">
         <div>
-          <p className="text-xl text-white">총 <span className="font-bold">{totalProducts}</span>개의 상품이 있습니다.</p>
+          <p className="text-xl text-white">총 <span className="font-bold">{totalProducts.length}</span>개의 상품이 있습니다.</p>
         </div>
         <ReactSelect
           className="w-40"
@@ -100,18 +154,54 @@ function Product() {
       </div>
       <hr className="border-t border-green-700 mb-10" />
       <div className="grid sm:grid-cols-5 gap-4">
-        {sortedProducts.map((product, index) => (
-          <Link
-            key={product.id}
-            to={`/market/${categoryName}/${index + 1}`}
-          >
-            <ProductItem product={product} />
+        {getPaginatedProducts().map((product) => (
+          <Link key={product.id} to={`/market/${categoryId}/product_${product.id}`}>
+            <div className="p-1 mx-auto max-w-xs mb-20">
+              <img src={product.imageUrl} alt={product.name} className="w-56 h-72 object-cover mb-2" />
+              <div className="text-center">
+                <h3 className="text-white mb-1">{product.name}</h3>
+                <p className="text-white">{product.price.toLocaleString()}원</p>
+                <div className="flex items-center justify-center mt-2">
+                  <StarRating rating={product.rating} />
+                  <span className="text-white ml-1">({product.reviewCount})</span>
+                </div>
+              </div>
+            </div>
           </Link>
         ))}
       </div>
+
+      <div className="flex justify-center mt-20">
+        {currentPage && (
+          <button
+            className="mx-1 px-3 py-1 rounded-md focus:outline-none bg-green-700 hover:bg-green-500 transition-colors duration-200 text-white w-10 h-10"
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            {<MdArrowBackIosNew />}
+          </button>
+        )}
+        {[...Array(Math.ceil(sortedProducts.length / itemsPerPage))].map((_, index) => (
+          <button
+            key={index}
+            className={`mx-1 px-3 py-1 rounded-md focus:outline-none ${currentPage === index + 1 ? "bg-green-500 text-white" : "bg-green-700 text-white"
+              } w-10 h-10`}
+            onClick={() => handlePageChange(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
+        {currentPage && (
+          <button
+            className="mx-1 px-3 py-1 rounded-md focus:outline-none bg-green-700 hover:bg-green-500 transition-colors duration-200 text-white w-10 h-10"
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            {<MdArrowForwardIos />}
+          </button>
+        )}
+      </div>
+
     </div>
   );
-
-}
+};
 
 export default Product;
