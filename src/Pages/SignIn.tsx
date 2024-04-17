@@ -32,10 +32,9 @@ function SignIn() {
 
       // 로그인 성공 시, JWT 토큰 저장
       const accessToken = response.headers['authorization'];
-      const currentTime = new Date().toISOString(); // 현재 시간을 ISO 형식 문자열로
-      console.log(currentTime);
+      const currentTime = Date.now().toString();
       dispatch({ 
-        type: 'LOGIN', 
+        type: 'LOGIN',
         token: accessToken,
         tokenTime: currentTime,
       });

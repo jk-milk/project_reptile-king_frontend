@@ -7,9 +7,9 @@ const apiWithAuth = axios.create({
 });
 
 // 토큰 갱신 함수
-const refreshToken = async (token: string) => {
+const refreshToken = async (token: string) => {  
   try {
-    const response = await axios.get(`${API}refresh-token`, {
+    const response = await axios.post(`${API}refresh-token`, {}, {
       headers: {
         Authorization: token
       }
@@ -17,7 +17,7 @@ const refreshToken = async (token: string) => {
     // 응답 헤더에서 'Refresh-Token' 값을 가져와 localStorage에 저장
     const refreshToken = response.headers['Refresh-Token'];
     localStorage.setItem('token', refreshToken);
-    localStorage.setItem('tokenTime', new Date().getTime().toString()); // 갱신 시간 업데이트
+    localStorage.setItem('tokenTime', new Date().getTime().toString()); // 갱신 시간 업데이트    
   } catch (error) {
     if (error instanceof AxiosError) {  // Refresh-Token을 받을 수 있는 시간조차 지나서 다시 로그인해야 하는 경우
       console.error(error.response?.data.msg, error);
@@ -32,8 +32,9 @@ const refreshToken = async (token: string) => {
 apiWithAuth.interceptors.request.use(async function(config) {
   const token = localStorage.getItem('token'); // accessToken
   const tokenTime = localStorage.getItem('tokenTime'); // 토큰이 처음 저장되었을 때의 시간
-  const now = new Date().getTime();
-
+  const now = Date.now();
+  // console.log(token);
+  
   // 로그인 후 50분이 지났는지 확인
   if (token && tokenTime && (now - parseInt(tokenTime, 10)) > 3000000) { // 3000000ms = 50분
     await refreshToken(token);
