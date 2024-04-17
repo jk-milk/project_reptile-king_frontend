@@ -71,8 +71,8 @@ function App() {
       </Route>
       <Route element={<MarketLayout />}>
         <Route path='market' element={<Market />} />
-        <Route path='market/:categoryName' element={<Product />} />
-        <Route path='market/:categoryName/:id' element={<ProductDetails />} />
+        <Route path='market/:categoryId' element={<Product />} />
+        <Route path='market/:categoryId/:id' element={<ProductDetails />} />
         <Route path='market/cart' element={<MarketCart />} />
         <Route path='market/pay' element={<MarketPay />} />
         <Route path='market/pay/success' element={<MarketPaySuccess />} />
