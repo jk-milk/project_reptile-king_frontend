@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { apiWithAuth } from "../components/common/axios";
 import { API } from "../config";
-import { Cage } from "../types/Cage";
+import { Cage, Reptile } from "../types/Cage";
 
 export const cage = [
   {
@@ -46,18 +46,30 @@ export const reptile = [
 ]
 
 function MyCage() {
+  const navigate = useNavigate();
   const [cages, setCages] = useState<Cage[] | null>(null);
+  const [reptiles, setReptiles] = useState<Reptile[] | null>(null);
+  
 
   // 개인 케이지 목록 가져오기
   useEffect(() => {
     const fetchCages = async () => {
       const response = await apiWithAuth.get(API + "cages");
-      console.log(response.data.cages);
-      setCages(response.data.cages);
+      console.log(response);
+      if (response.data.cages === "데이터 없음") {
+        setCages([]);
+        
+      } else {
+        setCages(response.data.cages);
+      }
     };
 
     fetchCages();
   }, []);
+  useEffect(() => {
+    console.log(cages);
+  }, [cages]);
+  
 
   // cages가 변경되면 각각 현재 온도와 습도 가져오기
   useEffect(() => {
@@ -67,13 +79,12 @@ function MyCage() {
         const tempHumPromises = cages.map((cage) =>
           apiWithAuth.get(`${API}cages/${cage.serial_code}/temperature-humidity`)
         );
-  
+
         try {
           // 모든 요청이 완료될 때까지 기다림
           const responses = await Promise.all(tempHumPromises);
           console.log(responses);
-          
-  
+
           // // 각 사육장에 대한 응답에서 온습도 정보를 추출하여 cages 상태에 저장
           // const updatedCages = cages.map((cage, index) => ({
           //   ...cage,
@@ -81,30 +92,37 @@ function MyCage() {
           //   cageTemperature: responses[index].data.temperature,
           //   cageHumidity: responses[index].data.humidity,
           // }));
-  
+
           // setCages(updatedCages);
         } catch (error) {
           console.error("온습도 정보를 가져오는데 실패했습니다.", error);
         }
       }
     };
-  
     fetchCagesTempHum();
   }, [cages]); // cages 상태가 변경될 때마다 실행
 
+  // 파충류 목록 가져오기
+  useEffect(() => {
+    const fetchCages = async () => {
+      const response = await apiWithAuth.get(API + "reptiles");
+      console.log(response);
+      if (response.data.reptiles === "데이터 없음") {
+        setReptiles([]);
+      } else {
+        setReptiles(response.data.reptiles);
+      }
+    };
+
+    fetchCages();
+  }, []);
+
   const handleAddCage = () => {
-    const confirmSubmit = window.confirm('사육장을 추가하시겠습니까?');
-    if (confirmSubmit) {
-      window.location.href = '/my-cage/add';
-    }
+    navigate('/my-cage/add');
   };
 
   const handleAddReptile = () => {
-    const confirmSubmit = window.confirm('파충류를 추가하시겠습니까?');
-    if (confirmSubmit) {
-      window.location.href = '/my-cage/reptile/add'
-    }
-
+    navigate('/my-cage/reptile/add');
   };
 
   return (
@@ -123,13 +141,16 @@ function MyCage() {
           {cages === null ? (
             <p>로딩 중...</p>
           ) : cages.length === 0 ? (
-            <p>데이터가 없습니다.</p>
+            <>
+              <p>사육장이 없습니다.</p>
+              <p>사육장을 추가해 주세요!</p>
+            </>
           ) :
-          cages.map((cage) => (
+            cages.map((cage) => (
               <div key={cage.id} className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
                 {cage.img_urls ?
-                  <img src={cage.img_urls[0]} alt={cage.name} className="w-full h-auto rounded-t" />
-                  : <img src="" alt={cage.name} className="w-full h-auto rounded-t" /> // 
+                  <img src={cage.img_urls[0]} alt={cage.name} className="w-full h-48 object-cover rounded-t" />
+                  : <img src="" alt={cage.name} className="w-full h-48 object-cover rounded-t" />
                 }
                 <div className="p-4">
                   <div className="text-lg font-semibold mb-2">{cage.name}</div>
@@ -142,7 +163,7 @@ function MyCage() {
                   </Link>
                 </div>
               </div>
-          ))}
+            ))}
         </div>
         <div className="flex justify-between items-center mb-3 mt-24">
           <div className="font-bold text-3xl">내 파충류</div>
@@ -154,19 +175,32 @@ function MyCage() {
           </button>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {reptile.map((repItem) => (
+          {reptiles === null ? (
+            <p>로딩 중...</p>
+          ) : reptiles.length === 0 ? (
+            <>
+              <p>파충류가 없습니다.</p>
+              <p>파충류를 추가해 주세요!</p>
+            </>
+          ) : reptiles.map((repItem) => (
             <div key={repItem.id} className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
-              {repItem.repImage && (
+              {repItem.img_urls ? (
                 <img
-                  src={repItem.repImage}
-                  alt={repItem.repName}
+                  src={repItem.img_urls[0]}
+                  alt={repItem.name}
                   className="w-full h-48 object-cover rounded-t"
                 />
-              )}
+              ) : 
+                <img
+                  src=''
+                  alt={repItem.name}
+                  className="w-full h-48 object-cover rounded-t"
+                />
+                }
               <div className="p-4">
-                <div className="text-lg font-semibold mb-2">{repItem.repName}</div>
-                <div className="text-gray-600 mb-2">{repItem.repType}</div>
-                <div className="text-gray-600 mb-2">나이 : {repItem.repAge}</div>
+                <div className="text-lg font-semibold mb-2">{repItem.name}</div>
+                <div className="text-gray-600 mb-2">{repItem.species}</div>
+                <div className="text-gray-600 mb-2">나이 : {repItem.birth }</div>
                 <Link to="/my-cage/reptile">
                   <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
                     파충류 상세보기
