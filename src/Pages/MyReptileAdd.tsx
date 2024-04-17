@@ -1,7 +1,14 @@
 import { useState } from 'react';
+import { apiWithAuth } from '../components/common/axios';
+import { API } from '../config';
 
 function MyReptileAdd() {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [reptileName, setReptileName] = useState('');
+  const [species, setSpecies] = useState('');
+  const [gender, setGender] = useState('');
+  const [birth, setBirth] = useState('');
+  const [memo, setMemo] = useState('');
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -23,10 +30,36 @@ function MyReptileAdd() {
     window.location.href = '/my-cage';
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const confirmSubmit = window.confirm('파충류 등록을 완료하시겠습니까?');
+    console.log(uploadedImages);
+    
     if (confirmSubmit) {
-      window.location.href = '/my-cage';
+      const formData = new FormData();
+      formData.append('name', reptileName);
+      formData.append('species', species);
+      formData.append('gender', gender);
+      formData.append('birth', birth);
+      formData.append('memo', memo);
+      uploadedImages.forEach(image => {
+        formData.append('images[]', image);
+      });
+
+      try {
+        const response = await apiWithAuth.post(API+'reptiles', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log(response);
+        
+        
+        alert('파충류가 성공적으로 등록되었습니다.');
+        // window.location.href = '/my-cage';
+      } catch (error) {
+        console.error(error);
+        alert('파충류 등록에 실패했습니다.');
+      }
     }
   };
 
@@ -47,6 +80,7 @@ function MyReptileAdd() {
                       type="text"
                       className="w-full h-10 p-2 border border-gray-300 rounded mt-2 mb-2"
                       placeholder="파충류 이름을 입력해 주세요..."
+                      onChange={(e) => setReptileName(e.target.value)}
                     ></input>
                   </td>
                 </tr>
@@ -59,18 +93,33 @@ function MyReptileAdd() {
                       type="text"
                       className="w-full h-10 p-2 border border-gray-300 rounded mb-2"
                       placeholder="파충류 종류를 입력해 주세요..."
+                      onChange={(e) => setSpecies(e.target.value)}
                     ></input>
                   </td>
                 </tr>
                 <tr>
                   <td className="w-1/4 text-lg text-center">
-                    나이
+                    생년월일
                   </td>
                   <td>
                     <input
                       type="text"
                       className="w-full h-10 p-2 border border-gray-300 rounded mb-2"
-                      placeholder="파충류 나이를 입력해 주세요..."
+                      placeholder="파충류 생년월일을 입력해 주세요..."
+                      onChange={(e) => setBirth(e.target.value)}
+                    ></input>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="w-1/4 text-lg text-center">
+                    성별
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      className="w-full h-10 p-2 border border-gray-300 rounded mb-2"
+                      placeholder="파충류 성별를 입력해 주세요..."
+                      onChange={(e) => setGender(e.target.value)}
                     ></input>
                   </td>
                 </tr>
@@ -94,7 +143,6 @@ function MyReptileAdd() {
                     />
                     <span className="ml-6">{uploadedImages.length}/3</span>
                     <span className="text-gray-400 text-sm ml-6">사진은 최대 20MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
-
                   </td>
                 </tr>
                 <tr>
@@ -116,6 +164,7 @@ function MyReptileAdd() {
                     <textarea
                       className="w-full h-40 border border-gray-300 rounded-md p-2 focus:outline-none mt-3 mb-3"
                       placeholder="메모를 입력해 주세요..."
+                      onChange={(e) => setMemo(e.target.value)}
                     ></textarea>
                   </td>
                 </tr>
