@@ -37,7 +37,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case 'LOGIN':{
       localStorage.setItem('token', action.token!);
-      localStorage.setItem('tokenTime', action.tokenTime!); // 로컬 스토리지에 tokenTime 저장
+      localStorage.setItem('tokenTime', action.tokenTime!);
       return {
         ...state,
         isAuthenticated: true,
