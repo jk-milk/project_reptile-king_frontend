@@ -9,7 +9,7 @@ const apiWithAuth = axios.create({
 // 토큰 갱신 함수
 const refreshToken = async (token: string) => {
   try {
-    const response = await axios.get(`${API}/refresh-token`, {
+    const response = await axios.get(`${API}refresh-token`, {
       headers: {
         Authorization: token
       }
