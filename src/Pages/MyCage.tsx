@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { apiWithAuth } from "../components/common/axios";
+import { API } from "../config";
+import { Cage } from "../types/Cage";
 
 export const cage = [
   {
@@ -33,7 +37,7 @@ export const reptile = [
     repImage: "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzAzMzFfMjE2%2FMDAxNjgwMjY5NDI1MzU4.KrGKqXLzZSjS4GskWqVp-lqaUpPb9AJj9gQWMFU0CSEg.MWhaqAGDzP3bOoieuhaRqQrdhrLRe4TxmPv9-ULIthcg.PNG.tyttang%2FIMG_1792.JPG&type=sc960_832"
   },
   {
-    id: 1,
+    id: 2,
     repName: "미란이",
     repType: "레오파드 게코",
     repAge: 4,
@@ -42,6 +46,52 @@ export const reptile = [
 ]
 
 function MyCage() {
+  const [cages, setCages] = useState<Cage[] | null>(null);
+
+  // 개인 케이지 목록 가져오기
+  useEffect(() => {
+    const fetchCages = async () => {
+      const response = await apiWithAuth.get(API + "cages");
+      console.log(response.data.cages);
+      setCages(response.data.cages);
+    };
+
+    fetchCages();
+  }, []);
+
+  // cages가 변경되면 각각 현재 온도와 습도 가져오기
+  useEffect(() => {
+    const fetchCagesTempHum = async () => {
+      if (cages) {
+        // Promise.all을 사용하여 모든 사육장에 대한 온습도 요청을 동시에 처리
+        const tempHumPromises = cages.map((cage) =>
+          apiWithAuth.get(`${API}cages/${cage.serial_code}/temperature-humidity`)
+        );
+  
+        try {
+          // 모든 요청이 완료될 때까지 기다림
+          const responses = await Promise.all(tempHumPromises);
+          console.log(responses);
+          
+  
+          // // 각 사육장에 대한 응답에서 온습도 정보를 추출하여 cages 상태에 저장
+          // const updatedCages = cages.map((cage, index) => ({
+          //   ...cage,
+          //   // 예시 응답 구조에 따라 온습도 정보를 저장
+          //   cageTemperature: responses[index].data.temperature,
+          //   cageHumidity: responses[index].data.humidity,
+          // }));
+  
+          // setCages(updatedCages);
+        } catch (error) {
+          console.error("온습도 정보를 가져오는데 실패했습니다.", error);
+        }
+      }
+    };
+  
+    fetchCagesTempHum();
+  }, [cages]); // cages 상태가 변경될 때마다 실행
+
   const handleAddCage = () => {
     const confirmSubmit = window.confirm('사육장을 추가하시겠습니까?');
     if (confirmSubmit) {
@@ -54,7 +104,7 @@ function MyCage() {
     if (confirmSubmit) {
       window.location.href = '/my-cage/reptile/add'
     }
-    
+
   };
 
   return (
@@ -70,22 +120,28 @@ function MyCage() {
           </button>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {cage.map((cageItem) => (
-            cageItem.cageImage && (
-              <div key={cageItem.id} className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
-                <img src={cageItem.cageImage} alt={cageItem.cageName} className="w-full h-auto rounded-t" />
+          {cages === null ? (
+            <p>로딩 중...</p>
+          ) : cages.length === 0 ? (
+            <p>데이터가 없습니다.</p>
+          ) :
+          cages.map((cage) => (
+              <div key={cage.id} className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
+                {cage.img_urls ?
+                  <img src={cage.img_urls[0]} alt={cage.name} className="w-full h-auto rounded-t" />
+                  : <img src="" alt={cage.name} className="w-full h-auto rounded-t" /> // 
+                }
                 <div className="p-4">
-                  <div className="text-lg font-semibold mb-2">{cageItem.cageName}</div>
-                  <div className="text-gray-600 mb-2">온도 : {cageItem.cageTemperature}°C</div>
-                  <div className="text-gray-600 mb-2">습도 : {cageItem.cageHumidity}%</div>
-                  <Link to={`/my-cage/${cageItem.id}`}>
-                    <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
+                  <div className="text-lg font-semibold mb-2">{cage.name}</div>
+                  {/* <div className="text-gray-600 mb-2">온도 : {cage.cageTemperature}°C</div>
+                  <div className="text-gray-600 mb-2">습도 : {cage.cageHumidity}%</div> */}
+                  <Link to={`/my-cage/${cage.id}`}>
+                    <button className="bg-blue-500 hover:bg-blue-40 0 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
                       사육장 상세보기
                     </button>
                   </Link>
                 </div>
               </div>
-            )
           ))}
         </div>
         <div className="flex justify-between items-center mb-3 mt-24">
