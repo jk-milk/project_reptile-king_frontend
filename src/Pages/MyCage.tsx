@@ -49,7 +49,7 @@ function MyCage() {
   const navigate = useNavigate();
   const [cages, setCages] = useState<Cage[] | null>();
   const [reptiles, setReptiles] = useState<Reptile[] | null>();
-    
+
   // 개인 케이지 목록 가져오기
   useEffect(() => {
     const fetchCages = async () => {
@@ -64,7 +64,7 @@ function MyCage() {
 
     fetchCages();
   }, []);
-  
+
   // cages가 변경되면 각각 현재 온도와 습도 가져오기
   useEffect(() => {
     const fetchCagesTempHum = async () => {
@@ -119,7 +119,7 @@ function MyCage() {
     navigate('/my-cage/reptile/add');
   };
 
-  function calculateAge(birth:string){
+  function calculateAge(birth: string) {
     const birthDate = new Date(birth);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -138,15 +138,15 @@ function MyCage() {
       // 나이가 1살 미만일 경우
       let month = (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate.getMonth());
       if (dayDifference < 0) {
-          month--;
+        month--;
       }
       if (month > 0) {
-          return `${month}개월`;
+        return `${month}개월`;
       } else {
-          // 1개월 미만일 경우
-          const oneDay = 1000 * 60 * 60 * 24; // 하루 -> 밀리초 변환
-          const days = Math.floor((today.getTime() - birthDate.getTime()) / oneDay);
-          return `${days}일`;
+        // 1개월 미만일 경우
+        const oneDay = 1000 * 60 * 60 * 24; // 하루 -> 밀리초 변환
+        const days = Math.floor((today.getTime() - birthDate.getTime()) / oneDay);
+        return `${days}일`;
       }
     }
   }
@@ -173,22 +173,30 @@ function MyCage() {
             </>
           ) :
             cages.map((cage) => (
-              <div key={cage.id} className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
-                {cage.img_urls ?
-                  <img src={cage.img_urls[0]} alt={cage.name} className="w-full h-48 object-cover rounded-t" />
-                  : <img src="" alt={cage.name} className="w-full h-48 object-cover rounded-t" />
-                }
-                <div className="p-4">
-                  <div className="text-lg font-semibold mb-2">{cage.name}</div>
-                  {/* <div className="text-gray-600 mb-2">온도 : {cage.cageTemperature}°C</div>
+              <Link to={`/my-cage/${cage.id}`} key={cage.id}>
+                <div className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
+                  {cage.img_urls ?
+                    <img 
+                      src={cage.img_urls[0]} 
+                      alt={cage.name} 
+                      className="w-full h-48 object-cover rounded-t"
+                    /> : 
+                    <img 
+                      src='' // 이미지가 없을 경우 디폴트 이미지 추가
+                      alt={cage.name} 
+                      className="w-full h-48 object-cover rounded-t"
+                    />
+                  }
+                  <div className="p-4">
+                    <div className="text-lg font-semibold mb-2">{cage.name}</div>
+                    {/* <div className="text-gray-600 mb-2">온도 : {cage.cageTemperature}°C</div>
                   <div className="text-gray-600 mb-2">습도 : {cage.cageHumidity}%</div> */}
-                  <Link to={`/my-cage/${cage.id}`}>
                     <button className="bg-blue-500 hover:bg-blue-40 0 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
                       사육장 상세보기
                     </button>
-                  </Link>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
         </div>
         <div className="flex justify-between items-center mb-3 mt-24">
@@ -209,31 +217,31 @@ function MyCage() {
               <p>파충류를 추가해 주세요!</p>
             </>
           ) : reptiles.map((reptile) => (
-            <div key={reptile.id} className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
-              {reptile.img_urls ? (
-                <img
-                  src={reptile.img_urls[0]}
-                  alt={reptile.name}
-                  className="w-full h-48 object-cover rounded-t"
-                />
-              ) : 
-                <img
-                  src=''
-                  alt={reptile.name}
-                  className="w-full h-48 object-cover rounded-t"
-                />
+            <Link to={`/my-cage/reptile/${reptile.id}`} key={reptile.id} >
+              <div className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
+                {reptile.img_urls ? 
+                  <img
+                    src={reptile.img_urls[0]}
+                    alt={reptile.name}
+                    className="w-full h-48 object-cover rounded-t"
+                  /> :
+                  <img
+                    src='' // 이미지가 없을 경우 디폴트 이미지 추가
+                    alt={reptile.name}
+                    className="w-full h-48 object-cover rounded-t"
+                  />
                 }
-              <div className="p-4">
-                <div className="text-lg font-semibold mb-2">{reptile.name}</div>
-                <div className="text-gray-600 mb-2">{reptile.species}</div>
-                <div className="text-gray-600 mb-2">나이 : {calculateAge(reptile.birth)}</div>
-                <button 
-                  onClick={()=>navigate(`/my-cage/reptile/${reptile.id}`)}
-                  className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
-                  파충류 상세보기
-                </button>
+                <div className="p-4">
+                  <div className="text-lg font-semibold mb-2">{reptile.name}</div>
+                  <div className="text-gray-600 mb-2">{reptile.species}</div>
+                  <div className="text-gray-600 mb-2">나이 : {calculateAge(reptile.birth)}</div>
+                  <button
+                    className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
+                    파충류 상세보기
+                  </button>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
