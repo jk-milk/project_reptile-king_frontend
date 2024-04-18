@@ -141,8 +141,8 @@ function MarketPay() {
                 orderName: "소형 케이지",
                 customerName: "파충KING",
                 customerEmail: "reptileking@gmail.com",
-                successUrl: `${window.location.origin}/success`,
-                failUrl: `${window.location.origin}/fail`,
+                successUrl: `${window.location.origin}/market/pay/success`,
+                failUrl: `${window.location.origin}/market/pay/fail`,
               })
             } catch (err) {
               console.log(err)
