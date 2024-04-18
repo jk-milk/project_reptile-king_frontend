@@ -47,18 +47,16 @@ export const reptile = [
 
 function MyCage() {
   const navigate = useNavigate();
-  const [cages, setCages] = useState<Cage[] | null>(null);
-  const [reptiles, setReptiles] = useState<Reptile[] | null>(null);
-  
-
+  const [cages, setCages] = useState<Cage[] | null>();
+  const [reptiles, setReptiles] = useState<Reptile[] | null>();
+    
   // 개인 케이지 목록 가져오기
   useEffect(() => {
     const fetchCages = async () => {
       const response = await apiWithAuth.get(API + "cages");
       console.log(response);
-      if (response.data.cages === "데이터 없음") {
-        setCages([]);
-        
+      if (response.data.msg === "데이터 없음") {
+        setCages(null);
       } else {
         setCages(response.data.cages);
       }
@@ -66,11 +64,7 @@ function MyCage() {
 
     fetchCages();
   }, []);
-  useEffect(() => {
-    console.log(cages);
-  }, [cages]);
   
-
   // cages가 변경되면 각각 현재 온도와 습도 가져오기
   useEffect(() => {
     const fetchCagesTempHum = async () => {
@@ -107,8 +101,8 @@ function MyCage() {
     const fetchCages = async () => {
       const response = await apiWithAuth.get(API + "reptiles");
       console.log(response);
-      if (response.data.reptiles === "데이터 없음") {
-        setReptiles([]);
+      if (response.data.msg === "데이터 없음") {
+        setReptiles(null);
       } else {
         setReptiles(response.data.reptiles);
       }
@@ -125,6 +119,38 @@ function MyCage() {
     navigate('/my-cage/reptile/add');
   };
 
+  function calculateAge(birth:string){
+    const birthDate = new Date(birth);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    const dayDifference = today.getDate() - birthDate.getDate();
+
+    // 현재 월이 태어난 월보다 작을 때 or 월은 같고 일이 작을 때
+    if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
+      age--;
+    }
+
+    if (age > 0) {
+      // 나이가 1살 이상일 때
+      return `${age}살`;
+    } else {
+      // 나이가 1살 미만일 경우
+      let month = (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate.getMonth());
+      if (dayDifference < 0) {
+          month--;
+      }
+      if (month > 0) {
+          return `${month}개월`;
+      } else {
+          // 1개월 미만일 경우
+          const oneDay = 1000 * 60 * 60 * 24; // 하루 -> 밀리초 변환
+          const days = Math.floor((today.getTime() - birthDate.getTime()) / oneDay);
+          return `${days}일`;
+      }
+    }
+  }
+
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
       <div className="bg-white rounded px-5 py-4">
@@ -138,9 +164,9 @@ function MyCage() {
           </button>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {cages === null ? (
+          {cages === undefined ? (
             <p>로딩 중...</p>
-          ) : cages.length === 0 ? (
+          ) : cages === null ? (
             <>
               <p>사육장이 없습니다.</p>
               <p>사육장을 추가해 주세요!</p>
@@ -175,37 +201,37 @@ function MyCage() {
           </button>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {reptiles === null ? (
+          {reptiles === undefined ? (
             <p>로딩 중...</p>
-          ) : reptiles.length === 0 ? (
+          ) : reptiles === null ? (
             <>
               <p>파충류가 없습니다.</p>
               <p>파충류를 추가해 주세요!</p>
             </>
-          ) : reptiles.map((repItem) => (
-            <div key={repItem.id} className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
-              {repItem.img_urls ? (
+          ) : reptiles.map((reptile) => (
+            <div key={reptile.id} className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
+              {reptile.img_urls ? (
                 <img
-                  src={repItem.img_urls[0]}
-                  alt={repItem.name}
+                  src={reptile.img_urls[0]}
+                  alt={reptile.name}
                   className="w-full h-48 object-cover rounded-t"
                 />
               ) : 
                 <img
                   src=''
-                  alt={repItem.name}
+                  alt={reptile.name}
                   className="w-full h-48 object-cover rounded-t"
                 />
                 }
               <div className="p-4">
-                <div className="text-lg font-semibold mb-2">{repItem.name}</div>
-                <div className="text-gray-600 mb-2">{repItem.species}</div>
-                <div className="text-gray-600 mb-2">나이 : {repItem.birth }</div>
-                <Link to="/my-cage/reptile">
-                  <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
-                    파충류 상세보기
-                  </button>
-                </Link>
+                <div className="text-lg font-semibold mb-2">{reptile.name}</div>
+                <div className="text-gray-600 mb-2">{reptile.species}</div>
+                <div className="text-gray-600 mb-2">나이 : {calculateAge(reptile.birth)}</div>
+                <button 
+                  onClick={()=>navigate(`/my-cage/reptile/${reptile.id}`)}
+                  className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
+                  파충류 상세보기
+                </button>
               </div>
             </div>
           ))}
