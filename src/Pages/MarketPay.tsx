@@ -187,7 +187,25 @@ function MarketPay() {
       {/* 결제버튼 */}
       <div className="flex justify-center mt-10">
         <button
+<<<<<<< HEAD
           onClick={handleOrder}
+=======
+          onClick={async () => {
+            const paymentWidget = paymentWidgetRef.current
+            try {
+              await paymentWidget?.requestPayment({
+                orderId: nanoid(),
+                orderName: "소형 케이지",
+                customerName: "파충KING",
+                customerEmail: "reptileking@gmail.com",
+                successUrl: `${window.location.origin}/market/pay/success`,
+                failUrl: `${window.location.origin}/market/pay/fail`,
+              })
+            } catch (err) {
+              console.log(err)
+            }
+          }}
+>>>>>>> fce378c864e689c9b3377ad048623391d1c2efbc
           className="bg-pink-700 text-white text-2xl font-bold py-3 px-9 rounded-lg hover:bg-pink-600 focus:outline-none focus:bg-pink-600"
         >
           {(product && product.price) ? `${(product.price + 3000).toLocaleString()}원 결제하기` : '결제하기'}
