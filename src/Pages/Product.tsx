@@ -155,7 +155,7 @@ const Product: React.FC = () => {
       <hr className="border-t border-green-700 mb-10" />
       <div className="grid sm:grid-cols-5 gap-4">
         {getPaginatedProducts().map((product) => (
-          <Link key={product.id} to={`/market/${categoryId}/product_${product.id}`}>
+          <Link key={product.id} to={`/market/${categoryId}/${product.id}`}>
             <div className="p-1 mx-auto max-w-xs mb-20">
               <img src={product.imageUrl} alt={product.name} className="w-56 h-72 object-cover mb-2" />
               <div className="text-center">

@@ -2,8 +2,6 @@ import { useState } from 'react';
 import MypageCategory from '../components/Mypage/MypageCategory';
 import MypageOrderItem from '../components/Mypage/MypageOrderItem';
 import { orders } from './MypageOrder';
-import { IoIosArrowForward } from 'react-icons/io';
-import { Link } from 'react-router-dom';
 
 function MypageOrderDetail() {
   const [selectedSubCategory, setSelectedSubCategory] = useState('마이 페이지'); // 선택된 세부 카테고리
