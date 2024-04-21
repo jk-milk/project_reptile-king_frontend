@@ -1,4 +1,6 @@
-export function calculateAge(birth: string) {
+export function calculateAge(birth: string | undefined) {
+  if (!birth) return "알 수 없음";
+  
   const birthDate = new Date(birth);
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
