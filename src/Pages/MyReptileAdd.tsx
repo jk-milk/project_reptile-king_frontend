@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { apiWithAuth } from '../components/common/axios';
 import { API } from '../config';
 import { useNavigate } from 'react-router-dom';
+import ImageWithDeleteButton from '../components/Board/ImageWithDeleteButton';
 
 function MyReptileAdd() {
   const navigate = useNavigate();
@@ -28,15 +29,26 @@ function MyReptileAdd() {
     }
   };
 
+  const handleDeleteImage = (index: number) => {
+    setUploadedImages((currentImages) => currentImages.filter((_, i) => i !== index));
+  };
+
   const handleCancel = () => {
     const confirmSubmit = confirm('파충류 등록을 취소하시겠습니까?');
     if (confirmSubmit)
-      navigate('/my-cage');
+      navigate(-1);
   };
 
   const handleSubmit = async () => {
+    if (!reptileName) {
+      alert("이름을 입력해 주세요!")
+    }
+    if (!species) {
+      alert("종을 입력해 주세요!")
+    }
+
     const confirmSubmit = confirm('파충류 등록을 완료하시겠습니까?');
-    
+
     if (confirmSubmit) {
       const formData = new FormData();
       formData.append('name', reptileName);
@@ -49,14 +61,14 @@ function MyReptileAdd() {
       });
 
       try {
-        await apiWithAuth.post(API+'reptiles', formData, {
+        await apiWithAuth.post(API + 'reptiles', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
 
         alert('파충류가 성공적으로 등록되었습니다.');
-        navigate('/my-cage');
+        navigate(-1);
       } catch (error) {
         console.error(error);
         alert('파충류 등록에 실패했습니다.');
@@ -65,127 +77,118 @@ function MyReptileAdd() {
   };
 
   return (
-    <div>
-      <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
-        <div className="bg-white rounded-lg shadow-md px-5 py-4">
-          <div className="font-bold text-3xl mb-3">파충류 등록</div>
-          <div className="flex items-center mt-2">
-            <table className="w-full">
-              <tbody>
-                <tr>
-                  <td className="w-1/4 text-lg text-center">
-                    이름
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      className="w-full h-10 p-2 border border-gray-300 rounded mt-2 mb-2"
-                      placeholder="파충류 이름을 입력해 주세요..."
-                      onChange={(e) => setReptileName(e.target.value)}
-                    ></input>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="w-1/4 text-lg text-center">
-                    종
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      className="w-full h-10 p-2 border border-gray-300 rounded mb-2"
-                      placeholder="파충류 종류를 입력해 주세요..."
-                      onChange={(e) => setSpecies(e.target.value)}
-                    ></input>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="w-1/4 text-lg text-center">
-                    생년월일
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      className="w-full h-10 p-2 border border-gray-300 rounded mb-2"
-                      placeholder="파충류 생년월일을 입력해 주세요..."
-                      onChange={(e) => setBirth(e.target.value)}
-                    ></input>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="w-1/4 text-lg text-center">
-                    성별
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      className="w-full h-10 p-2 border border-gray-300 rounded mb-2"
-                      placeholder="파충류 성별를 입력해 주세요..."
-                      onChange={(e) => setGender(e.target.value)}
-                    ></input>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="w-1/4 text-lg text-center">사진 첨부</td>
-                  <td>
-                    <button
-                      className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded"
-                      onClick={() => document.getElementById('imageUpload')?.click()}
-                      disabled={uploadedImages.length >= 3}
-                    >
-                      사진 첨부
-                    </button>
-                    <input
-                      id="imageUpload"
-                      type="file"
-                      className="hidden"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      multiple
-                    />
-                    <span className="ml-6">{uploadedImages.length}/3</span>
-                    <span className="text-gray-400 text-sm ml-6">사진은 최대 20MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                  </td>
-                  <td>
-                    {uploadedImages.length > 0 && (
-                      <div className="flex mt-3">
-                        {uploadedImages.map((image, index) => (
-                          <img key={index} src={URL.createObjectURL(image)} alt={`Uploaded Image ${index + 1}`} className="w-52 h-40 mr-2" />
-                        ))}
-                      </div>
-                    )}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="w-1/4 text-lg text-center">메모</td>
-                  <td>
-                    <textarea
-                      className="w-full h-40 border border-gray-300 rounded-md p-2 focus:outline-none mt-3 mb-3"
-                      placeholder="메모를 입력해 주세요..."
-                      onChange={(e) => setMemo(e.target.value)}
-                    ></textarea>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+    <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
+      <div className="bg-white rounded-lg shadow-md px-5 py-4">
+        <div className="font-bold text-3xl mb-3">파충류 등록</div>
+        <div className="grid grid-cols-4 gap-4 mt-2">
+          <div className="text-lg col-span-1 flex justify-center items-center">이름</div>
+          <input
+            type="text"
+            className="col-span-3 p-2 border border-gray-300 rounded"
+            placeholder="파충류 이름을 입력해 주세요..."
+            onChange={(e) => setReptileName(e.target.value)}
+          />
+
+          <div className="text-lg col-span-1 flex justify-center items-center">종</div>
+          <input
+            type="text"
+            className="col-span-3 p-2 border border-gray-300 rounded"
+            placeholder="파충류 종류를 입력해 주세요..."
+            onChange={(e) => setSpecies(e.target.value)}
+          ></input>
+
+          <div className="text-lg col-span-1 flex justify-center items-center">생년월일</div>
+          <input
+            type="date"
+            className="w-40 col-span-3 p-2 border border-gray-300 rounded"
+            onChange={(e) => setBirth(e.target.value)}
+          ></input>
+
+          <div className="text-lg col-span-1 flex justify-center items-center">성별</div>
+          <div className="col-span-3">
+            <div className="flex">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="M"
+                  checked={gender === 'M'}
+                  onChange={(e) => setGender(e.target.value)}
+                  className="h-5 w-5 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="ml-2 mr-4 pb-0.5 text-gray-700">Male</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="F"
+                  checked={gender === 'F'}
+                  onChange={(e) => setGender(e.target.value)}
+                  className="h-5 w-5 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="ml-2 pb-0.5 text-gray-700">Female</span>
+              </label>
+            </div>
           </div>
-          <div className="flex justify-center mt-3">
+
+          <div className="text-lg col-span-1 flex justify-center items-center">사진 첨부</div>
+          <div className="col-span-3">
             <button
-              className="hover:bg-red-200 bg-red-500 text-white font-bold py-1 px-4 rounded mr-6 self-center"
-              onClick={handleCancel}
+              className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded"
+              onClick={() => document.getElementById('imageUpload')?.click()}
+              disabled={uploadedImages.length >= 3}
             >
-              취소
+              사진 첨부
             </button>
-            <button
-              className="hover:bg-blue-200 bg-blue-500 text-white font-bold py-1 px-4 rounded self-center"
-              onClick={handleSubmit}
-            >
-              등록
-            </button>
+            <input
+              id="imageUpload"
+              type="file"
+              className="hidden"
+              accept="image/*"
+              onChange={handleImageUpload}
+              multiple
+            />
+            <span className="ml-6">{uploadedImages.length}/3</span>
+            <span className="text-gray-400 text-sm ml-6">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
           </div>
+
+          {uploadedImages.length > 0 && (
+            <>
+              <div className="col-span-1"></div>
+              <div className="col-span-3 flex mt-3">
+                {uploadedImages.map((image, index) => (
+                  <ImageWithDeleteButton
+                    key={index}
+                    src={URL.createObjectURL(image)}
+                    alt={`Uploaded Image ${index + 1}`}
+                    onDelete={() => handleDeleteImage(index)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+
+          <div className="text-lg col-span-1 flex justify-center items-center">메모</div>
+          <textarea
+            className="col-span-3 h-40 border border-gray-300 rounded-md p-2 focus:outline-none mt-3 mb-3"
+            placeholder="메모를 입력해 주세요..."
+            onChange={(e) => setMemo(e.target.value)}
+          ></textarea>
+        </div>
+        <div className="flex justify-center mt-3">
+          <button
+            className="hover:bg-red-200 bg-red-500 text-white font-bold py-1 px-4 rounded mr-6 self-center"
+            onClick={handleCancel}
+          >
+            취소
+          </button>
+          <button
+            className="hover:bg-blue-200 bg-blue-500 text-white font-bold py-1 px-4 rounded self-center"
+            onClick={handleSubmit}
+          >
+            등록
+          </button>
         </div>
       </div>
     </div>

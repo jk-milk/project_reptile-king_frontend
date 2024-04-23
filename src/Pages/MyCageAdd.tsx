@@ -184,19 +184,23 @@ function MyCageAdd() {
               <span className="ml-6">{uploadedImages.length}/3</span>
               <span className="text-gray-400 text-sm ml-6">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
             </div>
+
             {uploadedImages.length > 0 && (
-              <div className="col-span-4 flex mt-3">
-                {uploadedImages.map((image, index) => (
-                  <ImageWithDeleteButton
-                    key={index}
-                    src={URL.createObjectURL(image)}
-                    alt={`Uploaded Image ${index + 1}`}
-                    onDelete={() => handleDeleteImage(index)}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="col-span-1"></div>
+                <div className="col-span-3 flex mt-3">
+                  {uploadedImages.map((image, index) => (
+                    <ImageWithDeleteButton
+                      key={index}
+                      src={URL.createObjectURL(image)}
+                      alt={`Uploaded Image ${index + 1}`}
+                      onDelete={() => handleDeleteImage(index)}
+                    />
+                  ))}
+                </div>
+              </>
             )}
-            
+
             <div className="text-lg col-span-1 flex justify-center items-center">
               시리얼 코드
             </div>
