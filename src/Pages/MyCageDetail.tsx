@@ -7,6 +7,8 @@ import { API } from '../config';
 import { AvgTempHum, Cage, Reptile } from '../types/Cage';
 import { calculateAge } from '../utils/CalculateAge';
 import LineChart from '../components/Cage/LineChart';
+import { FiRefreshCw } from 'react-icons/fi';
+import { IoMdCreate } from 'react-icons/io';
 
 function MyCageDetail() {
   const navigate = useNavigate();
@@ -20,8 +22,8 @@ function MyCageDetail() {
   const [curTem, setCurTem] = useState(20);
   const [curHum, setCurHum] = useState(40);
   const [editMode, setEditMode] = useState(false); // 온습도 변경 모드 상태
-  const [temp, setTemp] = useState(30); // 설정온도 입력 상태
-  const [hum, setHum] = useState(40); // 설정습도 입력 상태
+  const [temp, setTemp] = useState<number>(); // 설정온도 입력 상태
+  const [hum, setHum] = useState<number>(); // 설정습도 입력 상태
   const [showLive, setShowLive] = useState(false); // 실시간 사육장 상태를 보여주는지 여부
   const [hover, setHover] = useState(false); // 실시간 사육장 상태를 보여주고 있을 때, 마우스가 위에 있는지 여부
   const [avgTempHum, setAvgTempHum] = useState<AvgTempHum[]>();
@@ -41,17 +43,18 @@ function MyCageDetail() {
   }, [id]);
 
   // 현재 온습도 데이터 가져오기
-  useEffect(() => {
-    const fetchCagesTempHum = async () => {
-      if (cage) {
-        const response = await apiWithAuth.get(`${API}cages/${id}/latest-temperature-humidity`)
-        console.log(response.data.latestData);
-        setCurTem(response.data.latestData.temperature);
-        setCurHum(response.data.latestData.humidity);
-      }
+  const fetchCagesTempHum = async () => {
+    if (cage) {
+      const response = await apiWithAuth.get(`${API}cages/${id}/latest-temperature-humidity`)
+      console.log(response.data.latestData);
+      setCurTem(response.data.latestData.temperature);
+      setCurHum(response.data.latestData.humidity);
     }
+  }
+
+  useEffect(() => {
     fetchCagesTempHum();
-  }, [cage, id]);
+  });
 
   // 온습도 그래프 데이터 가져오기
   useEffect(() => {
@@ -78,7 +81,12 @@ function MyCageDetail() {
 
     alert(`온도: ${temp}, 습도: ${hum}로 설정되었습니다.`);
     setEditMode(false); // 변경 모드 비활성화
-    // 새로고침
+    try {
+      fetchCagesTempHum(); // 새로고침
+    } catch {
+      console.error("현재 온습도 데이터 가져오기 중 에러")
+      window.location.reload(); // 명시적 새로고침
+    }
   };
 
   // 해당 케이지에 속하는 파충류 상세 데이터 가져오기
@@ -135,6 +143,11 @@ function MyCageDetail() {
   const handleAddReptile = () => {
     navigate("/my-cage/reptile/add");
   }
+
+  // 온습도 새로고침
+  const handleRefreshTempHum = () => {
+    fetchCagesTempHum();
+  };
 
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
@@ -202,13 +215,21 @@ function MyCageDetail() {
             </table>
 
             <div className="flex justify-between mt-20 mb-3">
-              <div className="font-bold text-3xl">현재 온·습도 / 설정 온·습도</div>
-              <button
-                onClick={handleEditTempHum}
-                className="border-yellow-500 border-2 hover:bg-yellow-200 text-yellow-500 font-semibold py-1 px-3 rounded transition duration-300"
-              >
-                변경
-              </button>
+              <div className="font-bold text-2xl">현재 온·습도 / 설정 온·습도</div>
+              <div className="flex">
+                <button
+                  onClick={handleRefreshTempHum}
+                  className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-semibold py-1 px-3 rounded transition duration-300 mr-2 flex items-center"
+                >
+                  <FiRefreshCw />
+                </button>
+                <button
+                  onClick={handleEditTempHum}
+                  className="border-yellow-500 border-2 hover:bg-yellow-200 text-yellow-500 font-semibold py-1 px-3 rounded transition duration-300"
+                >
+                  <IoMdCreate />
+                </button>
+              </div>
             </div>
             <hr className="border-t border-gray-400 mb-2" />
             <div className="flex justify-between mt-3">
@@ -226,7 +247,7 @@ function MyCageDetail() {
               </div>
             </div>
 
-            <div className={`${editMode ? 'opacity-100 ': 'opacity-0 overflow-hidden' } h-auto transition-opacity duration-300`}>
+            <div className={`${editMode ? 'opacity-100 ' : 'opacity-0 overflow-hidden'} h-auto transition-opacity duration-300`}>
               <div className="mt-4">
                 <div className="flex justify-between gap-4">
                   <div className="flex-1">
@@ -236,7 +257,7 @@ function MyCageDetail() {
                       type="number"
                       placeholder="온도 설정"
                       className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm"
-                      value={temp}
+                      value={temp ? temp : cage?.set_temp}
                       onChange={(e) => setTemp(Number(e.target.value))}
                     />
                   </div>
@@ -247,7 +268,7 @@ function MyCageDetail() {
                       type="number"
                       placeholder="습도 설정"
                       className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm"
-                      value={hum}
+                      value={hum ? hum : cage?.set_hum}
                       onChange={(e) => setHum(Number(e.target.value))}
                     />
                   </div>
@@ -298,7 +319,7 @@ function MyCageDetail() {
           readOnly
         ></textarea>
         <div className="flex justify-center">
-          <Link to="/my-cage" className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-16 transition duration-300">목록으로 돌아가기</Link>
+          <Link to="/my-cage" className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-semibold py-2 px-4 rounded mt-16 transition duration-300">목록으로 돌아가기</Link>
         </div>
       </div>
     </div>
