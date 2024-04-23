@@ -106,7 +106,7 @@ function MyReptileDetail() {
           readOnly
         ></textarea>
         <div className="flex justify-center"> 
-          <Link to="/my-cage" className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-16 transition duration-300">목록으로 돌아가기</Link>
+          <Link to="/my-cage" className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-semibold py-2 px-4 rounded mt-16 transition duration-300">목록으로 돌아가기</Link>
         </div>
       </div>
     </div>
