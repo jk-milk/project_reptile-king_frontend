@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { API } from '../config';
 import { apiWithoutAuth } from '../components/common/axios';
 
 // 이메일 중복 검사 
 const emailDuplicateCheck = async (email: string): Promise<boolean> => {
   try {
-    const response = await apiWithoutAuth.post(API+"register/check-email", {
+    const response = await apiWithoutAuth.post(API + "register/check-email", {
       email,
     });
 
@@ -31,7 +31,7 @@ const emailDuplicateCheck = async (email: string): Promise<boolean> => {
 
 const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
   try {
-    const response = await apiWithoutAuth.post(API+'register/check-nickname', {
+    const response = await apiWithoutAuth.post(API + 'register/check-nickname', {
       nickname,
     });
 
@@ -55,9 +55,9 @@ const nicknameDuplicateCheck = async (nickname: string): Promise<boolean> => {
   // return true;
 }
 
-const register = async (name: string, email: string, password: string, password_confirmation:string, nickname:string, phone:string): Promise<boolean> => {
+const register = async (name: string, email: string, password: string, password_confirmation: string, nickname: string, phone: string): Promise<boolean> => {
   try {
-    const response = await apiWithoutAuth.post(API+'register', {
+    const response = await apiWithoutAuth.post(API + 'register', {
       name,
       email,
       password,
@@ -90,9 +90,7 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [nickname, setNickname] = useState('');
-  const [phoneNumber1, setPhoneNumber1] = useState('');
-  const [phoneNumber2, setPhoneNumber2] = useState('');
-  const [phoneNumber3, setPhoneNumber3] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -157,7 +155,7 @@ function Signup() {
     setNickname(newNickname);
 
     // 닉네임 유효성 검사 (길이 제한)
-    
+
     if (newNickname.length >= 2 && newNickname.length <= 12) {
       try {
         // 닉네임 중복 체크를 비동기로 수행
@@ -182,14 +180,8 @@ function Signup() {
     }
   }
 
-  const onChangePhoneNumber1Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber1(e.target.value);
-  };
-  const onChangePhoneNumber2Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber2(e.target.value);
-  };
-  const onChangePhoneNumber3Handler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber3(e.target.value);
+  const onChangePhoneNumberHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhoneNumber(e.target.value);
   };
 
   const validatePassword = (password: string, confirm: string) => {
@@ -214,7 +206,6 @@ function Signup() {
 
   const signupHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const phoneNumber = phoneNumber1+phoneNumber2+phoneNumber3;
     const response = await register(name, email, password, confirm, nickname, phoneNumber);
     if (response) {
       alert('회원가입 성공!');
@@ -227,56 +218,48 @@ function Signup() {
 
   return (
     <div className="flex justify-center py-20">
-      <div className="bg-[#284420] laptop:min-w-[30rem] laptop:max-w-[30rem] min-w-[35rem] max-w-[35rem] p-10 rounded-md">
+      <div className="bg-[#284420] laptop:min-w-[30rem] laptop:max-w-[30rem] min-w-[35rem] max-w-[35rem] p-10 rounded-lg">
         <form onSubmit={signupHandler}>
           <div className="mb-5">
             <label htmlFor="name" className="block text-white mb-2">이름</label>
-            <input id="name" name="name" type="text" value={name} required onChange={onChangeNameHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="name" name="name" type="text" value={name} required onChange={onChangeNameHandler} className="bg-gray-50 border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500" />
           </div>
           <div className="mb-5">
             <label htmlFor="email" className="block text-white mb-2">이메일</label>
-            <input id="email" name="email" type="email" value={email} required onChange={onChangeEmailHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="email" name="email" type="email" value={email} required onChange={onChangeEmailHandler} className="bg-gray-50 border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500" />
             {emailError && <p className="text-red-500">{emailError}</p>}
           </div>
           <div className="mb-5">
             <label htmlFor="password" className="block text-white mb-2">비밀번호</label>
-            <input id="password" name="password" type="password" value={password} required placeholder="8자 이상, 대소문자, 숫자, 특수문자 포함" onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="password" name="password" type="password" value={password} required placeholder="8자 이상, 대소문자, 숫자, 특수문자 포함" onChange={onChangePasswordHandler} className="bg-gray-50 border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500" />
             {passwordError && <p className="text-red-500">{passwordError}</p>}
           </div>
           <div className="mb-5">
             <label htmlFor="confirm" className="block text-white mb-2">비밀번호 확인</label>
-            <input id="confirm" name="password_confirmation" type="password" value={confirm} required onChange={onChangePasswordHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="confirm" name="password_confirmation" type="password" value={confirm} required onChange={onChangePasswordHandler} className="bg-gray-50 border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500" />
             {confirmError && <p className="text-red-500">{confirmError}</p>}
           </div>
           <div className="mb-5">
             <label htmlFor="nickname" className="block text-white mb-2">닉네임</label>
-            <input id="nickname" name="nickname" type="text" value={nickname} required placeholder="2자 이상, 12자 이하" onChange={onChangeNicknameHandler} className="bg-white border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input id="nickname" name="nickname" type="text" value={nickname} required placeholder="2자 이상, 12자 이하" onChange={onChangeNicknameHandler} className="bg-gray-50 border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500" />
             {nicknameError && <p className="text-red-500">{nicknameError}</p>}
           </div>
-          <label htmlFor="phone1" className="block text-white mb-2">전화번호</label>
+          <label htmlFor="phone" className="block text-white mb-2">전화번호</label>
           <div className="mb-5 flex items-center">
-            <input id="phone1" name="phone1" type="tel" value={phoneNumber1} onChange={onChangePhoneNumber1Handler} className="bg-white border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-400 w-1/3" />
-            <span className="mx-2 text-white">-</span>
-            <label htmlFor="phone2" className="block text-white mb-2"></label>
-            <input id="phone2" name="phone2" type="tel" value={phoneNumber2} onChange={onChangePhoneNumber2Handler} className="bg-white border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-400 w-1/3" />
-            <span className="mx-2 text-white">-</span>
-            <label htmlFor="phone3" className="block text-white mb-2"></label>
-            <input id="phone3" name="phone3" type="tel" value={phoneNumber3} onChange={onChangePhoneNumber3Handler} className="bg-white border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-400 w-1/3" />
+            <input id="phone" name="phone" type="tel" value={phoneNumber} onChange={onChangePhoneNumberHandler} className="bg-gray-50 border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500" />
           </div>
-          <div className="flex justify-center">
-            <button type="submit" className="bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 disabled:text-gray-300 disabled:border-gray-200 disabled:shadow-none disabled:scale-100 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-              disabled={!isEmailChecked || !isEmailAvailable || password.trim() === '' || password !== confirm || !isNicknameChecked || !isNicknameAvailable}>
-              회원가입
+          <div className="flex justify-center mt-6">
+            <button 
+              type="submit" 
+              className="bg-green-500 hover:bg-green-700 disabled:bg-gray-500 disabled:text-gray-300 disabled:border-gray-200 disabled:shadow-none disabled:scale-100 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+              disabled={!isEmailChecked || !isEmailAvailable || password.trim() === '' || password !== confirm || !isNicknameChecked || !isNicknameAvailable}
+            >
+              가입하기
             </button>
           </div>
         </form>
-        <div className="mt-5 flex justify-center w-full">
-          <p className="text-white mr-2">이미 회원인가요?</p>
-          <Link to="/login" className="text-blue-500 hover:text-blue-300">로그인</Link>
-        </div>
       </div>
-    </div>
-  )
+    </div>);
 }
 
 export default Signup;
