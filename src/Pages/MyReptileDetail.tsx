@@ -101,7 +101,7 @@ function MyReptileDetail() {
         <div className="font-bold text-3xl mt-20">메모</div>
         <hr className="border-t border-gray-400 mt-3 mb-3" />
         <textarea
-          className="w-full h-40 border border-gray-300 rounded-md p-2 focus:outline-none cursor-default"
+          className="w-full h-40 border border-gray-300 rounded-md p-2 focus:outline-none cursor-default resize-none overflow-auto"
           value={reptile?.memo || ""} // memo가 falsy 값일 경우 빈 문자열로 대체
           readOnly
         ></textarea>
