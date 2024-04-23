@@ -156,7 +156,7 @@ function MyCageAdd() {
                   </select>
                   <button
                     onClick={() => navigate('/my-cage/reptile/add')}
-                    className="ms-2 hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded"
+                    className="ms-2 hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded transition duration-300"
                   >
                     파충류 추가하기
                   </button>
@@ -167,7 +167,7 @@ function MyCageAdd() {
             <div className="col-span-1 flex justify-center items-center text-lg">사진 첨부</div>
             <div className="col-span-3">
               <button
-                className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded"
+                className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded transition duration-300"
                 onClick={() => document.getElementById('imageUpload')?.click()}
                 disabled={uploadedImages.length >= 3}
               >
@@ -220,20 +220,20 @@ function MyCageAdd() {
             ></textarea>
           </div>
 
-        </div>
-        <div className="flex justify-center mt-3">
-          <button
-            className="hover:bg-red-200 bg-red-500 text-white font-bold py-1 px-4 rounded mr-6 self-center"
-            onClick={handleCancel}
-          >
-            취소
-          </button>
-          <button
-            className="hover:bg-blue-200 bg-blue-500 text-white font-bold py-1 px-4 rounded self-center"
-            onClick={handleSubmit}
-          >
-            등록
-          </button>
+          <div className="flex justify-center mt-3">
+            <button
+              className="hover:bg-red-200 text-red-500 border-red-500 border-2 font-bold py-1 px-4 rounded mr-6 self-center transition duration-300"
+              onClick={handleCancel}
+            >
+              취소
+            </button>
+            <button
+              className="hover:bg-blue-200 border-blue-500 border-2 text-blue-500 font-bold py-1 px-4 rounded self-center transition duration-300"
+              onClick={handleSubmit}
+            >
+              등록
+            </button>
+          </div>
         </div>
       </div>
     </div>

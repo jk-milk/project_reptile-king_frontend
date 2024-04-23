@@ -60,7 +60,7 @@ function MyReptileDetail() {
               <div className="ml-auto">
                 <button
                   onClick={handleEdit}
-                  className="bg-blue-600 hover:bg-blue-400 text-white font-semibold py-1 px-3 rounded transition duration-300"
+                  className="hover:bg-yellow-200 text-yellow-500 border-yellow-500 border-2 font-semibold py-1 px-3 rounded transition duration-300"
                 >
                   수정
                 </button>
@@ -105,7 +105,7 @@ function MyReptileDetail() {
           value={reptile?.memo || ""} // memo가 falsy 값일 경우 빈 문자열로 대체
           readOnly
         ></textarea>
-        <div className="flex justify-center">
+        <div className="flex justify-center"> 
           <Link to="/my-cage" className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-16 transition duration-300">목록으로 돌아가기</Link>
         </div>
       </div>
