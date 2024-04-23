@@ -27,8 +27,8 @@ function MyCageDetail() {
   const [showLive, setShowLive] = useState(false); // 실시간 사육장 상태를 보여주는지 여부
   const [hover, setHover] = useState(false); // 실시간 사육장 상태를 보여주고 있을 때, 마우스가 위에 있는지 여부
   const [avgTempHum, setAvgTempHum] = useState<AvgTempHum[]>();
-  // const liveURL = "http://172.21.2.41:8080/stream";
-  const liveURL = "/logo.png";
+  const liveURL = "http://172.21.2.41:8080/stream";
+  // const liveURL = "/logo.png";
 
   // 케이지의 상세 데이터 가져오기
   useEffect(() => {
