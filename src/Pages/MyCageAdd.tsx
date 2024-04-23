@@ -10,8 +10,6 @@ function MyCageAdd() {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [cageName, setCageName] = useState('');
   const [memo, setMemo] = useState('');
-  const [temp, setTemp] = useState(30);
-  const [hum, setHum] = useState(40);
   const [serialCode, setSerialCode] = useState('');
   const [reptiles, setReptiles] = useState<Reptile[] | null>(null);
   const [reptileSerialCode, setReptileSerialCode] = useState('');
@@ -72,8 +70,8 @@ function MyCageAdd() {
       console.log(reptileSerialCode, typeof (reptileSerialCode));
 
       formData.append('name', cageName);
-      formData.append('setTemp', temp.toString());
-      formData.append('setHum', hum.toString());
+      formData.append('setTemp', '30');
+      formData.append('setHum', '40');
       formData.append('serialCode', serialCode);
       formData.append('memo', memo);
       formData.append('reptileSerialCode', reptileSerialCode);
@@ -198,26 +196,7 @@ function MyCageAdd() {
                 ))}
               </div>
             )}
-            <div className="text-lg col-span-1 flex justify-center items-center">
-              설정 온도
-            </div>
-            <input
-              type="number"
-              className="col-span-3 p-2 border border-gray-300 rounded"
-              placeholder="온도를 입력해 주세요..."
-              value={temp}
-              onChange={(e) => setTemp(Number(e.target.value))}
-            />
-            <div className="col-span-1 flex justify-center items-center text-lg">
-              설정 습도
-            </div>
-            <input
-              type="number"
-              className="col-span-3 p-2 border border-gray-300 rounded"
-              placeholder="습도를 입력해 주세요..."
-              value={hum}
-              onChange={(e) => setHum(Number(e.target.value))}
-            />
+            
             <div className="text-lg col-span-1 flex justify-center items-center">
               시리얼 코드
             </div>
