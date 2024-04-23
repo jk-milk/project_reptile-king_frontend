@@ -13,15 +13,19 @@ function MyCage() {
   // 개인 케이지 목록 가져오기
   useEffect(() => {
     const fetchCages = async () => {
-      const response = await apiWithAuth.get(API + "cages");
-      console.log(response);
-      if (response.data.msg === "데이터 없음") {
+      try {
+        const response = await apiWithAuth.get(API + "cages");
+        console.log(response);
+        if (response.status === 204) { // 사육장이 없는 경우
+          setCages(null);
+        } else {
+          setCages(response.data.cages);
+        }
+      } catch (error) {
         setCages(null);
-      } else {
-        setCages(response.data.cages);
+        console.error("케이지 목록 가져오기 서버 에러");
       }
     };
-
     fetchCages();
   }, []);
 
@@ -31,7 +35,7 @@ function MyCage() {
       if (cages) {
         // Promise.all을 사용하여 모든 사육장에 대한 온습도 요청을 동시에 처리
         const tempHumPromises = cages.map((cage) =>
-          apiWithAuth.get(`${API}cages/${cage.serial_code}/temperature-humidity`)
+          apiWithAuth.get(`${API}cages/${cage.id}/temperature-humidity`)
         );
 
         try {
@@ -59,15 +63,19 @@ function MyCage() {
   // 파충류 목록 가져오기
   useEffect(() => {
     const fetchCages = async () => {
-      const response = await apiWithAuth.get(API + "reptiles");
-      console.log(response);
-      if (response.data.msg === "데이터 없음") {
+      try {
+        const response = await apiWithAuth.get(API + "reptiles");
+        console.log(response);
+        if (response.status === 204) {
+          setReptiles(null);
+        } else {
+          setReptiles(response.data.reptiles);
+        }
+      } catch (error) {
         setReptiles(null);
-      } else {
-        setReptiles(response.data.reptiles);
+        console.error("파충류 목록 가져오기 서버 에러");
       }
     };
-
     fetchCages();
   }, []);
 
@@ -95,10 +103,13 @@ function MyCage() {
           {cages === undefined ? (
             <p>로딩 중...</p>
           ) : cages === null ? (
-            <>
-              <p>사육장이 없습니다.</p>
-              <p>사육장을 추가해 주세요!</p>
-            </>
+            <div className="flex flex-col items-center justify-center col-span-full">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293H9.414a1 1 0 01-.707-.293L6.293 13.293A1 1 0 005.586 13H3" />
+              </svg>
+              <p className="mt-2 text-lg text-gray-600">사육장이 없습니다.</p>
+              <p className="text-gray-500">사육장을 추가해 주세요!</p>
+            </div>
           ) :
             cages.map((cage) => (
               <Link to={`/my-cage/${cage.id}`} state={{reptileSerialCode: cage.reptile_serial_code}} key={cage.id}>
@@ -140,10 +151,13 @@ function MyCage() {
           {reptiles === undefined ? (
             <p>로딩 중...</p>
           ) : reptiles === null ? (
-            <>
-              <p>파충류가 없습니다.</p>
-              <p>파충류를 추가해 주세요!</p>
-            </>
+            <div className="col-span-full text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
+              </svg>
+              <p className="mt-2 text-gray-700">파충류가 없습니다.</p>
+              <p className="text-gray-600">파충류를 추가해 주세요!</p>
+            </div>
           ) : reptiles.map((reptile) => (
             <Link to={`/my-cage/reptile/${reptile.id}`} key={reptile.id} state={{reptileSerialCode: reptile.serial_code}}>
               <div className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
