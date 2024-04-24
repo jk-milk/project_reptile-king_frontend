@@ -65,6 +65,7 @@ function MyCage() {
       }
     };
     fetchCagesTempHum();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cages]); // cages 상태가 변경될 때마다 실행
 
   // 파충류 목록 가져오기
