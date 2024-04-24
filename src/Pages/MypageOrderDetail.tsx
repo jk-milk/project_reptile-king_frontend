@@ -14,7 +14,6 @@ function MypageOrderDetail() {
   };
 
   const firstOrder = orders[0];
-  const totalPaymentAmount = firstOrder.productPrice + 3000;
 
   return (
     <div className="pt-12 pb-24 mx-auto max-w-screen-xl flex">
@@ -35,7 +34,7 @@ function MypageOrderDetail() {
             {/* 첫 번째 주문만 표시 */}
             <div>
               {/* 주문 상세 정보 */}
-              <div className="font-bold text-2xl mb-2">{firstOrder.deliveryDate} 주문</div>
+              <div className="font-bold text-2xl mb-2">2024.04.25 주문</div>
               <MypageOrderItem order={firstOrder} getDayOfWeek={getDayOfWeek} />
 
               {/* 받는사람 정보 */}
@@ -69,11 +68,11 @@ function MypageOrderDetail() {
                 <div className="space-y-3 text-lg">
                   <div className="flex items-center">
                     <div className="text-gray-500 w-40">결제수단</div>
-                    <div>{firstOrder.paymentMethod}</div>
+                    <div>농협은행</div>
                   </div>
                   <div className="flex items-center">
-                    <div className="text-gray-500 w-40">총 상품가격</div>
-                    <div>{firstOrder.productPrice.toLocaleString()}원</div>
+                    <div className="text-gray-500 w-40">상품가격</div>
+                    <div>68,000원</div>
                   </div>
                   <div className="flex items-center">
                     <div className="text-gray-500 w-40">배송비</div>
@@ -84,7 +83,7 @@ function MypageOrderDetail() {
 
               <div className="text-right mt-12 mb-3">
                 <div className="font-bold text-xl inline-block mr-4">총 결제금액</div>
-                <div className="font-bold text-3xl inline-block">{totalPaymentAmount.toLocaleString()}원</div>
+                <div className="font-bold text-3xl inline-block">71,000원</div>
               </div>
 
             </div>

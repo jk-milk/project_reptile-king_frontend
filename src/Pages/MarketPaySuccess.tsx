@@ -9,6 +9,10 @@ export function MarketPaySuccess() {
     window.location.href = "/market";
   };
 
+  const orderDetailClick = () => {
+    window.location.href = "/mypage/order/detail";
+  }
+
   return (
     <div>
       <div className="pt-10 pb-10 mx-auto max-w-screen-md">
@@ -29,27 +33,44 @@ export function MarketPaySuccess() {
           <div className="bg-lime-950 rounded-xl px-5 py-4 border-2 border-lime-300">
             <div className="flex items-center">
               <div>
-                <img src={product.imageUrl} alt={product.name} className="rounded-md h-20 w-20 mr-4" />
+                <img src="https://contents.sixshop.com/uploadedFiles/32210/product/image_1698381407717.jpeg " alt={product.name} className="rounded-md h-20 w-20 mr-4" />
               </div>
               <div className="text-white text-xl font-bold">
-                <div>{`${searchParams.get("orderId")}`}</div>
-                <div>{`${Number(
-                  searchParams.get("amount")
-                ).toLocaleString()}원`}</div>
+                <div>"리틀 포레스트" 크레스티드 게코 아크릴 사육장 20x20x30세트</div>
+                <div>68,000원</div>
               </div>
             </div>
             <div className="border-lime-300 border-b mt-5 mb-5"></div>
             <div className="text-white text-xl text-center mb-1">총 결제금액</div>
             <div className="text-white font-bold text-2xl text-center">
-              {`${Number(
-                searchParams.get("amount")
-              ).toLocaleString()}원`}</div>
+              71,000원</div>
           </div>
         </div>
-        <div className="flex justify-center mt-10">
-          <button className="bg-gray-600 hover:bg-gray-800 border text-white font-bold text-xl w-56 py-2 rounded-lg mr-6">주문내역 확인</button>
-          <button className="bg-pink-700 hover:bg-pink-900 border text-white font-bold text-xl w-56 py-2 rounded-lg" onClick={handlePayClick}>마켓으로</button>
+
+        {/* 주문자 정보 */}
+        <div className="text-white font-bold text-4xl mt-10 pb-5">주문자 정보</div>
+        <div className="bg-green-700 rounded-xl border-2 border-lime-300 px-5 py-4">
+          <div className="flex justify-between mb-4">
+            <div className="text-white font-bold text-xl">주문자</div>
+            <div className="text-white text-xl">배석민</div>
+          </div>
+          <div className="flex justify-between mb-4">
+            <div className="text-white font-bold text-xl">연락처</div>
+            <div className="text-white text-xl">01038915626</div>
+          </div>
+          <div className="flex justify-between mb-4">
+            <div className="text-white font-bold text-xl">배송지</div>
+            <div className="text-white text-xl">(39866) 경상북도 칠곡군 지천면 금송로 60 글로벌캠퍼스 A동</div>
+          </div>
+          <div className="flex justify-between">
+            <div className="text-white font-bold text-xl">배송요청사항</div>
+            <div className="text-white text-xl">그 외 장소</div>
+          </div>
         </div>
+      </div>
+      <div className="flex justify-center mt-10 pb-10">
+        <button className="bg-gray-600 hover:bg-gray-800 border text-white font-bold text-xl w-56 py-2 rounded-lg mr-6" onClick={orderDetailClick}>주문내역 확인</button>
+        <button className="bg-pink-700 hover:bg-pink-900 border text-white font-bold text-xl w-56 py-2 rounded-lg" onClick={handlePayClick}>마켓으로</button>
       </div>
     </div>
   )
