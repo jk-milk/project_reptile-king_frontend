@@ -47,11 +47,17 @@ function MyReptileDetail() {
       <div className="bg-white rounded-lg shadow-md px-5 py-4">
         <div className="font-bold text-3xl mb-3">{reptile?.name}</div>
         <div className="flex items-center mb-20">
-          {reptile?.img_urls && (
-            <div className="w-1/2 pr-6">
-              <img src={reptile?.img_urls[0]} alt="파충류 이미지" className="w-full h-auto rounded-lg" />
-            </div>
-          )}
+          <div className="w-1/2 pr-6">
+            {reptile?.img_urls ? (
+              <img src={reptile?.img_urls[0]} alt={reptile.name} className="w-full h-auto rounded-lg" />
+            ) :
+              <img 
+                src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/reptiles/defaultReptileImage2.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
+                alt='파충류 기본 이미지' 
+              />
+            }
+          </div>
+          
 
           <div className="w-1/2">
             <div className="flex items-center mb-3">

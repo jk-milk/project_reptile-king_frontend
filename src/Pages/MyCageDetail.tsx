@@ -170,13 +170,20 @@ function MyCageDetail() {
           </div>
         </div>
         <div className="flex items-center">
-          {cage?.img_urls && (
-            <div className="w-1/2 pr-6">
+          <div className="w-1/2 pr-6">
+            {cage?.img_urls ? (
               <img src={cage?.img_urls[0]} alt={cage.name} className="w-full h-auto rounded-lg" />
-            </div>
-          )}
+            ) :
+              <img
+                src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/cages/defaultCageImage.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
+                alt='사육장 기본 이미지'
+                className="w-full h-auto rounded-lg"
+              />
+            }
+          </div>
+
           <div className="w-1/2">
-            <div className="flex items-center mb-3">
+            <div className="flex items-center mt-10 mb-3">
               <div className="font-bold text-3xl">파충류 정보</div>
               <div className="ml-auto">
                 {reptile ? // 파충류가 등록되어 있는 경우
