@@ -19,11 +19,19 @@ export interface Reptile {
   serial_code:string;
   user_id: number;
   species: string;
-  gender: string; // 추후 수정
+  gender: string;
   birth: string;
   memo: string;
   img_urls: string[];
   created_at: string;
   updated_at: string;
   expired_at: string | null;
+}
+
+export interface AvgTempHum {
+  year: string;
+  month: string;
+  day: string;
+  avgtemp: string;
+  avghum: string;
 }
