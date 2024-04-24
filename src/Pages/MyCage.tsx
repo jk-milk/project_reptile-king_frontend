@@ -50,13 +50,24 @@ function MyCage() {
           const responses = await Promise.all(tempHumPromises);
           console.log(responses);
 
-          // 각 사육장에 대한 응답에서 온습도 정보를 추출하여 cages 상태에 저장
-          const updatedCages = curCages!.map((cage, index) => ({
-            ...cage,
-            // 예시 응답 구조에 따라 온습도 정보를 저장
-            cur_temp: responses[index].data.latestData.temperature,
-            cur_hum: responses[index].data.latestData.humidity,
-          }));         
+          const updatedCages = curCages!.map((cage, index) => {
+            const response = responses[index];
+            // 응답 데이터가 있고, latestData 객체가 존재하는 경우
+            if (response.data && response.data.latestData) {
+              return {
+                ...cage,
+                cur_temp: response.data.latestData.temperature,
+                cur_hum: response.data.latestData.humidity,
+              };
+            } else {
+              // 응답 데이터가 없거나, latestData 객체가 존재하지 않는 경우
+              return {
+                ...cage,
+                cur_temp: 20,
+                cur_hum: 40,
+              };
+            }
+          });  
 
           setCurCages(updatedCages);
         } catch (error) {
