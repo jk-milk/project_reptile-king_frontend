@@ -208,11 +208,11 @@ function MyCageDetail() {
               <tbody>
                 <tr>
                   <td className="font-semibold text-xl">이름</td>
-                  <td className="text-lg">{reptile?.name}</td>
+                  <td className="text-lg">{reptile?.name ? reptile.name : "미등록"}</td>
                 </tr>
                 <tr>
                   <td className="font-semibold text-xl">종</td>
-                  <td className="text-lg">{reptile?.species}</td>
+                  <td className="text-lg">{reptile?.species ? reptile.species : "미등록"}</td>
                 </tr>
                 <tr>
                   <td className="font-semibold text-xl">나이</td>
