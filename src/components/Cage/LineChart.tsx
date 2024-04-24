@@ -1,4 +1,4 @@
-import { VictoryChart, VictoryAxis, VictoryLine, VictoryTheme, VictoryLabel } from 'victory';
+import { VictoryChart, VictoryAxis, VictoryLine, VictoryTheme, VictoryLabel, VictoryVoronoiContainer, VictoryTooltip, VictoryLegend } from 'victory';
 import { AvgTempHum } from '../../types/Cage';
 
 interface LineChartProps {
@@ -8,15 +8,16 @@ interface LineChartProps {
 function LineChart({ data }: LineChartProps) {
   if (!data) return <div className="mt-20"></div>;
 
-  // 모든 데이터 포인트를 포함하는 temperatureData와 humidityData 배열 생성
   const temperatureData = data.map((item) => ({
     x: `${item.month}/${item.day}`,
     y: parseFloat(item.avgtemp),
+    label: `온도: ${item.avgtemp}°C`
   }));
 
   const humidityData = data.map((item) => ({
     x: `${item.month}/${item.day}`,
     y: parseFloat(item.avghum),
+    label: `습도: ${item.avghum}%`
   }));
 
   return (
@@ -27,57 +28,80 @@ function LineChart({ data }: LineChartProps) {
         height={200}
         domainPadding={20}
         theme={VictoryTheme.material}
+      // containerComponent={
+      //   <VictoryVoronoiContainer
+      //     voronoiDimension="x"
+      //     labels={({ datum }) => `${datum.x}, ${datum.label}`}
+      //     labelComponent={
+      //       <VictoryTooltip
+      //         cornerRadius={0}
+      //         flyoutStyle={{ fill: "white" }}
+      //       />
+      //     }
+      //   />
+      // }
       >
-        <VictoryLabel 
-          text="사육장 온습도 현황" 
-          x={75} 
-          y={30} 
+        <VictoryLabel
+          text="사육장 온습도 현황"
+          x={75}
+          y={30}
           textAnchor="middle"
           style={{ fontSize: 10 }}
         />
-        {/* 온도 데이터를 위한 Y축 (왼쪽) */}
-        <VictoryAxis 
+        <VictoryAxis
           dependentAxis
           label="온도 (°C)"
           style={{
             axisLabel: { padding: 35 }
           }}
         />
-        {/* 습도 데이터를 위한 Y축 (오른쪽) */}
-        <VictoryAxis 
+        <VictoryAxis
           dependentAxis
           label="습도 (%)"
           orientation="right"
           style={{
-            axisLabel: { padding: 40 }
+            axisLabel: { padding: 35 }
           }}
         />
-        {/* X축 */}
         <VictoryAxis
           label="날짜"
-          // // 날짜 형식의 x값에서 조건에 맞는 라벨만 표시하도록 tickFormat 설정
-          // tickFormat={(x) => {
-          //   const [month, day] = x.split('/');
-          //   return parseInt(day) % 5 === 0 ? `${month}/${day}` : '';
-          // }}
           style={{
             axisLabel: { padding: 30 }
           }}
         />
-        {/* 온도 데이터를 위한 그래프 */}
         <VictoryLine
           data={temperatureData}
           style={{
             data: { stroke: "#c43a31" }
           }}
+          labels={({ datum }) => datum.label}
+          labelComponent={<VictoryTooltip />}
         />
-        {/* 습도 데이터를 위한 그래프 */}
         <VictoryLine
           data={humidityData}
           style={{
             data: { stroke: "#0077b6" }
           }}
+          labels={({ datum }) => datum.label}
+          labelComponent={<VictoryTooltip />}
         />
+        <VictoryLegend x={250} y={20}
+          title=""
+          centerTitle
+          // orientation="horizontal"
+          gutter={10} // 항목 간의 간격 줄이기
+          style={{
+            border: { stroke: "black" },
+            title: { fontSize: 10 }, // 범례 제목의 글자 크기 줄이기
+            labels: { fontSize: 8 } // 범례 항목의 글자 크기 줄이기
+          }}
+          // symbolSpacer={5} // 범례 심볼과 텍스트 사이의 간격 조절
+          data={[
+            { name: "온도", symbol: { fill: "#c43a31", type: "square", size: 4 } }, // 심볼 크기 조절
+            { name: "습도", symbol: { fill: "#0077b6", type: "square", size: 4 } } // 심볼 크기 조절
+          ]}
+        />
+
       </VictoryChart>
     </>
   )
