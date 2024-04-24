@@ -122,7 +122,7 @@ const Home = () => {
             <span className="text-white text-6xl font-bold font-home">이들을 위한</span>
             <span className="block text-white text-7xl font-bold font-home">최고의 서비스</span>
           </div>
-          <button className="absolute bottom-10 right-64 px-2 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-2 text-white text-center font-sans text-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/cage')}>
+          <button className="absolute bottom-10 right-64 px-2 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-2 text-white text-center font-sans text-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/my-cage')}>
             사육장 바로가기
           </button>
         </div>
@@ -142,7 +142,7 @@ const Home = () => {
             <span className="block text-white text-7xl font-bold font-home leading-[6rem]">여러분의 이야기와 </span>
             <span className="block text-white text-7xl font-bold font-home leading-[6rem]">경험이 만나는 곳 </span>
           </p>
-          <button className="absolute top-48 right-32 px-3 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-2 text-white text-center font-sans text-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/community')}>
+          <button className="absolute top-48 right-32 px-3 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-2 text-white text-center font-sans text-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/board')}>
             커뮤니티 바로가기
           </button>
         </div>

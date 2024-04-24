@@ -34,8 +34,15 @@ import MyCageEdit from './Pages/MyCageEdit'
 import MyReptileEdit from './Pages/MyReptileEdit'
 import MyReptileDetail from './Pages/MyReptileDetail'
 import MyReptileAdd from './Pages/MyReptileAdd'
+import { useEffect } from 'react'
+import { setupAxiosInterceptors } from './components/common/axios'
+import { useAuth } from './hooks/useAuth'
 
 function App() {
+  const { dispatch } = useAuth();
+  useEffect(() => {
+    setupAxiosInterceptors(dispatch)
+  })
   return (
     <Routes>
       <Route index element={<Home />} />
@@ -51,9 +58,9 @@ function App() {
           <Route path='my-cage/:id' element={<MyCageDetail />} />
           <Route path='my-cage/:id/video' element={<MyCageVideo />} />
           <Route path='my-cage/add' element={<MyCageAdd />} />
-          <Route path='my-cage/edit' element={<MyCageEdit />} />
-          <Route path='my-cage/reptile' element={<MyReptileDetail />} />
-          <Route path='my-cage/reptile/edit' element={<MyReptileEdit />} />
+          <Route path='my-cage/edit/:id' element={<MyCageEdit />} />
+          <Route path='my-cage/reptile/:id' element={<MyReptileDetail />} />
+          <Route path='my-cage/reptile/edit/:id' element={<MyReptileEdit />} />
           <Route path='my-cage/reptile/add' element={<MyReptileAdd />} />
           <Route path='mypage' element={<Profile />} />
           <Route path='mypage/order' element={<MypageOrder />} />

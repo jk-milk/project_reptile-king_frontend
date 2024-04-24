@@ -1,60 +1,90 @@
-import { Link } from "react-router-dom";
-
-export const cage = [
-  {
-    id: 1,
-    cageName: "은별이집",
-    cageTemperature: 23,
-    cageSetTemperature: 30,
-    cageHumidity: 20,
-    cageSetHumidity: 30,
-    cageVideo: "",
-    cageMemo: "은별이랑 미란이집",
-    cageImage: "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjA1MzFfMjE5%2FMDAxNjUzOTU2OTI3NjQ1.AMLOgtUX_iqkt_xkFX97KiHUMkgplwQ4HSYV9tMH4kYg.eZI6QxK18ync5XPrBfqOS7IlNiBs8lRfe-jeZrCTit0g.JPEG.thgml9341%2FIMG_4906.jpg&type=sc960_832"
-  },
-  {
-    id: 2,
-    cageName: "미란이집",
-    cageTemperature: 23,
-    cageSetTemperature: 30,
-    cageHumidity: 20,
-    cageSetHumidity: 30,
-    cageVideo: "",
-    cageImage: "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzAzMTRfMjI0%2FMDAxNjc4Nzc2NjM4NjE2.pzfBMk20b9cSVD6sK8yhcWnt_cEnHJgyhmjzNIsKVdUg.RF4Mw6kRUrX9M5bPcdmxgZ8_-a6z43mv0aHysvdl_CQg.JPEG.noble8477%2F%25BE%25C6%25C5%25A9%25B8%25B1%25BB%25E7%25C0%25B0%25C0%25E5_%25285%2529.jpg&type=sc960_832"
-  },
-];
-
-export const reptile = [
-  {
-    id: 1,
-    repName: "은별이",
-    repType: "크레스티드 게코",
-    repAge: 7,
-    repImage: "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzAzMzFfMjE2%2FMDAxNjgwMjY5NDI1MzU4.KrGKqXLzZSjS4GskWqVp-lqaUpPb9AJj9gQWMFU0CSEg.MWhaqAGDzP3bOoieuhaRqQrdhrLRe4TxmPv9-ULIthcg.PNG.tyttang%2FIMG_1792.JPG&type=sc960_832"
-  },
-  {
-    id: 1,
-    repName: "미란이",
-    repType: "레오파드 게코",
-    repAge: 4,
-    repImage: "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA5MzBfMjIy%2FMDAxNjk2MDM4NTU0MTUw.YI_V0epxdV_43v18QnFVdenYew4VSMTZ4RFl-IjZwccg.5XtEKY5tmp6JX8jKoI1H3w-lm2Z4U_76OmoC1QMbRCIg.JPEG.dudlswleo%2F20230930_102257.jpg&type=sc960_832"
-  },
-]
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { apiWithAuth } from "../components/common/axios";
+import { API } from "../config";
+import { Cage, Reptile } from "../types/Cage";
+import { calculateAge } from "../utils/CalculateAge";
 
 function MyCage() {
+  const navigate = useNavigate();
+  const [cages, setCages] = useState<Cage[] | null>();
+  const [reptiles, setReptiles] = useState<Reptile[] | null>();
+
+  // 개인 케이지 목록 가져오기
+  useEffect(() => {
+    const fetchCages = async () => {
+      try {
+        const response = await apiWithAuth.get(API + "cages");
+        console.log(response);
+        if (response.status === 204) { // 사육장이 없는 경우
+          setCages(null);
+        } else {
+          setCages(response.data.cages);
+        }
+      } catch (error) {
+        setCages(null);
+        console.error("케이지 목록 가져오기 서버 에러");
+      }
+    };
+    fetchCages();
+  }, []);
+
+  // cages가 변경되면 각각 현재 온도와 습도 가져오기
+  useEffect(() => {
+    const fetchCagesTempHum = async () => {
+      if (cages) {
+        // Promise.all을 사용하여 모든 사육장에 대한 온습도 요청을 동시에 처리
+        const tempHumPromises = cages.map((cage) =>
+          apiWithAuth.get(`${API}cages/${cage.id}/temperature-humidity`)
+        );
+
+        try {
+          // 모든 요청이 완료될 때까지 기다림
+          const responses = await Promise.all(tempHumPromises);
+          console.log(responses);
+
+          // // 각 사육장에 대한 응답에서 온습도 정보를 추출하여 cages 상태에 저장
+          // const updatedCages = cages.map((cage, index) => ({
+          //   ...cage,
+          //   // 예시 응답 구조에 따라 온습도 정보를 저장
+          //   cageTemperature: responses[index].data.temperature,
+          //   cageHumidity: responses[index].data.humidity,
+          // }));
+
+          // setCages(updatedCages);
+        } catch (error) {
+          console.error("온습도 정보를 가져오는데 실패했습니다.", error);
+        }
+      }
+    };
+    fetchCagesTempHum();
+  }, [cages]); // cages 상태가 변경될 때마다 실행
+
+  // 파충류 목록 가져오기
+  useEffect(() => {
+    const fetchCages = async () => {
+      try {
+        const response = await apiWithAuth.get(API + "reptiles");
+        console.log(response);
+        if (response.status === 204) {
+          setReptiles(null);
+        } else {
+          setReptiles(response.data.reptiles);
+        }
+      } catch (error) {
+        setReptiles(null);
+        console.error("파충류 목록 가져오기 서버 에러");
+      }
+    };
+    fetchCages();
+  }, []);
+
   const handleAddCage = () => {
-    const confirmSubmit = window.confirm('사육장을 추가하시겠습니까?');
-    if (confirmSubmit) {
-      window.location.href = '/my-cage/add';
-    }
+    navigate('/my-cage/add');
   };
 
   const handleAddReptile = () => {
-    const confirmSubmit = window.confirm('파충류를 추가하시겠습니까?');
-    if (confirmSubmit) {
-      window.location.href = '/my-cage/reptile/add'
-    }
-    
+    navigate('/my-cage/reptile/add');
   };
 
   return (
@@ -70,23 +100,43 @@ function MyCage() {
           </button>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {cage.map((cageItem) => (
-            cageItem.cageImage && (
-              <div key={cageItem.id} className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
-                <img src={cageItem.cageImage} alt={cageItem.cageName} className="w-full h-auto rounded-t" />
-                <div className="p-4">
-                  <div className="text-lg font-semibold mb-2">{cageItem.cageName}</div>
-                  <div className="text-gray-600 mb-2">온도 : {cageItem.cageTemperature}°C</div>
-                  <div className="text-gray-600 mb-2">습도 : {cageItem.cageHumidity}%</div>
-                  <Link to={`/my-cage/${cageItem.id}`}>
+          {cages === undefined ? (
+            <p>로딩 중...</p>
+          ) : cages === null ? (
+            <div className="flex flex-col items-center justify-center col-span-full">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293H9.414a1 1 0 01-.707-.293L6.293 13.293A1 1 0 005.586 13H3" />
+              </svg>
+              <p className="mt-2 text-lg text-gray-600">사육장이 없습니다.</p>
+              <p className="text-gray-500">사육장을 추가해 주세요!</p>
+            </div>
+          ) :
+            cages.map((cage) => (
+              <Link to={`/my-cage/${cage.id}`} state={{reptileSerialCode: cage.reptile_serial_code}} key={cage.id}>
+                <div className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
+                  {cage.img_urls ?
+                    <img 
+                      src={cage.img_urls[0]} 
+                      alt={cage.name} 
+                      className="w-full h-48 object-cover rounded-t"
+                    /> : 
+                    <img 
+                      src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/cages/defaultCageImage.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
+                      alt={cage.name} 
+                      className="w-full h-48 object-cover rounded-t"
+                    />
+                  }
+                  <div className="p-4">
+                    <div className="text-lg font-semibold mb-2">{cage.name}</div>
+                    {/* <div className="text-gray-600 mb-2">온도 : {cage.cageTemperature}°C</div>
+                  <div className="text-gray-600 mb-2">습도 : {cage.cageHumidity}%</div> */}
                     <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
                       사육장 상세보기
                     </button>
-                  </Link>
+                  </div>
                 </div>
-              </div>
-            )
-          ))}
+              </Link>
+            ))}
         </div>
         <div className="flex justify-between items-center mb-3 mt-24">
           <div className="font-bold text-3xl">내 파충류</div>
@@ -98,26 +148,43 @@ function MyCage() {
           </button>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {reptile.map((repItem) => (
-            <div key={repItem.id} className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
-              {repItem.repImage && (
-                <img
-                  src={repItem.repImage}
-                  alt={repItem.repName}
-                  className="w-full h-48 object-cover rounded-t"
-                />
-              )}
-              <div className="p-4">
-                <div className="text-lg font-semibold mb-2">{repItem.repName}</div>
-                <div className="text-gray-600 mb-2">{repItem.repType}</div>
-                <div className="text-gray-600 mb-2">나이 : {repItem.repAge}</div>
-                <Link to="/my-cage/reptile">
-                  <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
+          {reptiles === undefined ? (
+            <p>로딩 중...</p>
+          ) : reptiles === null ? (
+            <div className="col-span-full text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
+              </svg>
+              <p className="mt-2 text-gray-700">파충류가 없습니다.</p>
+              <p className="text-gray-600">파충류를 추가해 주세요!</p>
+            </div>
+          ) : reptiles.map((reptile) => (
+            <Link to={`/my-cage/reptile/${reptile.id}`} key={reptile.id} state={{reptileSerialCode: reptile.serial_code}}>
+              <div className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
+                {reptile.img_urls ? 
+                  <img
+                    src={reptile.img_urls[0]}
+                    alt={reptile.name}
+                    className="w-full h-48 object-cover rounded-t"
+                  /> :
+                  <img
+                    // src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/reptiles/defaultReptileImage.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
+                    src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/reptiles/defaultReptileImage2.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
+                    alt={reptile.name}
+                    className="w-full h-48 object-cover rounded-t"
+                  />
+                }
+                <div className="p-4">
+                  <div className="text-lg font-semibold mb-2">{reptile.name}</div>
+                  <div className="text-gray-600 mb-2">{reptile.species}</div>
+                  <div className="text-gray-600 mb-2">나이 : {calculateAge(reptile.birth)}</div>
+                  <button
+                    className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
                     파충류 상세보기
                   </button>
-                </Link>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

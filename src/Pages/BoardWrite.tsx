@@ -5,13 +5,13 @@ import Dropdown from "../components/common/Dropdown";
 import { API } from "../config";
 import { apiWithAuth } from "../components/common/axios";
 import { Category } from "../types/Category";
-import { selectedCategory } from "../types/Board";
+import { SelectedCategory } from "../types/Board";
 
 function BoardWrite() {
   const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState<selectedCategory>({ name: "카테고리 선택", id: null });
+  const [selectedCategory, setSelectedCategory] = useState<SelectedCategory>({ name: "카테고리 선택", id: null });
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedSubCategory, setSelectedSubCategory] = useState<selectedCategory>({ name: "세부 카테고리 선택", id: null });
+  const [selectedSubCategory, setSelectedSubCategory] = useState<SelectedCategory>({ name: "세부 카테고리 선택", id: null });
   const [subCategories, setSubCategories] = useState<Category[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -61,7 +61,9 @@ function BoardWrite() {
     const postData = {
       title,
       content,
-      category_id: selectedSubCategory.id
+      category_id: selectedSubCategory.id,
+      // img_urls:'nullable|array',
+      // img_urls.*: 'image|mimes:jpeg,png,jpg,gif|max:2048'
     };
     
     try {
