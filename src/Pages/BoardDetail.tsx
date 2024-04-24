@@ -24,8 +24,8 @@ function BoardDetail() {
         const postsResponse = await apiWithoutAuth.get(`${API}posts/${postId}`);
         setPost(postsResponse.data);
 
-        const commentsResponse = await apiWithoutAuth.get(`${API}comments?post_id=${postId}`);
-        setComments(commentsResponse.data);
+        // const commentsResponse = await apiWithoutAuth.get(`${API}comments?post_id=${postId}`);
+        // setComments(commentsResponse.data);
       } catch (err) {
         alert("잘못된 경로입니다!");
         navigate("/board");

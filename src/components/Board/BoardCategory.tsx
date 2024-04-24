@@ -6,7 +6,7 @@ interface BoardCategoryProps {
   onSelectCategory: (id: number) => void;
 }
 
-function BoardCategory({ categories, selectedCategory, onSelectCategory }: BoardCategoryProps) {
+function BoardCategory({ categories, selectedCategory, onSelectCategory }: BoardCategoryProps) {  
   return (
     <div className="w-52 mr-20">
       <div className="mt-4">
