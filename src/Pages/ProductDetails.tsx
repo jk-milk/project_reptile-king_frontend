@@ -10,6 +10,7 @@ import { GoodsCategory } from '../types/Market';
 import { ProductItem } from "../types/Market";
 import { apiWithoutAuth } from '../components/common/axios';
 import { API } from '../config';
+import * as idb from 'idb';
 
 function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
@@ -23,14 +24,20 @@ function ProductDetails() {
       const fetchProductDetails = async () => {
         try {
           const response = await apiWithoutAuth.get(`${API}goods/${productId}`);
-          if (response.data && typeof response.data === 'object') {
-            const { img_urls, ...productData } = response.data;
-            const { thumbnail, info } = JSON.parse(img_urls);
+          console.log(response);
+
+          if (response.data) {
+            // const responseData = JSON.parse(response.data);
+            const responseData = response.data;
+            const { img_urls, ...productData } = responseData;
+            const { thumbnail, info } = img_urls;
             const productWithThumbnail = {
               ...productData,
               imageUrl: thumbnail,
               infoUrl: info,
             };
+            console.log(productWithThumbnail);
+
             setProduct(productWithThumbnail);
           }
         } catch (error) {
@@ -41,6 +48,7 @@ function ProductDetails() {
       fetchProductDetails();
     }
   }, [productId]);
+
 
 
   useEffect(() => {
@@ -64,13 +72,42 @@ function ProductDetails() {
     }
   };
 
+  // indexdDB를 사용하여 상품을 장바구니에 추가하는 함수
+  const addToCartIndexedDB = async (product) => {
+    try {
+      // indexdDB 데이터베이스 열기
+      const db = await idb.openDB('market', 1, {
+        upgrade(db) {
+          // 장바구니 스토어 생성
+          db.createObjectStore('cart', { autoIncrement: true, keyPath: 'id' });
+        },
+      });
+
+      // 상품을 장바구니에 추가
+      await db.add('cart', product);
+      console.log('상품이 장바구니에 추가되었습니다.');
+    } catch (error) {
+      console.error('장바구니에 상품을 추가하는 중 에러가 발생했습니다:', error);
+    }
+  };
+
   // 장바구니 클릭 시 동작하는 함수
   const handleCartClick = () => {
     const addToCart = window.confirm("해당 상품을 장바구니에 추가하시겠습니까?");
     if (addToCart) {
+      // 장바구니에 추가할 상품 데이터 생성
+      const cartProduct = {
+        productId: productId,
+        quantity: quantity,
+        price: product.price,
+      };
+      // indexdDB를 사용하여 장바구니에 상품 추가
+      addToCartIndexedDB(cartProduct);
+      // 장바구니 페이지로 이동
       window.location.href = "/market/cart";
     }
   };
+
 
   const handlePayClick = () => {
     // Calculate the adjusted price based on the selected quantity
@@ -100,90 +137,71 @@ function ProductDetails() {
         </div>
       </div>
 
-      {/* 상품 정보 */}
-      <div className="mx-auto max-w-screen-md pb-10">
-        <div className="grid grid-cols-12 gap-4">
+      <div className="mx-auto max-w-screen-lg pb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* 상품 이미지 */}
-          <div className="col-span-12 lg:col-span-5">
-            <div className="h-80 w-full flex justify-center items-center">
-              {product && <img src={product.imageUrl} alt="상품 이미지" className="object-cover h-full w-full" />}
-            </div>
-          </div>
-          {/* 상품 정보 */}
-          <div className="col-span-12 lg:col-span-7">
+          <div className="bg-white rounded-md overflow-hidden shadow-lg">
             {product && (
-              <div className="mb-2">
-                <div className="flex justify-between mb-3">
-                  <div>
-                    <div className="text-3xl font-bold text-white mb-1">{product.name}</div>
-                    <div className="mb-1 flex">
-                      <StarRating rating={product.rating} />
-                      <span className="text-white ml-2">({product.reviewCount})</span>
-                    </div>
-                    {product && product.price && (
-                      <div className="text-lg font-bold text-white mb-1">{product.price.toLocaleString()}원</div>
-                    )}
-
-                    <table className="w-full">
-                      <tbody>
-                        <tr>
-                          <td className="text-lg font-bold text-white">배송비</td>
-                          <td className="text-lg text-white text-right pl-10">무료배송</td>
-                        </tr>
-                        <tr>
-                          <td className="text-lg font-bold text-white">혜택</td>
-                          <td className="text-lg text-white text-right">14P 적립</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                <hr className="border-gray-400" />
-
-                {/* 상품 개수 조절 바 */}
-                <div className="mt-2">
-                  <table className="w-full">
-                    <tbody>
-                      {/* 윗줄: 상품명, 수량, 총 상품 금액 */}
-                      <tr>
-                        <td className="text-lg font-bold text-white text-center">상품명</td>
-                        <td className="text-lg font-bold text-white text-center">수량</td>
-                        <td className="text-lg font-bold text-white text-center">총 상품 금액</td>
-                      </tr>
-                      {/* 아랫줄: 실제 상품명, 수량, 총 상품 금액 */}
-                      <tr>
-                        <td className="text-white text-lg text-center">{product.name}</td>
-                        <td className="flex justify-center">
-                          <button onClick={() => handleQuantityChange(quantity - 1)} className="bg-gray-200 p-2 border-l border-t border-b border-gray-300 hover:bg-gray-300 focus:outline-none">
-                            <IoMdRemove size={16} />
-                          </button>
-                          <div className="w-10 text-center bg-white border border-gray-300 px-2 py-1">{quantity}</div>
-                          <button onClick={() => handleQuantityChange(quantity + 1)} className="bg-gray-200 p-2 border-r border-t border-b border-gray-300 hover:bg-gray-300 focus:outline-none">
-                            <IoMdAdd size={16} />
-                          </button>
-                        </td>
-                        <td className="text-white text-lg text-center">{(quantity * product.price).toLocaleString()}원</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                {/* 버튼 그룹: 구매하기, 장바구니 */}
-                <div className="grid grid-cols-2 gap-4 justify-center mt-5">
-                  <button className="bg-pink-700 rounded-xl hover:bg-pink-400 text-white font-bold px-8 py-2.5 flex items-center justify-center border-2 border-white transition duration-300 ease-in-out" onClick={handlePayClick}>
-                    <FiShoppingCart size={24} className="w-8 h-8" />
-                    <span className="ml-2 text-lg">구매하기</span>
-                  </button>
-
-                  <button className="bg-gray-600 rounded-xl hover:bg-gray-400 text-white font-bold px-8 py-2.5 flex items-center justify-center border-2 border-white transition duration-300 ease-in-out" onClick={handleCartClick}>
-                    <RiShoppingBasketLine size={24} className="w-8 h-8" />
-                    <span className="ml-2 text-lg">장바구니</span>
-                  </button>
-                </div>
+              <div className="h-full w-full flex justify-center items-center overflow-hidden">
+                <img src={product.imageUrl} alt="상품 이미지" className="object-cover h-full w-full" />
               </div>
             )}
           </div>
+          {/* 상품 정보 */}
+          <div className="bg-white rounded-md p-6 shadow-lg flex flex-col justify-between">
+            {product && (
+              <div>
+                <div className="text-3xl font-bold mb-1">{product.name}</div>
+                <div className="mb-1 flex items-center">
+                  <StarRating rating={product.rating} />
+                  <span className="ml-1">({product.reviewCount})</span>
+                </div>
+                {product.price && (
+                  <div className="text-lg font-bold mb-1">{product.price.toLocaleString()}원</div>
+                )}
+                <div className="flex justify-between">
+                  <div className="text-lg font-bold">배송비</div>
+                  <div className="text-lg">3,000원</div>
+                </div>
+                
+                <hr className="border-gray-400 my-3" />
+                <div className="text-md mb-2">{product.name}</div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-center">
+                    <button onClick={() => handleQuantityChange(quantity - 1)} className="bg-gray-200 p-2 border-l border-t border-b border-gray-300 hover:bg-gray-300 focus:outline-none">
+                      <IoMdRemove size={16} />
+                    </button>
+                    <div className="w-10 text-center bg-white border border-gray-300 px-2 py-1">{quantity}</div>
+                    <button onClick={() => handleQuantityChange(quantity + 1)} className="bg-gray-200 p-2 border-r border-t border-b border-gray-300 hover:bg-gray-300 focus:outline-none">
+                      <IoMdAdd size={16} />
+                    </button>
+                  </div>
+                  <div className="text-xl font-bold">{(quantity * product.price).toLocaleString()}원</div>
+                </div>
+                <div className="flex items-center justify-between mt-6">
+                  <div className="font-bold">주문수량</div>
+                  <div>{quantity}개</div>
+                </div>
+                <div className="flex items-center justify-between mt-1">
+                  <div className="font-bold">총 상품 금액</div>
+                  <div>{(quantity * product.price).toLocaleString()}원</div>
+                </div>
+              </div>
+            )}
+            {/* 버튼 그룹 */}
+            <div className="mt-8 grid grid-cols-2 gap-4">
+              <button className="bg-pink-600 hover:bg-pink-400 text-white font-bold py-3 rounded-lg flex items-center justify-center transition duration-300 ease-in-out" onClick={handlePayClick}>
+                <FiShoppingCart size={24} className="mr-2" />
+                구매하기
+              </button>
+              <button className="bg-gray-600 hover:bg-gray-400 text-white font-bold py-3 rounded-lg flex items-center justify-center transition duration-300 ease-in-out" onClick={handleCartClick}>
+                <RiShoppingBasketLine size={24} className="mr-2" />
+                장바구니
+              </button>
+            </div>
+          </div>
         </div>
+
 
         {/* 상세정보 및 상품평 탭 */}
         <div className="bg-white mt-10 flex flex-col">

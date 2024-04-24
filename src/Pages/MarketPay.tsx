@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { ProductItem } from '../types/Market';
+import Select from 'react-select';
 import { API } from '../config';
 import axios from 'axios';
+import { apiWithAuth } from '../components/common/axios';
 
 function MarketPay() {
   const [product, setProduct] = useState<ProductItem | null>(null);
@@ -12,7 +14,6 @@ function MarketPay() {
   const location = useLocation();
 
   useEffect(() => {
-    console.log("productId:", productId);
     const searchParams = new URLSearchParams(location.search);
     const priceParam = searchParams.get('price');
     const quantityParam = searchParams.get('quantity');
@@ -25,10 +26,9 @@ function MarketPay() {
       const fetchProductDetails = async () => {
         try {
           const response = await axios.get(`${API}goods/${productId}`);
-          console.log("Product API response:", response.data);
-          if (response.data && typeof response.data === 'object') {
+          if (response.data) {
             const { img_urls, ...productData } = response.data;
-            const { thumbnail } = JSON.parse(img_urls);
+            const { thumbnail } = (img_urls);
             const productWithThumbnail = {
               ...productData,
               imageUrl: thumbnail,
@@ -46,8 +46,7 @@ function MarketPay() {
 
   const sendPurchaseRequest = async () => {
     try {
-
-      const response = await axios.post(`${API}/purchase`, {
+      const response = await apiWithAuth.post(`${API}purchases`, {
         good_id: productId,
         total_price: price + 3000,
         quantity: quantity,
@@ -55,21 +54,23 @@ function MarketPay() {
       });
       console.log("Purchase API response:", response.data);
       if (response.status === 201) {
-        alert("구매가 성공적으로 완료되었습니다.");
+        alert("결제가 성공적으로 완료되었습니다.");
       }
     } catch (error) {
       console.error("구매 요청 중 에러 발생:", error);
     }
   };
 
-  const handleOrder = () => {
-    const orderSubmit = window.confirm("결제가 성공적으로 완료되었습니다.");
-    if (orderSubmit) {
-      sendPurchaseRequest();
-      window.location.href = `/market/pay/${productId}/success`;
+  const handleOrder = async () => {
+    try {
+      await sendPurchaseRequest();
+      window.location.href = `/market/pay/${productId}/success?price=${price}&quantity=${quantity}`;
+    } catch (error) {
+      console.error('구매 요청 중 에러 발생:', error);
     }
   };
-  
+
+
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-md">
       <div className="text-white font-bold text-4xl pb-5">주문/결제</div>
@@ -104,6 +105,42 @@ function MarketPay() {
                   <input type="tel" className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 mr-1" />
                 </td>
               </tr>
+              <tr>
+                <td className="pb-1 pr-4">배송요청사항</td>
+                <td>
+                  <Select
+                    options={[
+                      { value: 'option1', label: '부재 시 경비실에 맡겨주세요.' },
+                      { value: 'option2', label: '부재 시 택배함에 넣어주세요.' },
+                      { value: 'option3', label: '부재 시 집 앞에 놔 주세요.' },
+                      { value: 'option4', label: '배송 전 연락 바랍니다.' },
+                      { value: 'option5', label: '파손의 위험이 있는 상품입니다. 배송 시 주의해 주세요.' },
+                    ]}
+                    className="border border-gray-300 rounded"
+                    placeholder="배송 시 요청사항을 선택해 주세요"
+                    styles={{
+                      menu: provided => ({
+                        ...provided,
+                        zIndex: 9999,
+                      }),
+                      option: (provided, state) => ({
+                        ...provided,
+                        backgroundColor: state.isSelected ? '#f0f0f0' : 'white',
+                        color: 'black',
+                        fontSize: '1rem',
+                        '&:hover': {
+                          backgroundColor: '#f5f5f5',
+                        },
+                      }),
+                      control: provided => ({
+                        ...provided,
+                        fontSize: '1rem',
+                      }),
+                    }}
+                  />
+
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -133,7 +170,7 @@ function MarketPay() {
       <div className="bg-green-700 rounded-xl border-2 border-lime-300 mt-5">
         <div className="px-5 py-4">
           <div className="flex justify-between">
-          <div className="text-white font-bold text-2xl mb-4">주문상품</div>
+            <div className="text-white font-bold text-2xl mb-4">주문상품</div>
             <div className="text-white text-xl">{quantity}건</div>
           </div>
           {product && (
@@ -142,9 +179,9 @@ function MarketPay() {
                 <div>
                   <img src={product.imageUrl} alt={product.name} className="rounded-md h-20 w-20 mr-4" />
                 </div>
-                <div className="text-white text-xl font-bold">
-                  <div>{product.name}</div>
-                  <div>{product.price.toLocaleString()}원</div>
+                <div>
+                  <div className="text-white text-xl font-bold">{product.name}</div>
+                  <div className="text-white text-xl">{(product.price * quantity).toLocaleString()}원</div>
                 </div>
               </div>
             </div>
@@ -160,7 +197,7 @@ function MarketPay() {
             <div>
               <div className="flex justify-between mb-3">
                 <div className="text-white text-xl">총 상품금액</div>
-                <div className="text-white font-bold text-xl">{product.price.toLocaleString()}원</div>
+                <div className="text-white font-bold text-xl">{(product.price * quantity).toLocaleString()}원</div>
               </div>
               <div className="flex justify-between mb-5">
                 <div className="text-white text-xl">배송비</div>
@@ -169,7 +206,7 @@ function MarketPay() {
               <div className="border-lime-300 border-b"></div>
               <div className="flex justify-between pt-5">
                 <div className="text-white font-bold text-2xl">최종 결제금액</div>
-                <div className="text-white font-bold text-2xl">{(product.price + 3000).toLocaleString()}원</div>
+                <div className="text-white font-bold text-2xl">{(product.price * quantity + 3000).toLocaleString()}원</div> {/* 수량에 따른 최종 가격 표시 */}
               </div>
             </div>
           )}
@@ -187,28 +224,10 @@ function MarketPay() {
       {/* 결제버튼 */}
       <div className="flex justify-center mt-10">
         <button
-<<<<<<< HEAD
           onClick={handleOrder}
-=======
-          onClick={async () => {
-            const paymentWidget = paymentWidgetRef.current
-            try {
-              await paymentWidget?.requestPayment({
-                orderId: nanoid(),
-                orderName: "소형 케이지",
-                customerName: "파충KING",
-                customerEmail: "reptileking@gmail.com",
-                successUrl: `${window.location.origin}/market/pay/success`,
-                failUrl: `${window.location.origin}/market/pay/fail`,
-              })
-            } catch (err) {
-              console.log(err)
-            }
-          }}
->>>>>>> fce378c864e689c9b3377ad048623391d1c2efbc
           className="bg-pink-700 text-white text-2xl font-bold py-3 px-9 rounded-lg hover:bg-pink-600 focus:outline-none focus:bg-pink-600"
         >
-          {(product && product.price) ? `${(product.price + 3000).toLocaleString()}원 결제하기` : '결제하기'}
+          {(product && product.price) ? `${((product.price * quantity) + 3000).toLocaleString()}원 결제하기` : '결제하기'}
         </button>
       </div>
     </div>
