@@ -57,19 +57,23 @@ const Product: React.FC = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("http://54.180.158.4:8000/api/goods");
-        const productsWithThumbnail = response.data.map((product: ProductItem) => ({
-          ...product,
-          imageUrl: JSON.parse(product.img_urls).thumbnail,
-        }));
+        const productsWithThumbnail = response.data.map((product: ProductItem) => {
+          const imageUrl = typeof product.img_urls === 'string' ? JSON.parse(product.img_urls).thumbnail : product.img_urls.thumbnail;
+          return {
+            ...product,
+            imageUrl: imageUrl,
+          };
+        });
         const categoryIdNumber = categoryId ? parseInt(categoryId) : undefined;
         const categoryProduct = productsWithThumbnail.filter((product: ProductItem) => {
           return product.category_id === categoryIdNumber;
         });
         setTotalProducts(categoryProduct);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("제품을 가져오는 중 오류가 발생했습니다:", error);
       }
     };
+
 
     fetchProducts();
   }, [categoryId]);
@@ -159,9 +163,9 @@ const Product: React.FC = () => {
             <div className="p-1 mx-auto max-w-xs mb-20">
               <img src={product.imageUrl} alt={product.name} className="w-56 h-72 object-cover mb-2" />
               <div className="text-center">
-                <h3 className="text-white mb-1">{product.name}</h3>
+                <h3 className="text-white mb-1 font-bold">{product.name}</h3>
                 <p className="text-white">{product.price.toLocaleString()}원</p>
-                <div className="flex items-center justify-center mt-2">
+                <div className="flex items-center justify-center">
                   <StarRating rating={product.rating} />
                   <span className="text-white ml-1">({product.reviewCount})</span>
                 </div>
