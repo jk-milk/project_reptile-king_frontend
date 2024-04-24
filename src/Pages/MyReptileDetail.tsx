@@ -101,7 +101,7 @@ function MyReptileDetail() {
         <div className="font-bold text-3xl mb-3">건강분석</div>
         <hr className="border-t border-gray-400 mb-3" />
         <div className="bg-gray-300 rounded-md flex justify-center items-center">
-          활동량, 탈피주기 확인 차트
+          {/* 활동량, 탈피주기 확인 차트 */}
           <img 
             src="https://img.freepik.com/free-vector/flat-design-dynamic-veterinary-clinic-infographic_23-2149680939.jpg?t=st=1713955901~exp=1713959501~hmac=42ee9f09ccbdafe5b1fd6c05d86a55899d1bdc2022bb0b057695f7d83bfbdeb4&w=996" 
             alt="활동량, 탈피주기 확인 차트" 
