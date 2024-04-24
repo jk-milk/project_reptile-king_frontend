@@ -36,23 +36,23 @@ const MypageOrderItem: React.FC<Props> = ({ order, getDayOfWeek }) => {
   return (
     <div className="border-2 rounded px-5 py-4 flex items-center justify-between mt-2">
       <div>
-        <div className="font-bold text-xl">{order.deliveryStatus}</div>
+        <div className="font-bold text-xl">결제완료</div>
         <div className="text-xl mt-1">
-          {order.deliveryETA} ({getDayOfWeek(order.deliveryETA)}) 도착예정
+          2024.04.29 (월) 도착예정
         </div>
         <div className="flex items-center mt-2">
           <div>
             <img
-              src={order.productImgUrl}
-              alt={order.productName}
+              src="https://contents.sixshop.com/uploadedFiles/32210/product/image_1698381407717.jpeg "
+              alt={"\"리틀 포레스트\" 크레스티드 게코 아크릴 사육장 20x20x30세트"}
               className="w-16 h-16 rounded-full"
             />
           </div>
           <div className="ml-4 text-lg">
-            <div>{order.productName}</div>
+            <div>"리틀 포레스트" 크레스티드 게코 아크릴 사육장 20x20x30세트</div>
             <div className="flex items-center mt-1">
-              <div>{order.productPrice.toLocaleString()}원</div>
-              <div className="ml-3">{order.productQuantity}개</div>
+              <div>68,000원</div>
+              <div className="ml-3">1개</div>
             </div>
           </div>
         </div>
@@ -77,11 +77,11 @@ const MypageOrderItem: React.FC<Props> = ({ order, getDayOfWeek }) => {
           <div className="bg-white rounded-xl px-8 py-4 z-10 flex flex-col items-center justify-center">
 
             <div className="border border-black px-5 py-4 text-center">
-              <div className="text-2xl font">{order.deliveryETA} ({getDayOfWeek(order.deliveryETA)}) 도착예정</div>
+              <div className="text-2xl font">2024.04.29 도착예정</div>
               <div className="text-xl mb-3">{order.deliveryStatusMSG}</div>
               <div className="flex justify-between text-lg">
                 <div className="flex flex-col items-center">
-                  <div className="text-3xl bg-gray-400 text-white rounded-full p-1 mb-1">
+                  <div className="text-3xl bg-blue-500 text-white rounded-full p-1 mb-1">
                     <CiShop />
                   </div>
                   <div className="text-gray-600">결제완료</div>
@@ -93,7 +93,7 @@ const MypageOrderItem: React.FC<Props> = ({ order, getDayOfWeek }) => {
                   <div className="text-gray-600">상품준비중</div>
                 </div>
                 <div className="flex flex-col items-center">
-                  <div className="text-3xl bg-blue-500 text-white rounded-full p-1 mb-1">
+                  <div className="text-3xl bg-gray-400 text-white rounded-full p-1 mb-1">
                     <CiDeliveryTruck />
                   </div>
                   <div className="text-gray-600">배송중</div>
@@ -106,7 +106,7 @@ const MypageOrderItem: React.FC<Props> = ({ order, getDayOfWeek }) => {
                 </div>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-600">
-                <div className="bg-green-600 h-2.5 rounded-full w-64"></div>
+                <div className="bg-green-600 h-2.5 rounded-full w-10"></div>
               </div>
             </div>
 
