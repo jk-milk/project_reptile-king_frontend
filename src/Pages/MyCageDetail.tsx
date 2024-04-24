@@ -27,17 +27,17 @@ function MyCageDetail() {
   const [showLive, setShowLive] = useState(false); // 실시간 사육장 상태를 보여주는지 여부
   const [hover, setHover] = useState(false); // 실시간 사육장 상태를 보여주고 있을 때, 마우스가 위에 있는지 여부
   const [avgTempHum, setAvgTempHum] = useState<AvgTempHum[]>();
-  const liveURL = "http://172.21.2.41:8080/stream";
-  // const liveURL = "/logo.png";
+  const [liveURL, setLiveURL] = useState("");
 
   // 케이지의 상세 데이터 가져오기
   useEffect(() => {
     const fetchCages = async () => {
       const cageResponse = await apiWithAuth.get(API + "cages/" + id);
       console.log(cageResponse);
-      setCage(cageResponse.data.cage);
-      setTemp(cageResponse.data.set_temp);
-      setHum(cageResponse.data.set_hum);
+      setCage(cageResponse.data.cage);      
+      setTemp(cageResponse.data.cage.set_temp);
+      setHum(cageResponse.data.cage.set_hum);
+      setLiveURL("http://" + cageResponse.data.cage.location + ":8080/stream")
     };
     fetchCages();
   }, [id]);
