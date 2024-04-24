@@ -1,12 +1,13 @@
 import { IoMdNotifications } from "react-icons/io";
 import { FaCircleUser } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import { useState, useRef, useEffect } from "react";
 import { API } from "../../../config";
 import { apiWithAuth } from "../../common/axios";
 
 function Navbar() {
+  const navigate = useNavigate();
   const { state, dispatch } = useAuth();
   const { isAuthenticated } = state;
   const [isHovered, setIsHovered] = useState(false);
@@ -38,7 +39,8 @@ function Navbar() {
       console.error(err);
     } finally {
       dispatch({type: 'LOGOUT', accessToken: null, refreshToken: null});
-      location.replace("/");
+      alert("로그아웃 되었습니다.")
+      navigate('/');
     }
   };
 
@@ -51,7 +53,8 @@ function Navbar() {
               <li>
                 <Link to="/">
                   <img
-                    src="/logo.png"
+                    // src="/logo.png"
+                    src="https://avatars.githubusercontent.com/u/158139668?s=400&u=740c66cc2feb195bc7a3bac1ab9f745b78d74de4&v=4"
                     alt="logo"
                     className="mx-4 h-12"
                   />
