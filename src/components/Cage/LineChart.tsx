@@ -52,7 +52,7 @@ function LineChart({ data }: LineChartProps) {
           dependentAxis
           label="온도 (°C)"
           style={{
-            axisLabel: { padding: 35 }
+            axisLabel: { padding: 35, fontSize: 10 }
           }}
         />
         <VictoryAxis
@@ -60,13 +60,13 @@ function LineChart({ data }: LineChartProps) {
           label="습도 (%)"
           orientation="right"
           style={{
-            axisLabel: { padding: 35 }
+            axisLabel: { padding: 35, fontSize: 10 }
           }}
         />
         <VictoryAxis
           label="날짜"
           style={{
-            axisLabel: { padding: 30 }
+            axisLabel: { padding: 30, fontSize: 10 }
           }}
         />
         <VictoryLine
