@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { API } from '../config';
 import { apiWithoutAuth } from '../components/common/axios';
+import { isAxiosError } from 'axios';
 
 function SignIn() {
 
@@ -29,14 +30,17 @@ function SignIn() {
         email,
         password,
       });
+      console.log(response);
 
       // 로그인 성공 시, JWT 토큰 저장
       const accessToken = response.headers['authorization'];
-      const currentTime = Date.now().toString();
+      const refreshToken = response.headers['refresh-token'];
+      console.log(refreshToken);
+
       dispatch({ 
         type: 'LOGIN',
-        token: accessToken,
-        tokenTime: currentTime,
+        accessToken,
+        refreshToken,
       });
 
       // 로그인 성공 후 로직 처리
@@ -47,25 +51,16 @@ function SignIn() {
       navigate('/');
 
     } catch (error) {
-      if (error instanceof Error) {
+      if (isAxiosError(error)) { // error instanceof AxiosError 
         setLoginError('이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.');
-        console.error(error.message);
-      } else {
+        console.error(error);
+        alert('이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.');
+      } else { 
         // error가 Error 타입이 아닐 때의 처리
         setLoginError('알 수 없는 에러가 발생했습니다.');
       }
     }
-
-    // 테스트
-    // if (email === "test12@gmail.com" && password === "12345678")
-    //   alert("로그인 성공")
-    // else {
-    //   alert("로그인 실패")
-    //   setLoginError("이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.")
-    // }
   }
-
-
 
   return (
     <div className="flex justify-center py-20">

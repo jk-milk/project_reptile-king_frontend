@@ -3,25 +3,25 @@ import { createContext, useReducer, ReactNode } from 'react';
 // reducer에 사용할 로그인 현재 상태
 interface AuthState {
   isAuthenticated: boolean;
-  token: string | null;
-  tokenTime: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
 }
 
 // reducer에서 업데이트를 위한 액션 객체
-interface AuthAction {
+export interface AuthAction {
   type: 'LOGIN' | 'LOGOUT';
-  token: string | null;
-  tokenTime: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
 }
 
 // 초기 상태 설정
 const getInitialState = (): AuthState => {
-  const token = localStorage.getItem('token');
-  const tokenTime = localStorage.getItem('tokenTime');
+  const token = localStorage.getItem('accessToken');
+  const refreshToken = localStorage.getItem('refreshToken');
   return {
     isAuthenticated: !!token,
-    token: token,
-    tokenTime: tokenTime,
+    accessToken: token,
+    refreshToken: refreshToken,
   };
 };
 
@@ -36,23 +36,23 @@ export const AuthContext = createContext<{
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case 'LOGIN':{
-      localStorage.setItem('token', action.token!);
-      localStorage.setItem('tokenTime', action.tokenTime!);
+      localStorage.setItem('accessToken', action.accessToken!);
+      localStorage.setItem('refreshToken', action.refreshToken!);
       return {
         ...state,
         isAuthenticated: true,
-        token: action.token,
-        tokenTime: action.tokenTime,
+        accessToken: action.accessToken,
+        refreshToken: action.refreshToken,
       };
     }
     case 'LOGOUT':
-      localStorage.removeItem('token');
-      localStorage.removeItem('tokenTime');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       return {
         ...state,
         isAuthenticated: false,
-        token: null,
-        tokenTime: null,
+        accessToken: null,
+        refreshToken: null,
       };
     default:
       return state;

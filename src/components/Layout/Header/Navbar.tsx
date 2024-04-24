@@ -37,7 +37,7 @@ function Navbar() {
     } catch (err) {
       console.error(err);
     } finally {
-      dispatch({type: 'LOGOUT', token: null, tokenTime: null});
+      dispatch({type: 'LOGOUT', accessToken: null, refreshToken: null});
       location.replace("/");
     }
   };

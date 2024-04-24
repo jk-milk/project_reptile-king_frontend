@@ -1,62 +1,71 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+import { AuthAction } from '../../contexts/AuthContext';
 import { API } from "../../config";
-import { useAuth } from "../../hooks/useAuth";
-
-interface AuthAction {
-  type: 'LOGIN' | 'LOGOUT';
-  token: string | null;
-  tokenTime: string | null;
-}
 
 // 로그인이 필요한 요청용 axios 인스턴스
 const apiWithAuth = axios.create({
   baseURL: API
 });
 
-// 토큰 갱신 함수
-const refreshToken = async (token: string, dispatch: React.Dispatch<AuthAction>) => {  
-  try {
-    const response = await axios.post(`${API}refresh-token`, {}, {
-      headers: {
-        Authorization: token
-      }
-    });    
-    // 응답 헤더에서 'Refresh-Token' 값을 가져와 localStorage에 저장
-    const refreshToken = response.headers['Refresh-Token'];
-    localStorage.setItem('token', refreshToken);
-    localStorage.setItem('tokenTime', new Date().getTime().toString()); // 갱신 시간 업데이트    
-  } catch (error) {
-    if (error instanceof AxiosError) {  // Refresh-Token을 받을 수 있는 시간이 지나서 다시 로그인해야 하는 경우
-      console.error(error.response?.data.msg, error);
-      dispatch({ type: 'LOGOUT', token: null, tokenTime: null });
-      alert('세션이 만료되었습니다. 다시 로그인해 주세요.');
-      location.replace("/");
-    } else {
-      console.error("알 수 없는 에러 발생", error);
-      alert("알 수 없는 에러 발생");
+// 요청 인터셉터
+apiWithAuth.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('accessToken'); // accessToken 가져오기
+    if (token) {
+      config.headers['Authorization'] = token; // 요청 헤더에 accessToken 추가
     }
-  }
-};
-
-// 인터셉터를 사용해 토큰 추가
-apiWithAuth.interceptors.request.use(async function(config) {
-  const { state, dispatch } = useAuth();
-  const token = state.token;
-  const tokenTime = state.tokenTime; // 토큰이 처음 저장되었을 때의 시간
-  const now = Date.now();
-  // console.log(token);
-  
-  // 로그인 후 50분이 지났는지 확인
-  if (token && tokenTime && (now - parseInt(tokenTime, 10)) > 10000) { // 3000000ms = 50분
-    await refreshToken(token, dispatch);
-    config.headers.Authorization = state.token; // 갱신된 토큰으로 설정
-  } else { // 로그인 후 50분이 지나지 않은 경우 -> 로컬스토리지의 accessToken을 그대로 사용
-    config.headers.Authorization = token; // 기존 토큰으로 설정
-  }
-  return config;
-  }, function(error) {
+    return config;
+  },
+  error => {
     return Promise.reject(error);
-});
+  }
+);
+
+// 응답 인터셉터
+export const setupAxiosInterceptors = (logoutDispatch: React.Dispatch<AuthAction>) => {
+  apiWithAuth.interceptors.response.use(
+    response => response,
+    async error => {
+      console.log("에러");
+
+      const originalRequest = error.config;
+      console.log(originalRequest);
+
+      // accessToken 만료 시 refreshToken을 사용하여 accessToken 갱신
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        const refreshToken = localStorage.getItem('refreshToken');
+        console.log(refreshToken);
+
+        if (refreshToken) {
+          // refreshToken을 사용하여 새로운 accessToken 발급
+          try {
+            const response = await axios.post(`${API}refresh-token`, {}, {
+              headers: {
+                'Authorization': refreshToken
+              }
+            });
+            console.log(response);
+
+            if (response.status === 200) {
+              const accessToken = response.headers.authorization;
+              localStorage.setItem('accessToken', accessToken);
+              axios.defaults.headers.common['Authorization'] = accessToken;
+              console.log("요청 재시도");
+
+              return apiWithAuth(originalRequest); // 갱신된 토큰으로 요청 재시도
+            }
+          } catch (error) {
+            console.error("토큰 갱신 실패", error);
+            logoutDispatch({type: 'LOGOUT', accessToken: null, refreshToken: null});
+            return Promise.reject(error);
+          }
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
+};
 
 // 로그인이 필요하지 않은 요청용 axios 인스턴스
 const apiWithoutAuth = axios.create({
