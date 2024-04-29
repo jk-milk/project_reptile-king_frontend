@@ -42,9 +42,15 @@ function MyReptileAdd() {
   const handleSubmit = async () => {
     if (!reptileName) {
       alert("이름을 입력해 주세요!")
+      return;
     }
     if (!species) {
       alert("종을 입력해 주세요!")
+      return;
+    }
+    if (!gender) {
+      alert("성별을 선택해 주세요!")
+      return;
     }
 
     const confirmSubmit = confirm('파충류 등록을 완료하시겠습니까?');
