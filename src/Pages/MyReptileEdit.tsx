@@ -15,7 +15,10 @@ function MyReptileEdit() {
     const fetchReptile = async () => {
       setReptile(location.state);
       setName(location.state.name);
-      setBirth(location.state.birth)
+      if(location.state.birth === null)
+        setBirth('');
+      else
+        setBirth(location.state.birth)
       setSpecies(location.state.species);
       setGender(location.state.gender);
       if (location.state.memo !== null)
@@ -76,9 +79,15 @@ function MyReptileEdit() {
 
       formData.append('_method', 'PATCH');
 
-      const response = await apiWithAuth.post(`${API}reptiles/${id}`, formData);
-      console.log(response);
-      
+      try {
+        const response = await apiWithAuth.post(`${API}reptiles/${id}`, formData);
+        console.log(response);
+        alert('파충류가 성공적으로 수정되었습니다.');
+        navigate('/my-cage');
+      } catch (error) {
+        console.error(error);
+        alert('파충류 수정에 실패했습니다.');
+      }
     }
   };
 

@@ -47,14 +47,11 @@ export const setupAxiosInterceptors = (logoutDispatch: React.Dispatch<AuthAction
             });
             console.log(response);
 
-            if (response.status === 200) {
-              const accessToken = response.headers.authorization;
-              localStorage.setItem('accessToken', accessToken);
-              axios.defaults.headers.common['Authorization'] = accessToken;
-              console.log("요청 재시도");
-
-              return apiWithAuth(originalRequest); // 갱신된 토큰으로 요청 재시도
-            }
+            const accessToken = response.headers.authorization;
+            localStorage.setItem('accessToken', accessToken);
+            axios.defaults.headers.common['Authorization'] = accessToken;
+            console.log("요청 재시도");
+            return apiWithAuth(originalRequest); // 갱신된 토큰으로 요청 재시도
           } catch (error) {
             console.error("토큰 갱신 실패", error);
             logoutDispatch({type: 'LOGOUT', accessToken: null, refreshToken: null});

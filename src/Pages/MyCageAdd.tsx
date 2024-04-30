@@ -62,6 +62,15 @@ function MyCageAdd() {
   };
 
   const handleSubmit = async () => {
+    if (!cageName) {
+      alert("이름을 입력해 주세요!")
+      return;
+    }
+    if (!serialCode) {
+      alert("시리얼 코드를 입력해 주세요!")
+      return;
+    }
+
     const confirmSubmit = confirm('사육장 등록을 완료하시겠습니까?');
     console.log(uploadedImages);
 
@@ -81,16 +90,12 @@ function MyCageAdd() {
       });
 
       try {
-        const response = await apiWithAuth.post(API + 'cages', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        const response = await apiWithAuth.post(API + 'cages', formData);
         console.log(response);
 
-        // for (let pair of response.config.data.entries()) {
-        //   console.log(`${pair[0]}: ${pair[1]}`);
-        // }
+        for (const pair of response.config.data.entries()) {
+          console.log(`${pair[0]}: ${pair[1]}`);
+        }
 
         alert('사육장이 성공적으로 등록되었습니다.');
         navigate('/my-cage');
@@ -108,7 +113,7 @@ function MyCageAdd() {
           <div className="font-bold text-3xl mb-3">사육장 등록</div>
           <div className="grid grid-cols-4 gap-4 mt-2">
             <div className="text-lg col-span-1 flex justify-center items-center">
-              이름
+              이름 <span className="text-red-500 ml-1">*</span>
             </div>
             <input
               type="text"
@@ -151,7 +156,7 @@ function MyCageAdd() {
                     className="w-1/6 h-10 p-2 border border-gray-300 rounded mb-2">
                     <option value="" disabled>파충류 선택</option>
                     {reptiles.map((reptile) => (
-                      <option key={reptile.name} value={reptile.serial_code}>{reptile.name}</option>
+                      <option key={reptile.id} value={reptile.serial_code}>{reptile.name}</option>
                     ))}
                   </select>
                   <button
@@ -202,7 +207,7 @@ function MyCageAdd() {
             )}
 
             <div className="text-lg col-span-1 flex justify-center items-center">
-              시리얼 코드
+              시리얼 코드<span className="text-red-500 ml-1">*</span>
             </div>
             <input
               type="text"

@@ -42,9 +42,15 @@ function MyReptileAdd() {
   const handleSubmit = async () => {
     if (!reptileName) {
       alert("이름을 입력해 주세요!")
+      return;
     }
     if (!species) {
       alert("종을 입력해 주세요!")
+      return;
+    }
+    if (!gender) {
+      alert("성별을 선택해 주세요!")
+      return;
     }
 
     const confirmSubmit = confirm('파충류 등록을 완료하시겠습니까?');
@@ -81,7 +87,9 @@ function MyReptileAdd() {
       <div className="bg-white rounded-lg shadow-md px-5 py-4">
         <div className="font-bold text-3xl mb-3">파충류 등록</div>
         <div className="grid grid-cols-4 gap-4 mt-2">
-          <div className="text-lg col-span-1 flex justify-center items-center">이름</div>
+          <div className="text-lg col-span-1 flex justify-center items-center">
+            이름<span className="text-red-500 ml-1">*</span>
+          </div>
           <input
             type="text"
             className="col-span-3 p-2 border border-gray-300 rounded"
@@ -89,7 +97,9 @@ function MyReptileAdd() {
             onChange={(e) => setReptileName(e.target.value)}
           />
 
-          <div className="text-lg col-span-1 flex justify-center items-center">종</div>
+          <div className="text-lg col-span-1 flex justify-center items-center">
+            종<span className="text-red-500 ml-1">*</span>
+          </div>
           <input
             type="text"
             className="col-span-3 p-2 border border-gray-300 rounded"
@@ -100,11 +110,14 @@ function MyReptileAdd() {
           <div className="text-lg col-span-1 flex justify-center items-center">생년월일</div>
           <input
             type="date"
+            value={birth}
             className="w-40 col-span-3 p-2 border border-gray-300 rounded"
             onChange={(e) => setBirth(e.target.value)}
           ></input>
 
-          <div className="text-lg col-span-1 flex justify-center items-center">성별</div>
+          <div className="text-lg col-span-1 flex justify-center items-center">
+            성별<span className="text-red-500 ml-1">*</span>
+          </div>
           <div className="col-span-3">
             <div className="flex">
               <label className="flex items-center">
