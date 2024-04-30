@@ -7,9 +7,9 @@ import { calculateAge } from "../utils/CalculateAge";
 
 function MyCage() {
   const navigate = useNavigate();
-  const [cages, setCages] = useState<Cage[] | null>();
-  const [reptiles, setReptiles] = useState<Reptile[] | null>();
-  const [curCages, setCurCages] = useState<CurCage[] | null>();
+  const [cages, setCages] = useState<Cage[] | null>(); // 케이지 목록 정보
+  const [curCages, setCurCages] = useState<CurCage[] | null>(); // 온습도 포함 케이지 목록 정보
+  const [reptiles, setReptiles] = useState<Reptile[] | null>(); // 파충류 목록 정보
 
   // 개인 케이지 목록 가져오기
   useEffect(() => {
@@ -19,6 +19,7 @@ function MyCage() {
         console.log(response);
         if (response.status === 204) { // 사육장이 없는 경우
           setCages(null);
+          setCurCages(null);
         } else {
           setCages(response.data.cages);
           const curCages = response.data.cages.map((cage: Cage) => ({
@@ -26,14 +27,17 @@ function MyCage() {
             cur_temp: null, // cur_temp cur_hum null로 초기화
             cur_hum: null,
           }));
-          setCurCages(curCages)
+          setCurCages(curCages);
         }
       } catch (error) {
         setCages(null);
+        setCurCages(curCages);
         console.error("케이지 목록 가져오기 서버 에러");
+        alert("케이지 목록 가져오는 중 에러! 다시 시도해 주세요.");
       }
     };
     fetchCages();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // cages가 변경되면 각각 현재 온도와 습도 가져오기
@@ -63,7 +67,7 @@ function MyCage() {
               // 응답 데이터가 없거나, latestData 객체가 존재하지 않는 경우
               return {
                 ...cage,
-                cur_temp: 20,
+                cur_temp: 20, // 온습도 기본값 지정
                 cur_hum: 40,
               };
             }
@@ -93,6 +97,7 @@ function MyCage() {
       } catch (error) {
         setReptiles(null);
         console.error("파충류 목록 가져오기 서버 에러");
+        alert("파충류 목록 가져오는 중 에러! 다시 시도해 주세요.");
       }
     };
     fetchCages();
@@ -135,12 +140,12 @@ function MyCage() {
                 <div className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
                   {cage.img_urls ?
                     <img 
-                      src={cage.img_urls[0]} 
+                      src={cage.img_urls[0]}
                       alt={cage.name} 
                       className="w-full h-48 object-cover rounded-t"
                     /> : 
                     <img 
-                      src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/cages/defaultCageImage.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
+                      src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/defaults/defaultCageImage.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
                       alt={cage.name} 
                       className="w-full h-48 object-cover rounded-t"
                     />
@@ -187,8 +192,8 @@ function MyCage() {
                     className="w-full h-48 object-cover rounded-t"
                   /> :
                   <img
-                    // src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/reptiles/defaultReptileImage.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
-                    src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/reptiles/defaultReptileImage2.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
+                    // src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/defaults/defaultReptileImage.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
+                    src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/defaults/defaultReptileImage2.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
                     alt={reptile.name}
                     className="w-full h-48 object-cover rounded-t"
                   />
