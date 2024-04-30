@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { apiWithAuth } from '../components/common/axios';
 import { API } from '../config';
-import { Cage } from '../types/Cage';
-import axios from 'axios';
+import { Cage, Reptile } from '../types/Cage';
 import ImageWithDeleteButton from '../components/Board/ImageWithDeleteButton';
 
 function MyCageEdit() {
@@ -17,6 +16,10 @@ function MyCageEdit() {
     const fetchCage = async () => {
       setCage(location.state);
       setName(location.state.name);
+      if (location.state.reptile_serial_code === null)
+        setReptileSerialCode("none");
+      else
+        setReptileSerialCode(location.state.reptile_serial_code);
       if (location.state.memo !== null)
         setMemo(location.state.memo);
       setImgUrls(location.state.img_urls || []);
@@ -26,10 +29,37 @@ function MyCageEdit() {
   }, [location.state]);
 
   const [cage, setCage] = useState<Cage>();
+  console.log(cage);
+
   const [name, setName] = useState('');
+  const [reptileSerialCode, setReptileSerialCode] = useState('');
   const [memo, setMemo] = useState('');
   const [imgUrls, setImgUrls] = useState<string[]>([]);
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [reptiles, setReptiles] = useState<Reptile[] | null>(null);
+  console.log(reptiles);
+  
+
+  // 사용자의 파충류 목록 가져오기
+  useEffect(() => {
+    const fetchReptiles = async () => {
+      try {
+        const response = await apiWithAuth.get(API + "reptiles");
+        // console.log(response);
+        // setCategories(postsCategories);
+        if (response.status === 204) {
+          setReptiles([]);
+        } else {
+          setReptiles(response.data.reptiles);
+        }
+      } catch {
+        console.error("서버 오류");
+        alert("서버 오류! 잠시 후 다시 시도해 주세요.");
+      }
+    };
+
+    fetchReptiles();
+  }, []);
 
   // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   const files = event.target.files;
@@ -60,7 +90,7 @@ function MyCageEdit() {
   const handleCancel = () => {
     const confirmCancel = confirm('사육장 수정을 취소하시겠습니까?');
     if (confirmCancel)
-      navigate('/my-cage');
+      navigate(-1);
   };
 
   const handleSubmit = async () => {
@@ -84,7 +114,8 @@ function MyCageEdit() {
       // formData.append('imgUrls', JSON.stringify(imgUrls));
 
       if (imgUrls.length === 0)
-        formData.append('imgUrls[]', '');
+        // formData.append('imgUrls[]', '');
+        formData.append('imgUrls[]', JSON.stringify(imgUrls));
       else {
         imgUrls.forEach(url => {
           formData.append('imgUrls[]', url);
@@ -113,11 +144,10 @@ function MyCageEdit() {
       formData.append('_method', 'PATCH');
 
       // FormData의 모든 key-value 쌍을 로그로 확인
-      for (let pair of formData.entries()) {
+      for (const pair of formData.entries()) {
         console.log(`${pair[0]}: ${pair[1]}`);
       }
       // console.log(id);
-      const token = localStorage.getItem('token');
 
       try {
         // const response = await apiWithAuth.patch(`${API}cages/${id}`, formData, {
@@ -126,19 +156,21 @@ function MyCageEdit() {
         //     'Content-Type': 'multipart/form-data',
         //   },
         // });
-        const response = await axios({
-          method: 'post',
-          url: `${API}cages/${id}`,
-          data: formData,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': token
-          }
-        });
+        // const response = await axios({
+        //   method: 'post',
+        //   url: `${API}cages/${id}`,
+        //   data: formData,
+        //   headers: {
+        //     'Content-Type': 'multipart/form-data',
+        //     'Authorization': token
+        //   }
+        // });
+
+        const response = await apiWithAuth.post(`${API}cages/${id}`, formData);
 
         console.log(response);
 
-        for (let pair of response.config.data.entries()) {
+        for (const pair of response.config.data.entries()) {
           console.log(`${pair[0]}: ${pair[1]}`);
         }
 
@@ -165,79 +197,133 @@ function MyCageEdit() {
     <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
       <div className="bg-white rounded-lg shadow-md px-5 py-4">
         <div className="font-bold text-3xl mb-3">사육장 수정</div>
-        <div className="flex items-center mt-2">
-          <table className="w-full">
-            <tbody>
-              <tr>
-                <td className="w-1/4 text-lg text-center">
-                  이름
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    className="w-full h-10 p-2 border border-gray-300 rounded mt-2 mb-2"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  ></input>
-                </td>
-              </tr>
-              <tr>
-                <td className="w-1/4 text-lg text-center">이미지</td>
-                <td>
-                  <div className="flex items-center">
-                    <button
-                      className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded"
-                      onClick={() => document.getElementById('imageUpload')?.click()}
-                      disabled={imgUrls.length + uploadedImages.length >= 3} // 총 이미지 개수 제한
-                    >
-                      이미지 업로드
-                    </button>
-                    <input
-                      id="imageUpload"
-                      type="file"
-                      className="hidden"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      multiple
-                    />
-                    <span className="ml-6">{imgUrls.length + uploadedImages.length}/3</span>
-                    <span className="text-gray-400 text-sm ml-6">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
+        <div className="grid grid-cols-4 gap-4 mt-2">
+          <div className="text-lg col-span-1 flex justify-center items-center">
+            이름<span className="text-red-500 ml-1">*</span>
+          </div>
+          <input
+            type="text"
+            className="col-span-3 p-2 border border-gray-300 rounded"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          ></input>
+
+          <div className="col-span-1 text-lg flex justify-center items-center">
+            파충류 선택
+          </div>
+          <div className="col-span-3">
+            <div className="flex items-center">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="reptileSerialCode"
+                  value="none"
+                  checked={reptileSerialCode === 'none'}
+                  onChange={(e) => setReptileSerialCode(e.target.value)}
+                  className="h-5 w-5 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="ml-2 mr-4 pb-0.5 text-gray-700">미등록</span>
+              </label>
+              {reptiles === null ? (
+                // 로딩 중인 경우
+                <p className="w-fit h-10 p-1 border border-gray-300 rounded mb-2 text-center">로딩 중...</p>
+              ) : reptiles.length === 0 ? (
+                // 데이터가 없는 경우
+                <div className='flex h-10 mb-1'>
+                  <div className="w-fit p-2 border border-gray-300 rounded text-center">
+                    <p>등록된 파충류가 없습니다.</p>
                   </div>
-                  <div className="flex mt-3">
-                    {/* 기존 이미지들 먼저 보여주기 */}
-                    {imgUrls && imgUrls.map((url, index) => (
-                      <ImageWithDeleteButton
-                        key={`existing-${index}`}
-                        src={url}
-                        alt={`Existing Image ${index + 1}`}
-                        onDelete={() => handleDeleteExistingImage(index)}
-                      />
+                  <button
+                    onClick={() => navigate('/my-cage/reptile/add')}
+                    className="ms-2 hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded"
+                  >
+                    파충류 추가하기
+                  </button>
+                </div>
+              ) : (
+                // 데이터가 있는 경우, select와 options를 표시
+                <div className='flex h-10 mb-1'>
+                  <select
+                    value={reptileSerialCode}
+                    onChange={(event) => {
+                      setReptileSerialCode(event.target.value);
+                      console.log(event.target.value); // 선택된 값 출력
+                    }}
+                    className="h-10 p-2 border border-gray-300 rounded mb-2">
+                    <option value="none" disabled>파충류 선택</option>
+                    {reptiles.map((reptile) => (
+                      <option key={reptile.id} value={reptile.serial_code}>{reptile.name}</option>
                     ))}
-                    {/* 새로 업로드된 이미지들 보여주기 */}
-                    {uploadedImages.map((image, index) => (
-                      <ImageWithDeleteButton
-                        key={`uploaded-${index}`}
-                        src={URL.createObjectURL(image)}
-                        alt={`Uploaded Image ${index + 1}`}
-                        onDelete={() => handleDeleteUploadedImage(index)}
-                      />
-                    ))}
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td className="w-1/4 text-lg text-center">메모</td>
-                <td>
-                  <textarea
-                    className="w-full h-40 border border-gray-300 rounded-md p-2 focus:outline-none mt-3 mb-3"
-                    value={memo}
-                    onChange={(e) => setMemo(e.target.value)}
-                    placeholder="메모를 입력해 주세요..."
-                  ></textarea>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  </select>
+                  <button
+                    onClick={() => navigate('/my-cage/reptile/add')}
+                    className="ms-2 hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded transition duration-300"
+                  >
+                    파충류 추가하기
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="col-span-1 flex justify-center items-center text-lg">사진 첨부</div>
+          <div className="col-span-3">
+            <button
+              className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded transition duration-300"
+              onClick={() => document.getElementById('imageUpload')?.click()}
+              disabled={imgUrls.length + uploadedImages.length >= 3} // 총 이미지 개수 제한
+            >
+              사진 첨부
+            </button>
+            <input
+              id="imageUpload"
+              type="file"
+              className="hidden"
+              accept="image/*"
+              onChange={handleImageUpload}
+              multiple
+            />
+            <span className="ml-6">{imgUrls.length + uploadedImages.length}/3</span>
+            <span className="text-gray-400 text-sm ml-6">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
+          </div>
+
+          {/* 기존 이미지들 먼저 보여주기 */}
+          {imgUrls && imgUrls.map((url, index) => (
+            <>
+              <div className="col-span-1"></div>
+              <div className="col-span-3 flex mt-3">
+                <ImageWithDeleteButton
+                  key={`existing-${index}`}
+                  src={url}
+                  alt={`Existing Image ${index + 1}`}
+                  onDelete={() => handleDeleteExistingImage(index)}
+                />
+              </div>
+            </>
+          ))}
+          {/* 새로 업로드된 이미지들 보여주기 */}
+          {uploadedImages.map((image, index) => (
+            <>
+              <div className="col-span-1"></div>
+              <div className="col-span-3 flex mt-3">
+                <ImageWithDeleteButton
+                  key={`uploaded-${index}`}
+                  src={URL.createObjectURL(image)}
+                  alt={`Uploaded Image ${index + 1}`}
+                  onDelete={() => handleDeleteUploadedImage(index)}
+                />
+              </div>
+            </>
+          ))}
+          <div className="text-lg col-span-1 flex justify-center items-center">메모</div>
+          <textarea
+            className="col-span-3 h-40 border border-gray-300 rounded-md p-2 focus:outline-none mt-3 mb-3"
+            value={memo}
+            onChange={(e) => setMemo(e.target.value)}
+            placeholder="메모를 입력해 주세요..."
+          ></textarea>
+
+
         </div>
         <div className="flex justify-center mt-3">
           <button
