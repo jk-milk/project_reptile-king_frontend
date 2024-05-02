@@ -46,9 +46,8 @@ export interface Reptile {
 }
 
 export interface AvgTempHum {
-  year: string;
-  month: string;
-  day: string;
+  date: string;
+  hour: string;
   avgtemp: string;
   avghum: string;
 }
