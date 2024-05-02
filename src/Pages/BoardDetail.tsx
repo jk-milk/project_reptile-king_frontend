@@ -65,7 +65,6 @@ function BoardDetail() {
       {post ? (
         <>
           <div className="mt-20">
-            <BoardCategory />
           </div>
           <div className="laptop:w-[47.6875rem] w-mainContent">
             <div className="bg-gray-200 px-5 mt-20 mb-5 rounded">
@@ -103,7 +102,7 @@ function BoardDetail() {
               <CommentForm postId={Number(postId)} onCommentPosted={onCommentPosted} />
             </div>
           </div>
-          <PopularPosts />
+          {/* <PopularPosts /> */}
         </>
       ) : null}
     </div>

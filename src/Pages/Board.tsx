@@ -19,6 +19,8 @@ function Board() {
   const [title, setTitle] = useState<string>(); // 게시글 상단 문자열
 
   const [posts, setPosts] = useState<Post[] | null>(null);
+  console.log(posts);
+  
   const [sort, setSort] = useState("최신순"); // 정렬 방식
   const [searchWord, setSearchWord] = useState(""); // 검색어
 
@@ -27,12 +29,15 @@ function Board() {
   const LIKES_NUMBER = 5; // 인기글 조건: 좋아요 수 LIKES_NUMBER 이상인 글들이 인기글
   const POSTS_PER_PAGE = 10; // 한 페이지에 보여줄 게시글 수
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [totalPosts, setTotalPosts] = useState(0); // 게시판에 표시되어야 할 전체 게시글 수
 
   // 카테고리 가져오기  
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await apiWithoutAuth.get(API + 'categories');      
+      const response = await apiWithoutAuth.get(API + 'categories');
+      // console.log(response, "fetchCategories");
+      
       // posts만 뽑기
       const posts = response.data.filter((data: Category) => data.division === 'posts');
 
@@ -41,6 +46,8 @@ function Board() {
         const subPosts = response.data.filter((data: Category) => Number(data.parent_id) === post.id);
         return { ...post, subPosts };
       });
+      console.log(postsWithSubPosts, "postsWithSubPosts");
+      
       setCategories(postsWithSubPosts);
     };
 
@@ -49,20 +56,33 @@ function Board() {
 
   // 게시글 가져오기
   // 카테고리, 검색어, 정렬 기준, 페이지네이션을 포함한 게시글 데이터를 가져오는 함수
-  const fetchPosts = async ({ categoryId, searchTerm, sortBy, page }) => {
+  // const fetchPosts = async ({ categoryId, searchTerm, sortBy, page }) => {
+  const fetchPosts = async () => {
     // 백엔드 API 호출 
     // 예: `fetch('/api/posts?category=${categoryId}&search=${searchTerm}&sort=${sortBy}&page=${page}')`
     // 임시로 전체 글 호출
-    const response = await apiWithoutAuth.get(API + 'posts');
-    
-    return response.data;
+    const response = await apiWithoutAuth.get(`${API}posts`);
+    console.log(response.data);
+    setPosts(response.data.data);
+    setTotalPages(response.data.last_page);
   };
 
-  // // 카테고리 기준 게시글 데이터 가져오기
-  // const fetchPostsByCategory = async (category_id: number) => {
-  //   const response = await apiWithoutAuth.get(`${API}posts/category/${category_id}`);
-  //   return response.data;
-  // }
+  useEffect(()=>{
+    fetchPosts();
+  },[])
+
+  // 카테고리 기준 게시글 데이터 가져오기
+  const fetchPostsByCategory = async (category_id: number) => {
+    const response = await apiWithoutAuth.get(`${API}posts/category/${category_id}`);
+    setPosts(response.data.data);
+    setTotalPages(response.data.last_page);
+  }
+
+  useEffect(()=>{
+    const categoryId = searchParams.get('category');
+    if (categoryId !== null)
+      fetchPostsByCategory(Number(categoryId));
+  }, [searchParams])
 
   // 카테고리를 선택하면 이동
   const selectCategoryAndNavigate = (id: number) => {
@@ -78,22 +98,22 @@ function Board() {
     }
   };
 
-  // URL의 쿼리 스트링이 변경될 때마다 쿼리 스트링에 따라 글 가져오기 - 카테고리, 검색어, 정렬기준, 페이지네이션
-  useEffect(() => {
-    const categoryId = searchParams.get('category');
-    const searchTerm = searchParams.get('search');
-    const sortBy = searchParams.get('sort');
-    const page = searchParams.get('page');
+  // // URL의 쿼리 스트링이 변경될 때마다 쿼리 스트링에 따라 글 가져오기 - 카테고리, 검색어, 정렬기준, 페이지네이션
+  // useEffect(() => {
+  //   const categoryId = searchParams.get('category');
+  //   const searchTerm = searchParams.get('search');
+  //   const sortBy = searchParams.get('sort');
+  //   const page = searchParams.get('page');
 
-    // 카테고리 ID를 사용해 카테고리 이름 찾고 게시판 상단 문자열 변경
-    const category = categories.find(c => c.id === Number(categoryId));
-    if (category) {
-      setTitle(category.name);
-    }
+  //   // 카테고리 ID를 사용해 카테고리 이름 찾고 게시판 상단 문자열 변경
+  //   const category = categories.find(c => c.id === Number(categoryId));
+  //   if (category) {
+  //     setTitle(category.name);
+  //   }
 
-    // 게시글 데이터 가져오기
-    fetchPosts({ categoryId, searchTerm, sortBy, page }).then(data => setPosts(data));
-  }, [searchParams, categories]);
+  //   // 게시글 데이터 가져오기
+  //   fetchPosts({ categoryId, searchTerm, sortBy, page }).then(data => setPosts(data));
+  // }, [searchParams, categories]);
 
   // // 글 페이지 설정
   // useEffect(() => {
@@ -169,7 +189,7 @@ function Board() {
             </button>
           </Link>
         </div>
-        {/* <PostList posts={posts} /> */}
+        <PostList posts={posts} />
         <Pagination
           totalPosts={totalPosts}
           postsPerPage={POSTS_PER_PAGE}

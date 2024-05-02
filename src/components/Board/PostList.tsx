@@ -7,6 +7,8 @@ import { Post } from "../../types/Board";
 import { BiSolidLike } from "react-icons/bi";
 
 const PostList = ({ posts }: { posts: Post[] | null }) => {
+  console.log(posts);
+  
   // 실제 api와 연결해서 댓글 수 출력하는 코드 임시
   // const [comments, setComments] = useState<{ [key: number]: Comment[] }>({});
 
