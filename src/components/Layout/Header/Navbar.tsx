@@ -32,8 +32,13 @@ function Navbar() {
   }, [dropdownRef]);
 
   const handleLogout = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
     try {
-      const response = await apiWithAuth.post(API + "logout");
+      const response = await apiWithAuth.post(API + "logout", {
+        headers: {
+          'Refresh-Token': refreshToken
+        }
+      });
       console.log(response);
     } catch (err) {
       console.error(err);
