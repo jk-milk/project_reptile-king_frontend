@@ -28,13 +28,14 @@ function MyCageDetail() {
   const [hover, setHover] = useState(false); // 실시간 사육장 상태를 보여주고 있을 때, 마우스가 위에 있는지 여부
   const [avgTempHum, setAvgTempHum] = useState<AvgTempHum[]>();
   const [liveURL, setLiveURL] = useState("");
+  console.log(cage);
 
   // 케이지의 상세 데이터 가져오기
   useEffect(() => {
     const fetchCages = async () => {
       const cageResponse = await apiWithAuth.get(API + "cages/" + id);
       console.log(cageResponse);
-      setCage(cageResponse.data.cage);      
+      setCage(cageResponse.data.cage);
       setTemp(cageResponse.data.cage.set_temp);
       setHum(cageResponse.data.cage.set_hum);
       setLiveURL("http://" + cageResponse.data.cage.location + ":8080/stream")
@@ -50,22 +51,23 @@ function MyCageDetail() {
       setCurTem(response.data.latestData.temperature);
       setCurHum(response.data.latestData.humidity);
     }
-  }
+  };
 
   useEffect(() => {
     fetchCagesTempHum();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cage, id]);
 
   // 온습도 그래프 데이터 가져오기
   useEffect(() => {
-    const fetchCagesTempHums = async () => {
+    const fetchCagesTempHumGraphs = async () => {
       if (cage) {
         const response = await apiWithAuth.get(`${API}cages/${id}/daily-temperature-humidity`)
         console.log(response.data.avgData);
         setAvgTempHum(response.data.avgData);
       }
     }
-    fetchCagesTempHums();
+    fetchCagesTempHumGraphs();
   }, [cage, id]);
 
   // 온습도 변경 모드 활성화
@@ -112,29 +114,17 @@ function MyCageDetail() {
   const handleDeleteCage = async () => {
     const check = confirm("정말 삭제하시겠습니까?");
     if (check) {
-      console.log(id);
-      const response = await apiWithAuth.delete(API + "cages/" + id);
-      console.log(response);
-      alert("삭제되었습니다.")
-      navigate("/my-cage");
+      try {
+        const response = await apiWithAuth.delete(API + "cages/" + id);
+        console.log(response);
+        alert("삭제되었습니다.")
+        navigate("/my-cage");
+      } catch (error) {
+        console.error(error);
+        alert("사육장 삭제 중 에러! 다시 시도해 주세요!")
+      }
     }
   }
-
-  // const handleEditReptile = () => {
-  //   navigate(`/my-cage/reptile/edit/${id}`, {
-  //     state: reptile
-  //   });
-  // }
-
-  // const handleDeleteReptile = async () => {
-  //   const check = confirm("정말 삭제하시겠습니까?");
-  //   if (check) {
-  //     console.log(id);
-  //     const response = await apiWithAuth.delete(API + "cages/" + id);
-  //     console.log(response);
-  //     navigate("/my-cage");
-  //   }
-  // }
 
   const handleShowReptileDetail = () => {
     navigate(`/my-cage/reptile/${reptile?.id}`, { state: { reptileSerialCode: reptileSerialCode } });
@@ -170,12 +160,12 @@ function MyCageDetail() {
           </div>
         </div>
         <div className="flex items-center">
-          <div className="w-1/2 pr-6">
-            {cage?.img_urls ? (
-              <img src={cage?.img_urls[0]} alt={cage.name} className="w-full h-auto rounded-lg" />
+          <div className="w-1/2 pr-6 flex flex-col">
+            {cage?.img_urls.length !== 0 ? (
+              <img src={cage?.img_urls[0]} alt={cage?.name} className="w-full h-auto rounded-lg" />
             ) :
               <img
-                src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/cages/defaultCageImage.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
+                src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/defaults/defaultCageImage.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
                 alt='사육장 기본 이미지'
                 className="w-full h-auto rounded-lg"
               />
@@ -226,12 +216,14 @@ function MyCageDetail() {
               <div className="flex">
                 <button
                   onClick={handleRefreshTempHum}
+                  title='온·습도 새로고침'
                   className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-semibold py-1 px-3 rounded transition duration-300 mr-2 flex items-center"
                 >
                   <FiRefreshCw />
                 </button>
                 <button
                   onClick={handleEditTempHum}
+                  title='설정 온·습도 변경'
                   className="border-yellow-500 border-2 hover:bg-yellow-200 text-yellow-500 font-semibold py-1 px-3 rounded transition duration-300"
                 >
                   <IoMdCreate />
@@ -249,7 +241,7 @@ function MyCageDetail() {
               <div className="flex flex-col items-center w-1/2 ml-3">
                 <div className="text-lg font-semibold mb-2">설정 온·습도</div>
                 <div className="bg-gray-300 rounded-lg shadow-md py-3 px-4 h-28 text-center text-4xl font-bold flex justify-center items-center">
-                  {cage?.set_temp}&#176;C / {cage?.set_hum}%
+                  {temp}&#176;C / {hum}%
                 </div>
               </div>
             </div>
@@ -264,7 +256,8 @@ function MyCageDetail() {
                       type="number"
                       placeholder="온도 설정"
                       className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm"
-                      value={temp ? temp : cage?.set_temp}
+                      value={temp}
+                      defaultValue={cage?.set_temp}
                       onChange={(e) => setTemp(Number(e.target.value))}
                     />
                   </div>
@@ -275,7 +268,8 @@ function MyCageDetail() {
                       type="number"
                       placeholder="습도 설정"
                       className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm"
-                      value={hum ? hum : cage?.set_hum}
+                      value={hum}
+                      defaultValue={cage?.set_hum}
                       onChange={(e) => setHum(Number(e.target.value))}
                     />
                   </div>
