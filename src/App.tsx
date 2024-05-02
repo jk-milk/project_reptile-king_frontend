@@ -34,15 +34,8 @@ import MyCageEdit from './Pages/MyCageEdit'
 import MyReptileEdit from './Pages/MyReptileEdit'
 import MyReptileDetail from './Pages/MyReptileDetail'
 import MyReptileAdd from './Pages/MyReptileAdd'
-import { useEffect } from 'react'
-import { setupAxiosInterceptors } from './components/common/axios'
-import { useAuth } from './hooks/useAuth'
 
 function App() {
-  const { dispatch } = useAuth();
-  useEffect(() => {
-    setupAxiosInterceptors(dispatch)
-  })
   return (
     <Routes>
       <Route index element={<Home />} />
