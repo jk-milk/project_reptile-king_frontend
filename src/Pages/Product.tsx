@@ -174,16 +174,13 @@ const Product: React.FC = () => {
           </Link>
         ))}
       </div>
-
       <div className="flex justify-center mt-20">
-        {currentPage && (
-          <button
-            className="mx-1 px-3 py-1 rounded-md focus:outline-none bg-green-700 hover:bg-green-500 transition-colors duration-200 text-white w-10 h-10"
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            {<MdArrowBackIosNew />}
-          </button>
-        )}
+        <button
+          className="mx-1 px-3 py-1 rounded-md focus:outline-none bg-green-700 hover:bg-green-500 transition-colors duration-200 text-white w-10 h-10"
+          onClick={() => currentPage !== 1 && handlePageChange(currentPage - 1)}
+        >
+          {<MdArrowBackIosNew />}
+        </button>
         {[...Array(Math.ceil(sortedProducts.length / itemsPerPage))].map((_, index) => (
           <button
             key={index}
@@ -194,14 +191,12 @@ const Product: React.FC = () => {
             {index + 1}
           </button>
         ))}
-        {currentPage && (
-          <button
-            className="mx-1 px-3 py-1 rounded-md focus:outline-none bg-green-700 hover:bg-green-500 transition-colors duration-200 text-white w-10 h-10"
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            {<MdArrowForwardIos />}
-          </button>
-        )}
+        <button
+          className="mx-1 px-3 py-1 rounded-md focus:outline-none bg-green-700 hover:bg-green-500 transition-colors duration-200 text-white w-10 h-10"
+          onClick={() => currentPage !== Math.ceil(sortedProducts.length / itemsPerPage) && handlePageChange(currentPage + 1)}
+        >
+          {<MdArrowForwardIos />}
+        </button>
       </div>
 
     </div>

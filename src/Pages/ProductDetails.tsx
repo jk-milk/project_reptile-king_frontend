@@ -24,10 +24,7 @@ function ProductDetails() {
       const fetchProductDetails = async () => {
         try {
           const response = await apiWithoutAuth.get(`${API}goods/${productId}`);
-          console.log(response);
-
           if (response.data) {
-            // const responseData = JSON.parse(response.data);
             const responseData = response.data;
             const { img_urls, ...productData } = responseData;
             const { thumbnail, info } = img_urls;
@@ -49,8 +46,6 @@ function ProductDetails() {
     }
   }, [productId]);
 
-
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -71,49 +66,71 @@ function ProductDetails() {
       setQuantity(value);
     }
   };
+  // addToCartIndexedDB 함수 안에 updateProductPrice 함수를 정의합니다.
+  const updateProductPrice = (product: ProductItem, quantity: number) => {
+    const updatedPrice = product.price * quantity;
+    return {
+      ...product,
+      quantity: quantity,
+      price: updatedPrice
+    };
+  };
 
-  // indexdDB를 사용하여 상품을 장바구니에 추가하는 함수
-  const addToCartIndexedDB = async (product) => {
+  const addToCartIndexedDB = async (product: ProductItem) => {
     try {
-      // indexdDB 데이터베이스 열기
       const db = await idb.openDB('market', 1, {
         upgrade(db) {
-          // 장바구니 스토어 생성
           db.createObjectStore('cart', { autoIncrement: true, keyPath: 'id' });
         },
       });
 
-      // 상품을 장바구니에 추가
-      await db.add('cart', product);
+      // 변경된 수량에 따라 가격을 업데이트합니다.
+      const updatedProduct = updateProductPrice(product, quantity);
+
+      // 조절된 가격과 원래 가격을 추가합니다.
+      const productWithPrices = {
+        ...updatedProduct,
+        originalPrice: product.price,
+      };
+
+      await db.add('cart', productWithPrices);
       console.log('상품이 장바구니에 추가되었습니다.');
     } catch (error) {
       console.error('장바구니에 상품을 추가하는 중 에러가 발생했습니다:', error);
     }
   };
 
-  // 장바구니 클릭 시 동작하는 함수
-  const handleCartClick = () => {
+
+
+  const handleCartClick = async () => {
     const addToCart = window.confirm("해당 상품을 장바구니에 추가하시겠습니까?");
-    if (addToCart) {
-      // 장바구니에 추가할 상품 데이터 생성
-      const cartProduct = {
-        productId: productId,
-        quantity: quantity,
-        price: product.price,
-      };
-      // indexdDB를 사용하여 장바구니에 상품 추가
-      addToCartIndexedDB(cartProduct);
-      // 장바구니 페이지로 이동
-      window.location.href = "/market/cart";
+    if (addToCart && product) {
+      try {
+        // 이미 상품 정보가 로드되었으므로 다시 서버에 요청하지 않고 product 변수를 사용합니다.
+        const cartProduct = {
+          productId: productId,
+          quantity: quantity,
+          price: product.price,
+          name: product.name,
+          imageUrl: product.imageUrl
+        };
+
+        addToCartIndexedDB(cartProduct);
+        window.location.href = "/market/cart";
+      } catch (error) {
+        console.error("장바구니에 상품을 추가하는 중 에러가 발생했습니다:", error);
+      }
     }
   };
 
-
+  // 상품 구매
   const handlePayClick = () => {
-    // Calculate the adjusted price based on the selected quantity
     const adjustedPrice = quantity * product.price;
-    // MarketPay 페이지로 이동할 때 productId와 함께 가격(price)와 수량(quantity)도 함께 전달
-    window.location.href = `/market/pay/${productId}?price=${adjustedPrice}&quantity=${quantity}`;
+    const confirmation = window.confirm("해당 상품을 구매하시겠습니까?");
+
+    if (confirmation) {
+      window.location.href = `/market/pay/${productId}?price=${adjustedPrice}&quantity=${quantity}`;
+    }
   };
 
   return (
@@ -163,7 +180,7 @@ function ProductDetails() {
                   <div className="text-lg font-bold">배송비</div>
                   <div className="text-lg">3,000원</div>
                 </div>
-                
+
                 <hr className="border-gray-400 my-3" />
                 <div className="text-md mb-2">{product.name}</div>
                 <div className="flex items-center justify-between">
