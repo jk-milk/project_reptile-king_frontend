@@ -7,11 +7,14 @@ export interface GoodsCategory {
 }
 
 export interface ProductItem {
+  productId: string;
+  quantity: number;
   imageUrl: string | undefined;
   thumbnail: string | undefined;
   id: number;
   name: string;
   price: number;
+  originalPrice?: number;
   category_id: number;
   content: string;
   img_urls: { thumbnail: string; main: string; info: string };
