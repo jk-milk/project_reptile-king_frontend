@@ -1,17 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MarketCartItem from "../components/Market/MarketCartItem";
-import { products } from "../../src/Pages/Product";
+import * as idb from 'idb';
+import { ProductItem } from "../types/Market";
 
 function MarketCart() {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const [deletedItems, setDeletedItems] = useState<number[]>([]); // 삭제된 상품을 관리하는 상태 추가
+  const [deletedItems, setDeletedItems] = useState<number[]>([]);
   const [selectedQuantities, setSelectedQuantities] = useState<{ [productId: number]: number }>({});
+  const [cartItems, setCartItems] = useState<ProductItem[]>([]);
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const db = await idb.openDB('market', 1);
+        const cartItems = await db.getAll('cart');
+        setCartItems(cartItems);
+      } catch (error) {
+        console.error('장바구니 상품을 불러오는 중 에러가 발생했습니다:', error);
+      }
+    };
+    fetchCartItems();
+  }, []);
 
   const handleSelectAll = () => {
     setSelectAll(!selectAll);
     if (!selectAll) {
-      const allProductIds = products.map((product) => product.id);
+      const allProductIds = cartItems.map((product) => product.id);
       setSelectedItems(allProductIds);
     } else {
       setSelectedItems([]);
@@ -26,37 +41,42 @@ function MarketCart() {
     }
   };
 
-  // 상품 삭제 함수
   const handleDeleteItem = (productId: number) => {
     setSelectedItems(selectedItems.filter((id) => id !== productId));
-    setDeletedItems([...deletedItems, productId]); // 삭제된 상품을 추가
+    setDeletedItems([...deletedItems, productId]);
   };
 
-  // 선택된 상품의 총 가격 계산
   const calculateTotalPrice = () => {
     let totalPrice = 0;
-    selectedItems.forEach((itemId) => {
-      const item = products.find((product) => product.id === itemId);
-      if (item && !deletedItems.includes(itemId)) {
-        const selectedQuantity = selectedQuantities[itemId] || 1; // 선택된 수량
-        totalPrice += item.price * selectedQuantity; // 가격 * 수량
+    cartItems.forEach((item) => {
+      if (selectedItems.includes(item.id)) { 
+        const selectedQuantity = selectedQuantities[item.id] || 1;
+        totalPrice += item.price * selectedQuantity;
       }
     });
     return totalPrice;
   };
 
-  // 주문금액 계산
   const calculateOrderTotal = () => {
-    const totalPrice = calculateTotalPrice(); // 기존 상품금액 계산 함수 호출
-    const orderTotal = totalPrice + 3000; // 배송비 3,000원 추가
+    const totalPrice = calculateTotalPrice();
+    const orderTotal = totalPrice + 3000;
     return orderTotal;
   };
 
-  const handleQuantityChange = (productId: number, newQuantity: number) => {
-    setSelectedQuantities(prevQuantities => ({
-      ...prevQuantities,
-      [productId]: newQuantity
-    }));
+const handleQuantityChange = async (productId: number, newQuantity: number) => {
+    try {
+      const db = await idb.openDB('market', 1);
+      await db.put('cart', { ...cartItems.find(item => item.id === productId), quantity: newQuantity }); // 새로운 수량으로 업데이트
+      const updatedCartItems = cartItems.map(item => {
+        if (item.id === productId) {
+          return { ...item, quantity: newQuantity }; // 해당 상품의 수량만 업데이트
+        }
+        return item;
+      });
+      setCartItems(updatedCartItems); // 업데이트된 상품 목록으로 상태 업데이트
+    } catch (error) {
+      console.error('IndexedDB에서 상품 수량을 업데이트하는 중 에러가 발생했습니다:', error);
+    }
   };
 
   const handlePayClick = () => {
@@ -68,7 +88,6 @@ function MarketCart() {
       <div className="text-white font-bold text-4xl pb-5">장바구니</div>
       <div className="grid grid-cols-12 gap-4">
 
-        {/* 왼쪽 */}
         <div className="col-span-8">
           <div className="bg-green-700 rounded-xl border-2 border-lime-300">
             <div className="flex items-center px-5 py-4">
@@ -81,24 +100,22 @@ function MarketCart() {
               <div className="flex-1 text-left text-xl text-white font-bold">전체선택</div>
             </div>
             <div className="border-lime-300 border-b"></div>
-            {products.map((product) => (
-              // 삭제된 상품은 제외
+            {cartItems.map((product) => (
               !deletedItems.includes(product.id) && (
                 <MarketCartItem
                   key={product.id}
                   product={product}
                   checked={selectedItems.includes(product.id)}
                   setChecked={(isChecked) => handleCheckedChange(product.id, isChecked)}
-                  onDelete={() => handleDeleteItem(product.id)} // 삭제 함수 전달
-                  selectedQuantity={selectedQuantities[product.id] || 1} // 선택된 수량을 전달
-                  onQuantityChange={(newQuantity) => handleQuantityChange(product.id, newQuantity)} // 선택된 상품의 수량 변경 함수 전달
+                  onDelete={() => handleDeleteItem(product.id)}
+                  selectedQuantity={selectedQuantities[product.id] || 1}
+                  onQuantityChange={(newQuantity) => handleQuantityChange(product.id, newQuantity)}
                 />
               )
             ))}
           </div>
         </div>
 
-        {/* 오른쪽 */}
         <div className="col-span-4">
           <div className="bg-green-700 rounded-lg shadow-md border-2 border-lime-300 p-4">
             <div className="px-6 py-4">
