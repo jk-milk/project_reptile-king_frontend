@@ -7,6 +7,7 @@ export interface GoodsCategory {
 }
 
 export interface ProductItem {
+  userId: string;
   productId: string;
   quantity: number;
   imageUrl: string | undefined;
