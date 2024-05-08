@@ -16,7 +16,7 @@ function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [selectedTab, setSelectedTab] = useState("details");
   const [categories, setCategories] = useState<GoodsCategory[]>([]);
-  const [product, setProduct] = useState<ProductItem[]>([]);
+  const [product, setProduct] = useState<ProductItem | null>(null);
   const { productId } = useParams();
 
   useEffect(() => {
@@ -33,8 +33,6 @@ function ProductDetails() {
               imageUrl: thumbnail,
               infoUrl: info,
             };
-            console.log(productWithThumbnail);
-
             setProduct(productWithThumbnail);
           }
         } catch (error) {
@@ -66,7 +64,7 @@ function ProductDetails() {
       setQuantity(value);
     }
   };
-  // addToCartIndexedDB 함수 안에 updateProductPrice 함수를 정의합니다.
+
   const updateProductPrice = (product: ProductItem, quantity: number) => {
     const updatedPrice = product.price * quantity;
     return {
@@ -78,30 +76,39 @@ function ProductDetails() {
 
   const addToCartIndexedDB = async (product: ProductItem) => {
     try {
-      const db = await idb.openDB('market', 1, {
+      // 사용자별 데이터베이스를 엽니다.
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        console.error("accessToken이 없습니다.");
+        return;
+      }
+  
+      const [, payloadBase64] = token.split(".");
+      const payload = JSON.parse(atob(payloadBase64));
+      const userId = payload.sub; // 'sub' 필드가 사용자 ID를 나타냄
+  
+      const db = await idb.openDB(`cart_${userId}`, 1, {
         upgrade(db) {
           db.createObjectStore('cart', { autoIncrement: true, keyPath: 'id' });
         },
       });
-
+  
       // 변경된 수량에 따라 가격을 업데이트합니다.
       const updatedProduct = updateProductPrice(product, quantity);
-
+  
       // 조절된 가격과 원래 가격을 추가합니다.
       const productWithPrices = {
         ...updatedProduct,
         originalPrice: product.price,
       };
-
+  
       await db.add('cart', productWithPrices);
       console.log('상품이 장바구니에 추가되었습니다.');
     } catch (error) {
       console.error('장바구니에 상품을 추가하는 중 에러가 발생했습니다:', error);
     }
   };
-
-
-
+  
   const handleCartClick = async () => {
     const addToCart = window.confirm("해당 상품을 장바구니에 추가하시겠습니까?");
     if (addToCart && product) {
@@ -115,7 +122,7 @@ function ProductDetails() {
           imageUrl: product.imageUrl
         };
 
-        addToCartIndexedDB(cartProduct);
+        await addToCartIndexedDB(cartProduct);
         window.location.href = "/market/cart";
       } catch (error) {
         console.error("장바구니에 상품을 추가하는 중 에러가 발생했습니다:", error);
@@ -125,7 +132,7 @@ function ProductDetails() {
 
   // 상품 구매
   const handlePayClick = () => {
-    const adjustedPrice = quantity * product.price;
+    const adjustedPrice = quantity * (product?.price || 0);
     const confirmation = window.confirm("해당 상품을 구매하시겠습니까?");
 
     if (confirmation) {
@@ -245,7 +252,7 @@ function ProductDetails() {
               {/* 선택된 탭에 따라 해당 컴포넌트 표시 */}
               <div className="flex justify-center">
                 {selectedTab === "details" && <div>
-                  <img src={product.infoUrl} />
+                  <img src={product?.infoUrl} alt="상세 정보" />
                 </div>}
               </div>
               {selectedTab === "reviews" && <ProductReviews />}
