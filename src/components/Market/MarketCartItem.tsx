@@ -7,7 +7,7 @@ interface MarketCartItemProps {
   product: ProductItem;
   checked: boolean;
   setChecked: (isChecked: boolean) => void;
-  onDelete: () => void;
+  onDelete: (productId: number) => void;
   onQuantityChange: (productId: number, newQuantity: number) => void;
 }
 
@@ -15,18 +15,32 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
   const [selectedQuantity, setSelectedQuantity] = useState<number>(product.quantity);
   const [price, setPrice] = useState<number>(product.originalPrice * product.quantity);
 
+   // userId 변수 정의
+   const userId = (() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return null;
+
+    const [, payloadBase64] = token.split(".");
+    const payload = JSON.parse(atob(payloadBase64));
+    return payload.sub; // 'sub' 필드가 사용자 ID를 나타냄
+  })();
+
   useEffect(() => {
     // 상품의 수량이 변경될 때마다 IndexedDB에 업데이트
     const updateQuantityInDB = async () => {
       try {
-        const db = await idb.openDB('market', 1);
-        await db.put('cart', { ...product, quantity: selectedQuantity, price: price  }); // 새로운 수량으로 업데이트
+        const db = await idb.openDB(`cart_${userId}`, 1); // 개별 사용자의 장바구니 데이터베이스를 엽니다.
+        const tx = db.transaction('cart', 'readwrite'); // 'cart' 객체 저장소에 대한 트랜잭션 시작
+        const store = tx.objectStore('cart'); // 'cart' 객체 저장소에 대한 참조 가져오기
+        await store.put({ ...product, quantity: selectedQuantity, price: price  }); // 새로운 수량으로 업데이트
+        await tx.oncomplete; // 트랜잭션 완료
       } catch (error) {
-        console.error('IndexedDB에서 상품 수량과 가격을 업데이트하는 중 에러가 발생했습니다:', error);
+        console.error('개별 사용자의 장바구니 데이터베이스에서 상품 수량과 가격을 업데이트하는 중 에러가 발생했습니다:', error);
       }
     };
     updateQuantityInDB();
-  }, [product, selectedQuantity, price]); // selectedQuantity가 변경될 때마다 실행
+  }, [product, selectedQuantity, price, userId]); // selectedQuantity가 변경될 때마다 실행
+  
 
   const calculatePrice = () => {
     return product.originalPrice * selectedQuantity; // Use originalPrice for calculation
@@ -39,15 +53,19 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
   const handleDelete = async () => {
     const isConfirmed = window.confirm('선택하신 상품을 장바구니에서 삭제하시겠습니까?');
     if (isConfirmed) {
+      // 화면에서 상품 삭제
+      onDelete(product.id);
+  
       // IndexedDB에서 해당 상품을 삭제합니다.
       try {
-        const db = await idb.openDB('market', 1);
-        await db.delete('cart', product.id);
+        const db = await idb.openDB(`cart_${userId}`, 1);
+        const tx = db.transaction('cart', 'readwrite');
+        const store = tx.objectStore('cart');
+        await store.delete(product.id); // 해당 상품을 ID로 삭제
+        await tx.oncomplete;
         console.log('상품이 IndexedDB에서 삭제되었습니다.');
-        // 삭제된 상품의 ID를 부모 컴포넌트로 전달하여 UI를 업데이트합니다.
-        onDelete(product.id);
       } catch (error) {
-        console.error('IndexedDB에서 상품을 삭제하는 중 에러가 발생했습니다:', error);
+        console.error('개별 사용자의 장바구니 데이터베이스에서 상품을 삭제하는 중 에러가 발생했습니다:', error);
       }
     }
   };
@@ -57,7 +75,6 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
       setSelectedQuantity(selectedQuantity - 1);
       setPrice(product.originalPrice * (selectedQuantity - 1)); // 새로운 가격 계산
       onQuantityChange(product.id, selectedQuantity - 1); // 상품 ID 및 새 수량 전달
-      window.location.reload();
     }
   };
 
@@ -65,7 +82,6 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
     setSelectedQuantity(selectedQuantity + 1);
     setPrice(product.originalPrice * (selectedQuantity + 1)); // 새로운 가격 계산
     onQuantityChange(product.id, selectedQuantity + 1); // 상품 ID 및 새 수량 전달
-    window.location.reload();
   };
 
   return (

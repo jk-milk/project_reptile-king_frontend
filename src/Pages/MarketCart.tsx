@@ -10,18 +10,35 @@ function MarketCart() {
   const [selectedQuantities, setSelectedQuantities] = useState<{ [productId: number]: number }>({});
   const [cartItems, setCartItems] = useState<ProductItem[]>([]);
 
+  const userId = (() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return null;
+
+    const [, payloadBase64] = token.split(".");
+    const payload = JSON.parse(atob(payloadBase64));
+    return payload.sub; // 'sub' 필드가 사용자 ID를 나타냄
+  })();
+
+  console.log(userId);
+
   useEffect(() => {
-    const fetchCartItems = async () => {
+    const createCartDB = async () => {
       try {
-        const db = await idb.openDB('market', 1);
-        const cartItems = await db.getAll('cart');
-        setCartItems(cartItems);
+        const db = await idb.openDB(`cart_${userId}`, 1);
+        const tx = db.transaction('cart', 'readonly');
+        const store = tx.objectStore('cart');
+        const items = await store.getAll();
+        setCartItems(items); // 데이터베이스에서 가져온 상품 목록을 상태로 설정
+        console.log('사용자 개별 장바구니 DB에서 데이터를 가져왔습니다.');
       } catch (error) {
-        console.error('장바구니 상품을 불러오는 중 에러가 발생했습니다:', error);
+        console.error('사용자 개별 장바구니 DB에서 데이터를 가져오는 중 에러가 발생했습니다:', error);
       }
     };
-    fetchCartItems();
-  }, []);
+  
+    if (userId) { // 사용자 ID가 존재할 때만 데이터베이스에서 데이터 가져오도록 조건 추가
+      createCartDB();
+    }
+  }, [userId]);
 
   const handleSelectAll = () => {
     setSelectAll(!selectAll);
@@ -49,7 +66,7 @@ function MarketCart() {
   const calculateTotalPrice = () => {
     let totalPrice = 0;
     cartItems.forEach((item) => {
-      if (selectedItems.includes(item.id)) { 
+      if (selectedItems.includes(item.id)) {
         const selectedQuantity = selectedQuantities[item.id] || 1;
         totalPrice += item.price * selectedQuantity;
       }
@@ -63,9 +80,9 @@ function MarketCart() {
     return orderTotal;
   };
 
-const handleQuantityChange = async (productId: number, newQuantity: number) => {
+  const handleQuantityChange = async (productId: number, newQuantity: number) => {
     try {
-      const db = await idb.openDB('market', 1);
+      const db = await idb.openDB(`cart_${userId}`, 1); // 개별 사용자의 장바구니 데이터베이스를 엽니다.
       await db.put('cart', { ...cartItems.find(item => item.id === productId), quantity: newQuantity }); // 새로운 수량으로 업데이트
       const updatedCartItems = cartItems.map(item => {
         if (item.id === productId) {
@@ -75,13 +92,15 @@ const handleQuantityChange = async (productId: number, newQuantity: number) => {
       });
       setCartItems(updatedCartItems); // 업데이트된 상품 목록으로 상태 업데이트
     } catch (error) {
-      console.error('IndexedDB에서 상품 수량을 업데이트하는 중 에러가 발생했습니다:', error);
+      console.error('개별 사용자의 장바구니 데이터베이스에서 상품 수량을 업데이트하는 중 에러가 발생했습니다:', error);
     }
-  };
+  };  
 
   const handlePayClick = () => {
     window.location.href = "/market/Pay";
   };
+
+  console.log(cartItems);
 
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-xl">
@@ -136,7 +155,6 @@ const handleQuantityChange = async (productId: number, newQuantity: number) => {
           </div>
           <button className="bg-pink-700 hover:bg-pink-900 border-2 text-white font-bold text-2xl py-4 rounded-lg mt-4 w-full" onClick={handlePayClick}>바로구매</button>
         </div>
-
       </div>
     </div>
   );
