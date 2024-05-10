@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import { FaSearch } from 'react-icons/fa';
 
 // 게시판 검색창
 function SearchBar({ handleSearchChange }: { handleSearchChange: (searchTerm: string) => void }) {
@@ -14,7 +15,7 @@ function SearchBar({ handleSearchChange }: { handleSearchChange: (searchTerm: st
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-5">
+    <form onSubmit={handleSubmit} className="mt-5 flex">
       <input
         type="text"
         value={inputValue}
@@ -23,9 +24,9 @@ function SearchBar({ handleSearchChange }: { handleSearchChange: (searchTerm: st
       />
       <button
         type="submit"
-        className="text-white bg-green-500 border-y border-e border-green-500 rounded-e-md leading-tight focus:outline-none focus:border-green-500 font-semibold text-sm px-2 py-2"
+        className="text-white bg-green-500 border-y border-e border-green-500 rounded-e-md leading-tight focus:outline-none focus:border-green-500 font-semibold text-lg px-2 py-2"
       >
-        검색
+        <FaSearch />
       </button>
     </form>
   );
