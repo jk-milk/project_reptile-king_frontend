@@ -48,7 +48,7 @@ function SignIn() {
       setPassword('');
       setLoginError('');
       alert('로그인 성공!');
-      navigate(-1);
+      navigate("/");
 
     } catch (error) {
       if (isAxiosError(error)) { // error instanceof AxiosError 
