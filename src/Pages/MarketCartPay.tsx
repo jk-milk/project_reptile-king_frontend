@@ -1,58 +1,66 @@
-import { ProductItem } from '../types/Market';
-import Select from 'react-select';
-import { API } from '../config';
-import axios from 'axios';
-import { apiWithAuth } from '../components/common/axios';
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import Select from 'react-select';
+import * as idb from 'idb';
+import { ProductItem } from "../types/Market";
+import { apiWithAuth } from '../components/common/axios';
+import { API } from '../config';
 
-function MarketPay() {
-  const [product, setProduct] = useState<ProductItem | null>(null);
-  const [price, setPrice] = useState<number>(0); // 가격 상태 추가
-  const [quantity, setQuantity] = useState<number>(1); // 수량 상태 추가
-  const { productId } = useParams<{ productId: string }>();
-  const location = useLocation();
+function MarketCartPay() {
+  const [selectedProducts, setSelectedProducts] = useState<ProductItem[]>([]);
+  const [totalSelectedItems, setTotalSelectedItems] = useState<number>(0);
+  const [totalProductPrice, setTotalProductPrice] = useState<number>(0); 
+
+  const userId = (() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return null;
+
+    const [, payloadBase64] = token.split(".");
+    const payload = JSON.parse(atob(payloadBase64));
+    return payload.sub; // 'sub' 필드가 사용자 ID를 나타냄
+  })();
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const priceParam = searchParams.get('price');
-    const quantityParam = searchParams.get('quantity');
-    const parsedPrice = priceParam ? parseFloat(priceParam) : 0; // 가격 파싱
-    const parsedQuantity = quantityParam ? parseInt(quantityParam, 10) : 1; // 수량 파싱
-    setPrice(parsedPrice); // 가격 설정
-    setQuantity(parsedQuantity); // 수량 설정
-
-    if (productId) {
-      const fetchProductDetails = async () => {
+    const storedSelectedItems = localStorage.getItem('selectedItems');
+    if (storedSelectedItems) {
+      const selectedItems: number[] = JSON.parse(storedSelectedItems);
+      setTotalSelectedItems(selectedItems.length); // 선택된 상품의 총 수량 설정
+  
+      // 해당 상품 ID에 맞는 상품 정보를 IndexedDB에서 가져와서 state에 저장
+      const fetchSelectedProducts = async () => {
         try {
-          const response = await axios.get(`${API}goods/${productId}`);
-          if (response.data) {
-            const { img_urls, ...productData } = response.data;
-            const { thumbnail } = (img_urls);
-            const productWithThumbnail = {
-              ...productData,
-              imageUrl: thumbnail,
-            };
-            setProduct(productWithThumbnail);
-          }
+          const db = await idb.openDB(`cart_${userId}`, 1);
+          const tx = db.transaction('cart', 'readonly');
+          const store = tx.objectStore('cart');
+          const selectedProductsPromises = selectedItems.map(async (productId) => {
+            return await store.get(productId);
+          });
+          const selectedProducts = await Promise.all(selectedProductsPromises);
+          setSelectedProducts(selectedProducts.filter(product => product !== undefined)); // undefined 제거
+  
+          // 총 상품금액 계산
+          const totalProductPrice = selectedProducts.reduce((total, product) => {
+            return total + product.price;
+          }, 0);
+          setTotalProductPrice(totalProductPrice);
         } catch (error) {
-          console.error("상품 정보를 불러오는 중 에러 발생:", error);
+          console.error('선택된 상품 정보를 가져오는 중 에러가 발생했습니다:', error);
         }
       };
-
-      fetchProductDetails();
+      fetchSelectedProducts();
     }
-  }, [productId, location.search]);
+  }, [userId]);
 
   const sendPurchaseRequest = async () => {
     try {
-      const response = await apiWithAuth.post(`${API}purchases`, {
-        good_id: productId,
-        total_price: price + 3000,
-        quantity: quantity,
-        payment_selection: '카드결제',
-      });
-
+      const productsData = selectedProducts.map(product => ({
+        good_id: product.productId,
+        total_price: product.price + 3000, // 상품 가격에 배송비 추가
+        quantity: product.quantity,
+        payment_selection: '카드결제', // 결제 수단 설정
+      }));
+      
+      // 상품 정보를 담은 배열을 한 번에 보내는 방식으로 수정할 수도 있습니다.
+      const response = await apiWithAuth.post(`${API}purchases`, productsData);
       console.log("Purchase API response:", response.data);
       if (response.status === 201) {
         alert("결제가 성공적으로 완료되었습니다.");
@@ -60,12 +68,12 @@ function MarketPay() {
     } catch (error) {
       console.error("구매 요청 중 에러 발생:", error);
     }
-  };
+  };  
 
   const handleOrder = async () => {
     try {
       await sendPurchaseRequest();
-      window.location.href = `/market/pay/${productId}/success?price=${price}&quantity=${quantity}`;
+      // window.location.href = `/market/pay/${productId}/success?price=${price}&quantity=${quantity}`;
     } catch (error) {
       console.error('구매 요청 중 에러 발생:', error);
     }
@@ -170,22 +178,25 @@ function MarketPay() {
       <div className="bg-green-700 rounded-xl border-2 border-lime-300 mt-5">
         <div className="px-5 py-4">
           <div className="flex justify-between">
-            <div className="text-white font-bold text-2xl mb-4">주문상품</div>
-            <div className="text-white text-xl">{quantity}건</div>
+            <div className="text-white font-bold text-2xl">주문상품</div>
+            <div className="text-white text-xl">{totalSelectedItems}건</div>
           </div>
-          {product && (
-            <div className="bg-lime-950 rounded-xl px-5 py-4 border-2 border-lime-300">
+          {selectedProducts.map((product) => (
+            <div key={product.id} className="bg-lime-950 rounded-xl px-5 py-4 border-2 border-lime-300 mt-4">
               <div className="flex items-center">
                 <div>
                   <img src={product.imageUrl} alt={product.name} className="rounded-md h-20 w-20 mr-4" />
                 </div>
                 <div>
                   <div className="text-white text-xl font-bold">{product.name}</div>
-                  <div className="text-white text-xl">{(product.price * quantity).toLocaleString()}원</div>
+                  <div className="flex items-center flex-wrap">
+                    <div className="text-white text-xl mr-4">{product.price.toLocaleString()}원</div>
+                    <div className="text-white text-xl font-bold">{product.quantity}개</div>
+                  </div>
                 </div>
               </div>
             </div>
-          )}
+          ))}
         </div>
       </div>
 
@@ -193,23 +204,21 @@ function MarketPay() {
       <div className="bg-green-700 rounded-xl border-2 border-lime-300 mt-5">
         <div className="px-5 py-4">
           <div className="text-white font-bold text-2xl mb-4">결제금액</div>
-          {product && ( // Conditionally render only when product is not null
-            <div>
-              <div className="flex justify-between mb-3">
-                <div className="text-white text-xl">총 상품금액</div>
-                <div className="text-white font-bold text-xl">{(product.price * quantity).toLocaleString()}원</div>
-              </div>
-              <div className="flex justify-between mb-5">
-                <div className="text-white text-xl">배송비</div>
-                <div className="text-white font-bold text-xl">3,000원</div>
-              </div>
-              <div className="border-lime-300 border-b"></div>
-              <div className="flex justify-between pt-5">
-                <div className="text-white font-bold text-2xl">최종 결제금액</div>
-                <div className="text-white font-bold text-2xl">{(product.price * quantity + 3000).toLocaleString()}원</div> {/* 수량에 따른 최종 가격 표시 */}
-              </div>
+          <div>
+            <div className="flex justify-between mb-3">
+              <div className="text-white text-xl">총 상품금액</div>
+              <div className="text-white font-bold text-xl">{totalProductPrice.toLocaleString()}원</div>
             </div>
-          )}
+            <div className="flex justify-between mb-5">
+              <div className="text-white text-xl">배송비</div>
+              <div className="text-white font-bold text-xl">3,000원</div>
+            </div>
+            <div className="border-lime-300 border-b"></div>
+            <div className="flex justify-between pt-5">
+              <div className="text-white font-bold text-2xl">최종 결제금액</div>
+              <div className="text-white font-bold text-2xl">{(totalProductPrice + 3000).toLocaleString()}원</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -227,10 +236,10 @@ function MarketPay() {
           onClick={handleOrder}
           className="bg-pink-700 text-white text-2xl font-bold py-3 px-9 rounded-lg hover:bg-pink-600 focus:outline-none focus:bg-pink-600"
         >
-          {(product && product.price) ? `${((product.price * quantity) + 3000).toLocaleString()}원 결제하기` : '결제하기'}
+          {(totalProductPrice + 3000).toLocaleString()}원 결제하기
         </button>
       </div>
     </div>
   );
 }
-export default MarketPay;
+export default MarketCartPay;

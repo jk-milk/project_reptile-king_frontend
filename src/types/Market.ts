@@ -22,4 +22,5 @@ export interface ProductItem {
   rating: number;
   reviewCount: number;
   created_at: string;
+  selected: boolean;
 }

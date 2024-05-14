@@ -15,8 +15,8 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
   const [selectedQuantity, setSelectedQuantity] = useState<number>(product.quantity);
   const [price, setPrice] = useState<number>(product.originalPrice * product.quantity);
 
-   // userId 변수 정의
-   const userId = (() => {
+  // userId 변수 정의
+  const userId = (() => {
     const token = localStorage.getItem("accessToken");
     if (!token) return null;
 
@@ -32,7 +32,7 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
         const db = await idb.openDB(`cart_${userId}`, 1); // 개별 사용자의 장바구니 데이터베이스를 엽니다.
         const tx = db.transaction('cart', 'readwrite'); // 'cart' 객체 저장소에 대한 트랜잭션 시작
         const store = tx.objectStore('cart'); // 'cart' 객체 저장소에 대한 참조 가져오기
-        await store.put({ ...product, quantity: selectedQuantity, price: price  }); // 새로운 수량으로 업데이트
+        await store.put({ ...product, quantity: selectedQuantity, price: price }); // 새로운 수량, 가격으로 업데이트
         await tx.oncomplete; // 트랜잭션 완료
       } catch (error) {
         console.error('개별 사용자의 장바구니 데이터베이스에서 상품 수량과 가격을 업데이트하는 중 에러가 발생했습니다:', error);
@@ -40,7 +40,6 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
     };
     updateQuantityInDB();
   }, [product, selectedQuantity, price, userId]); // selectedQuantity가 변경될 때마다 실행
-  
 
   const calculatePrice = () => {
     return product.originalPrice * selectedQuantity; // Use originalPrice for calculation
@@ -55,7 +54,7 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
     if (isConfirmed) {
       // 화면에서 상품 삭제
       onDelete(product.id);
-  
+
       // IndexedDB에서 해당 상품을 삭제합니다.
       try {
         const db = await idb.openDB(`cart_${userId}`, 1);
@@ -76,18 +75,20 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
       setPrice(product.originalPrice * (selectedQuantity - 1)); // 새로운 가격 계산
       onQuantityChange(product.id, selectedQuantity - 1); // 상품 ID 및 새 수량 전달
     }
+    window.location.reload();
   };
 
   const handleIncrease = () => {
     setSelectedQuantity(selectedQuantity + 1);
     setPrice(product.originalPrice * (selectedQuantity + 1)); // 새로운 가격 계산
     onQuantityChange(product.id, selectedQuantity + 1); // 상품 ID 및 새 수량 전달
+    window.location.reload();
   };
 
   return (
     <div className="flex items-center px-5 py-4 border-t border-lime-300">
-      <input 
-        type="checkbox" 
+      <input
+        type="checkbox"
         className="mr-4 h-5 w-5 border-gray-300 rounded checked:border-transparent"
         checked={checked}
         onChange={handleCheckboxChange}

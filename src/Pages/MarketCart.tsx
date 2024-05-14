@@ -10,16 +10,19 @@ function MarketCart() {
   const [selectedQuantities, setSelectedQuantities] = useState<{ [productId: number]: number }>({});
   const [cartItems, setCartItems] = useState<ProductItem[]>([]);
 
+  useEffect(() => {
+    // 선택된 상품을 로컬 스토리지에 저장
+    localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+  }, [selectedItems]);
+
   const userId = (() => {
     const token = localStorage.getItem("accessToken");
     if (!token) return null;
 
     const [, payloadBase64] = token.split(".");
     const payload = JSON.parse(atob(payloadBase64));
-    return payload.sub; // 'sub' 필드가 사용자 ID를 나타냄
+    return payload.sub;
   })();
-
-  console.log(userId);
 
   useEffect(() => {
     const createCartDB = async () => {
@@ -82,7 +85,7 @@ function MarketCart() {
 
   const handleQuantityChange = async (productId: number, newQuantity: number) => {
     try {
-      const db = await idb.openDB(`cart_${userId}`, 1); // 개별 사용자의 장바구니 데이터베이스를 엽니다.
+      const db = await idb.openDB(`cart_${userId}`, 1); // 개별 사용자의 장바구니 데이터베이스를 열기
       await db.put('cart', { ...cartItems.find(item => item.id === productId), quantity: newQuantity }); // 새로운 수량으로 업데이트
       const updatedCartItems = cartItems.map(item => {
         if (item.id === productId) {
@@ -97,10 +100,8 @@ function MarketCart() {
   };  
 
   const handlePayClick = () => {
-    window.location.href = "/market/Pay";
+    window.location.href = "/market/cart/pay";
   };
-
-  console.log(cartItems);
 
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-xl">
