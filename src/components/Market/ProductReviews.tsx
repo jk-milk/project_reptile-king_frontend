@@ -3,7 +3,7 @@ import StarRating from './StarRating';
 const ProductReviews = () => {
   return (
     <div>
-      <div className="bg-gray-200 p-4 border border-gray-400 rounded-sm">
+      <div className="bg-gray-100 p-4 border border-gray-300 rounded-sm">
         <div className="flex items-center mb-3">
           <img className="h-12 w-12 rounded-full" src="https://via.placeholder.com/150" alt="User Profile" />
           <div className="ml-2">

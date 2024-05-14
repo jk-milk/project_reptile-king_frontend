@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
 import { ProductItem } from '../types/Market';
 import Select from 'react-select';
 import { API } from '../config';
 import axios from 'axios';
 import { apiWithAuth } from '../components/common/axios';
+import { useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 
 function MarketPay() {
   const [product, setProduct] = useState<ProductItem | null>(null);
@@ -52,6 +52,7 @@ function MarketPay() {
         quantity: quantity,
         payment_selection: '카드결제',
       });
+
       console.log("Purchase API response:", response.data);
       if (response.status === 201) {
         alert("결제가 성공적으로 완료되었습니다.");
@@ -69,7 +70,6 @@ function MarketPay() {
       console.error('구매 요청 중 에러 발생:', error);
     }
   };
-
 
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-md">
