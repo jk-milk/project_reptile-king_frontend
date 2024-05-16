@@ -2,7 +2,7 @@ import { ProductItem } from '../types/Market';
 import Select from 'react-select';
 import { API } from '../config';
 import axios from 'axios';
-import { apiWithAuth } from '../components/common/axios';
+import { apiWithAuth, apiWithoutAuth } from '../components/common/axios';
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -12,6 +12,44 @@ function MarketPay() {
   const [quantity, setQuantity] = useState<number>(1); // 수량 상태 추가
   const { productId } = useParams<{ productId: string }>();
   const location = useLocation();
+  const [orderInfo, setOrderInfo] = useState({
+    name: '',
+    email: '',
+    emailDomain: '',
+    phoneNumber: '',
+    deliveryNote: ''
+  });
+  const [selectedDeliveryNote, setSelectedDeliveryNote] = useState(''); // 선택된 배송 요청 사항 상태 추가
+  const userId = (() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return null;
+
+    const [, payloadBase64] = token.split(".");
+    const payload = JSON.parse(atob(payloadBase64));
+    return payload.sub;
+  })();
+  const [userAddress, setUserAddress] = useState('');
+  
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await apiWithoutAuth.get(`${API}users/${userId}`);
+        if (response.data && response.data.address) {
+          setUserAddress(response.data.address);
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+  
+    if (userId) {
+      fetchUserDetails();
+    }
+  }, [userId]);
+
+  const handleDeliveryNoteChange = (selectedOption) => {
+    setSelectedDeliveryNote(selectedOption.label);
+  };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -62,15 +100,37 @@ function MarketPay() {
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setOrderInfo(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+  
   const handleOrder = async () => {
     try {
+      const updatedOrderInfo = { ...orderInfo, deliveryNote: selectedDeliveryNote };
+      localStorage.setItem('orderInfo', JSON.stringify(updatedOrderInfo));
       await sendPurchaseRequest();
-      window.location.href = `/market/pay/${productId}/success?price=${price}&quantity=${quantity}`;
+      const confirmation = window.confirm("해당 상품을 구매하시겠습니까?");
+      if (confirmation) {
+        // Save product information including image to local storage
+        const productInfo = {
+          name: product.name,
+          price: product.price,
+          quantity: quantity,
+          totalPrice: (product.price * quantity + 3000).toLocaleString(),
+          imageUrl: product.imageUrl // Include product image URL
+        };
+        localStorage.setItem('productInfo', JSON.stringify(productInfo));
+        window.location.href = `/market/pay/${productId}/success?price=${price}&quantity=${quantity}`;
+      }
     } catch (error) {
       console.error('구매 요청 중 에러 발생:', error);
     }
   };
-
+  
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-md">
       <div className="text-white font-bold text-4xl pb-5">주문/결제</div>
@@ -84,15 +144,32 @@ function MarketPay() {
               <tr>
                 <td className="pb-4 pr-4">이름</td>
                 <td>
-                  <input type="text" className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4" />
+                  <input
+                    type="text"
+                    name="name"
+                    value={orderInfo.name}
+                    onChange={handleInputChange}
+                    className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4"
+                  />
                 </td>
               </tr>
               <tr>
                 <td className="pb-4 pr-4">이메일</td>
                 <td>
-                  <input type="email" className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 mr-1" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={orderInfo.email}
+                    onChange={handleInputChange}
+                    className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 mr-1"
+                  />
                   @
-                  <select className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 ml-1">
+                  <select
+                    name="emailDomain"
+                    value={orderInfo.emailDomain}
+                    onChange={handleInputChange}
+                    className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 ml-1"
+                  >
                     <option>gmail.com</option>
                     <option>naver.com</option>
                     <option>daum.com</option>
@@ -102,7 +179,13 @@ function MarketPay() {
               <tr>
                 <td className="pb-4 pr-4">전화번호</td>
                 <td>
-                  <input type="tel" className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 mr-1" />
+                  <input
+                    type="tel"
+                    name="phoneNumber"
+                    value={orderInfo.phoneNumber}
+                    onChange={handleInputChange}
+                    className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 mr-1"
+                  />
                 </td>
               </tr>
               <tr>
@@ -118,6 +201,7 @@ function MarketPay() {
                     ]}
                     className="border border-gray-300 rounded"
                     placeholder="배송 시 요청사항을 선택해 주세요"
+                    onChange={handleDeliveryNoteChange}
                     styles={{
                       menu: provided => ({
                         ...provided,
@@ -161,7 +245,7 @@ function MarketPay() {
               <span className="text-white font-bold">기본 배송지</span>
             </div>
           </div>
-          <div className="text-white text-xl">경북 칠곡군 지천면 금송로 60, 글로벌생활관 A동</div>
+          <div className="text-white text-xl">{userAddress}</div>
           <div className="text-white text-xl">배석민 010-3891-5626</div>
         </div>
       </div>
