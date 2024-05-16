@@ -1,9 +1,61 @@
-import { useSearchParams } from "react-router-dom"
-import { products } from './Product';
+import { useEffect, useState } from "react";
+import { apiWithoutAuth } from "../components/common/axios";
+import { API } from "../config";
 
 export function MarketPaySuccess() {
-  const [searchParams] = useSearchParams();
-  const product = products[0];
+  const [userAddress, setUserAddress] = useState('');
+  const [orderInfo, setOrderInfo] = useState({
+    name: '',
+    email: '',
+    emailDomain: '',
+    phoneNumber: '',
+    deliveryNote: ''
+  });
+  const [productInfo, setProductInfo] = useState({
+    name: '',
+    price: '',
+    totalPrice: '',
+    imageUrl: ''
+  });
+
+  const userId = (() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return null;
+
+    const [, payloadBase64] = token.split(".");
+    const payload = JSON.parse(atob(payloadBase64));
+    return payload.sub;
+  })();
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await apiWithoutAuth.get(`${API}users/${userId}`);
+        if (response.data && response.data.address) {
+          setUserAddress(response.data.address);
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+  
+    if (userId) {
+      fetchUserDetails();
+    }
+  }, [userId]);
+  
+  useEffect(() => {
+    // 로컬 스토리지에서 주문자 정보를 가져옴
+    const storedOrderInfo = localStorage.getItem('orderInfo');
+    if (storedOrderInfo) {
+      setOrderInfo(JSON.parse(storedOrderInfo));
+    }
+        // 로컬 스토리지에서 상품 정보를 가져옴
+        const storedProductInfo = localStorage.getItem('productInfo');
+        if (storedProductInfo) {
+          setProductInfo(JSON.parse(storedProductInfo));
+        }
+  }, []);
 
   const handlePayClick = () => {
     window.location.href = "/market";
@@ -28,22 +80,22 @@ export function MarketPaySuccess() {
         <div className="bg-green-700 rounded-xl border-2 border-lime-300 px-5 py-4">
           <div className="flex justify-between mb-4">
             <div className="text-white font-bold text-xl">주문상품</div>
-            <div className="text-white font-bold text-xl">1개</div>
+            <div className="text-white font-bold text-xl">개</div>
           </div>
           <div className="bg-lime-950 rounded-xl px-5 py-4 border-2 border-lime-300">
             <div className="flex items-center">
               <div>
-                <img src="https://contents.sixshop.com/uploadedFiles/32210/product/image_1698381407717.jpeg " alt={product.name} className="rounded-md h-20 w-20 mr-4" />
+                <img src={productInfo.imageUrl} alt={"상품이미지"} className="rounded-md h-20 w-20 mr-4" />
               </div>
               <div className="text-white text-xl font-bold">
-                <div>"리틀 포레스트" 크레스티드 게코 아크릴 사육장 20x20x30세트</div>
-                <div>68,000원</div>
+                <div>{productInfo.name}</div>
+                <div>{productInfo.price.toLocaleString()}원</div>
               </div>
             </div>
             <div className="border-lime-300 border-b mt-5 mb-5"></div>
             <div className="text-white text-xl text-center mb-1">총 결제금액</div>
             <div className="text-white font-bold text-2xl text-center">
-              71,000원</div>
+              {productInfo.totalPrice}원</div>
           </div>
         </div>
 
@@ -52,19 +104,27 @@ export function MarketPaySuccess() {
         <div className="bg-green-700 rounded-xl border-2 border-lime-300 px-5 py-4">
           <div className="flex justify-between mb-4">
             <div className="text-white font-bold text-xl">주문자</div>
-            <div className="text-white text-xl">배석민</div>
+            <div className="text-white text-xl">{orderInfo.name}</div>
+          </div>
+          <div className="flex justify-between mb-4">
+            <div className="text-white font-bold text-xl">이메일</div>
+            <div className="text-white text-xl">
+              {orderInfo.email}
+              @
+              {orderInfo.emailDomain}
+            </div>
           </div>
           <div className="flex justify-between mb-4">
             <div className="text-white font-bold text-xl">연락처</div>
-            <div className="text-white text-xl">01038915626</div>
+            <div className="text-white text-xl">{orderInfo.phoneNumber}</div>
           </div>
           <div className="flex justify-between mb-4">
             <div className="text-white font-bold text-xl">배송지</div>
-            <div className="text-white text-xl">(39866) 경상북도 칠곡군 지천면 금송로 60 글로벌캠퍼스 A동</div>
+            <div className="text-white text-xl">{userAddress}</div>
           </div>
           <div className="flex justify-between">
             <div className="text-white font-bold text-xl">배송요청사항</div>
-            <div className="text-white text-xl">그 외 장소</div>
+            <div className="text-white text-xl">{orderInfo.deliveryNote}</div>
           </div>
         </div>
       </div>
