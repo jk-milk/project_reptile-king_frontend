@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Footer from "../components/Layout/Footer/Footer";
 import Navbar from "../components/Layout/Header/Navbar";
 import Dots from "../components/Dots";
+// import { API } from "../config";
+// import axios from "axios";
 
 const Home = () => {
   const outerDivRef = useRef<HTMLDivElement | null>(null); // MainPage 자체
@@ -74,18 +76,18 @@ const Home = () => {
 
   const movePageTo = (index: number) => {
     const pageHeight = outerDivRef.current?.children.item(0)?.clientHeight;
-    if(outerDivRef.current && pageHeight) {
+    if (outerDivRef.current && pageHeight) {
       outerDivRef.current.scrollTo({
         top: pageHeight * index,
         left: 0,
         behavior: "smooth",
       });
-  
+
       canScroll.current = false;
       setTimeout(() => {
         canScroll.current = true;
       }, 500);
-  
+
       setCurrentPage(index);
     }
   };
@@ -95,7 +97,7 @@ const Home = () => {
     if (!outer) return;
     outer.addEventListener("wheel", wheelHandler);
     outer.addEventListener("scroll", scrollHandler);
-    
+
     return () => {
       if (outer) {
         outer.removeEventListener("wheel", wheelHandler);
@@ -105,20 +107,39 @@ const Home = () => {
   });
 
   useEffect(() => {
-    setNumberOfPages((outerDivRef.current?.children.length || 1)-1);
+    setNumberOfPages((outerDivRef.current?.children.length || 1) - 1);
   }, []);
+
+  // const refresh = async () => {
+  //   const refreshToken = localStorage.getItem('refreshToken');
+  //   console.log("로컬스토리지에서 가져온 리프레쉬토큰", refreshToken);
+    
+  //   try {
+  //     const response = await axios.post(`${API}refresh-token`, {}, {
+  //       headers: {
+  //         'Authorization': refreshToken
+  //       }
+  //     });
+  //     console.log(response);
+  //   } catch(error) {
+  //     console.error("토큰 갱신 실패", error);
+  //   }
+  // }
 
   return (
     <>
       <Navbar />
       <Dots numberOfPages={numberOfPages} currentPage={currentPage} movePageTo={movePageTo} />
-            <div className="h-screen overflow-hidden scrollbar-hide" ref={outerDivRef}>
+      <div className="h-screen overflow-hidden scrollbar-hide" ref={outerDivRef}>
         <div className="relative h-screen w-screen bg-[url('./assets/reptile1.png')] bg-cover">
           <div className="absolute top-24 left-28 leading-[6rem] max-w-xl">
             <p className="block">
               <span className="text-mainTextColor text-7xl font-bold font-sans">파충류</span>
               <span className="text-white text-6xl font-bold font-sans">를 사랑하는</span>
             </p>
+            {/* <button onClick={refresh}>
+              refresh
+            </button> */}
             <span className="text-white text-6xl font-bold font-home">이들을 위한</span>
             <span className="block text-white text-7xl font-bold font-home">최고의 서비스</span>
           </div>
