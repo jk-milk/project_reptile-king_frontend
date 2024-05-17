@@ -106,7 +106,7 @@ function PostWrite() {
     // 이미지 URL 배열을 순회하며, 각 이미지의 원래 src 속성(base64 URL)을 S3 URL로 교체
     imgUrls.forEach((imgData) => {
       // 이미지 태그의 src 속성을 찾아내는 정규식
-      const regex = new RegExp(`src=".*?"${imgData.uniqueId}.*?"`, 'g');
+      const regex = new RegExp(`src="data:image\\/.*?;base64,.*?${imgData.uniqueId}.*?"`, 'g');
       // 정규식을 사용하여 base64 이미지 URL을 업로드된 S3 URL로 교체
       uploadContent = uploadContent.replace(regex, `src="${imgData.imgUrl}"`);
     });
