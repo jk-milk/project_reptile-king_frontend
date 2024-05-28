@@ -35,6 +35,7 @@ import MyReptileEdit from './Pages/MyReptileEdit'
 import MyReptileDetail from './Pages/MyReptileDetail'
 import MyReptileAdd from './Pages/MyReptileAdd'
 import MarketCartPay from './Pages/MarketCartPay'
+import MarketCartPaySuccess from './Pages/MarketCartPaySuccess'
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
           <Route path='market/pay/:productId' element={<MarketPay />} />
           <Route path='market/cart/pay' element={<MarketCartPay />} />
           <Route path='market/pay/:productId/success' element={<MarketPaySuccess />} />
+          <Route path='market/cart/pay/success' element={<MarketCartPaySuccess />} />
         </Route>
       </Route>
     </Routes>

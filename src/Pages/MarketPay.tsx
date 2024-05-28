@@ -41,7 +41,7 @@ function MarketPay() {
         console.error("Error fetching user details:", error);
       }
     };
-  
+    console.log(userId)
     if (userId) {
       fetchUserDetails();
     }
@@ -92,9 +92,6 @@ function MarketPay() {
       });
 
       console.log("Purchase API response:", response.data);
-      if (response.status === 201) {
-        alert("결제가 성공적으로 완료되었습니다.");
-      }
     } catch (error) {
       console.error("구매 요청 중 에러 발생:", error);
     }
@@ -108,29 +105,32 @@ function MarketPay() {
     }));
   };
   
-  const handleOrder = async () => {
-    try {
-      const updatedOrderInfo = { ...orderInfo, deliveryNote: selectedDeliveryNote };
-      localStorage.setItem('orderInfo', JSON.stringify(updatedOrderInfo));
-      await sendPurchaseRequest();
-      const confirmation = window.confirm("해당 상품을 구매하시겠습니까?");
-      if (confirmation) {
-        // Save product information including image to local storage
+const handleOrder = async () => {
+  try {
+    const updatedOrderInfo = { ...orderInfo, deliveryNote: selectedDeliveryNote };
+    localStorage.setItem('orderInfo', JSON.stringify(updatedOrderInfo));
+    await sendPurchaseRequest();
+    const confirmation = window.confirm("해당 상품을 구매하시겠습니까?");
+    if (confirmation) {
+      if (product) {
         const productInfo = {
           name: product.name,
           price: product.price,
           quantity: quantity,
-          totalPrice: (product.price * quantity + 3000).toLocaleString(),
-          imageUrl: product.imageUrl // Include product image URL
+          totalPrice: (product.price * quantity + 3000).toLocaleString()
         };
+
         localStorage.setItem('productInfo', JSON.stringify(productInfo));
         window.location.href = `/market/pay/${productId}/success?price=${price}&quantity=${quantity}`;
+      } else {
+        console.error("상품 정보가 없습니다.");
       }
-    } catch (error) {
-      console.error('구매 요청 중 에러 발생:', error);
     }
-  };
-  
+  } catch (error) {
+    console.error('구매 요청 중 에러 발생:', error);
+  }
+};
+
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-md">
       <div className="text-white font-bold text-4xl pb-5">주문/결제</div>
