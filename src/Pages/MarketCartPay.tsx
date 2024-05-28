@@ -8,7 +8,39 @@ import { API } from '../config';
 function MarketCartPay() {
   const [selectedProducts, setSelectedProducts] = useState<ProductItem[]>([]);
   const [totalSelectedItems, setTotalSelectedItems] = useState<number>(0);
-  const [totalProductPrice, setTotalProductPrice] = useState<number>(0); 
+  const [totalProductPrice, setTotalProductPrice] = useState<number>(0);
+  const [cartOrderInfo, setCartOrderInfo] = useState({
+    name: '',
+    email: '',
+    emailDomain: '',
+    phoneNumber: '',
+    deliveryNote: ''
+  });
+
+  const [selectedCartDeliveryNote, setSelectedCartDeliveryNote] = useState('');
+
+  useEffect(() => {
+    const storedOrderInfo = localStorage.getItem('cartOrderInfo');
+    if (storedOrderInfo) {
+      setCartOrderInfo(JSON.parse(storedOrderInfo));
+    }
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCartOrderInfo(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleDeliveryNoteChange = (selectedOption) => {
+    setSelectedCartDeliveryNote(selectedOption.label);
+    setCartOrderInfo(prevState => ({
+      ...prevState,
+      deliveryNote: selectedOption.label
+    }));
+  };
 
   const userId = (() => {
     const token = localStorage.getItem("accessToken");
@@ -16,16 +48,15 @@ function MarketCartPay() {
 
     const [, payloadBase64] = token.split(".");
     const payload = JSON.parse(atob(payloadBase64));
-    return payload.sub; // 'sub' 필드가 사용자 ID를 나타냄
+    return payload.sub;
   })();
 
   useEffect(() => {
     const storedSelectedItems = localStorage.getItem('selectedItems');
     if (storedSelectedItems) {
       const selectedItems: number[] = JSON.parse(storedSelectedItems);
-      setTotalSelectedItems(selectedItems.length); // 선택된 상품의 총 수량 설정
-  
-      // 해당 상품 ID에 맞는 상품 정보를 IndexedDB에서 가져와서 state에 저장
+      setTotalSelectedItems(selectedItems.length);
+
       const fetchSelectedProducts = async () => {
         try {
           const db = await idb.openDB(`cart_${userId}`, 1);
@@ -35,47 +66,59 @@ function MarketCartPay() {
             return await store.get(productId);
           });
           const selectedProducts = await Promise.all(selectedProductsPromises);
-          setSelectedProducts(selectedProducts.filter(product => product !== undefined)); // undefined 제거
-  
-          // 총 상품금액 계산
-          const totalProductPrice = selectedProducts.reduce((total, product) => {
+          const filteredProducts = selectedProducts.filter(product => product !== undefined);
+          setSelectedProducts(filteredProducts);
+
+          const totalProductPrice = filteredProducts.reduce((total, product) => {
             return total + product.price;
           }, 0);
           setTotalProductPrice(totalProductPrice);
+
+          // Store selected products in local storage
+          localStorage.setItem('selectedProducts', JSON.stringify(filteredProducts));
         } catch (error) {
-          console.error('선택된 상품 정보를 가져오는 중 에러가 발생했습니다:', error);
+          console.error('Error fetching selected products:', error);
         }
       };
       fetchSelectedProducts();
     }
   }, [userId]);
 
+  useEffect(() => {
+    if (selectedProducts.length > 0) {
+      localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+    }
+  }, [selectedProducts]);
+
   const sendPurchaseRequest = async () => {
     try {
-      const productsData = selectedProducts.map(product => ({
-        good_id: product.productId,
-        total_price: product.price + 3000, // 상품 가격에 배송비 추가
-        quantity: product.quantity,
-        payment_selection: '카드결제', // 결제 수단 설정
-      }));
-      
-      // 상품 정보를 담은 배열을 한 번에 보내는 방식으로 수정할 수도 있습니다.
-      const response = await apiWithAuth.post(`${API}purchases`, productsData);
-      console.log("Purchase API response:", response.data);
-      if (response.status === 201) {
-        alert("결제가 성공적으로 완료되었습니다.");
-      }
-    } catch (error) {
-      console.error("구매 요청 중 에러 발생:", error);
-    }
-  };  
+      const selectedProducts = JSON.parse(localStorage.getItem('selectedProducts'));
 
+      const purchases = selectedProducts.map((product, index) => ({
+        good_id: product.id,
+        total_price: index === 0 ? product.price + 3000 : product.price,
+        quantity: product.quantity,
+        payment_selection: '카드결제'
+      }));
+
+      const response = await apiWithAuth.post(`${API}purchases`, purchases);
+
+      console.log('Purchase request sent successfully:', response.data);
+    } catch (error) {
+      console.error('Error sending purchase request:', error);
+    }
+  };
+  
   const handleOrder = async () => {
     try {
+      localStorage.setItem('cartOrderInfo', JSON.stringify(cartOrderInfo));
       await sendPurchaseRequest();
-      // window.location.href = `/market/pay/${productId}/success?price=${price}&quantity=${quantity}`;
+      const confirmation = window.confirm("해당 상품을 구매하시겠습니까?");
+      if (confirmation) {
+        window.location.href = "/market/cart/pay/success";
+      }
     } catch (error) {
-      console.error('구매 요청 중 에러 발생:', error);
+      console.error('Error during purchase request:', error);
     }
   };
 
@@ -83,7 +126,6 @@ function MarketCartPay() {
     <div className="pt-10 pb-10 mx-auto max-w-screen-md">
       <div className="text-white font-bold text-4xl pb-5">주문/결제</div>
 
-      {/* 주문자 */}
       <div className="bg-green-700 rounded-xl border-2 border-lime-300">
         <div className="px-5 py-4">
           <div className="text-white font-bold text-2xl mb-4">주문자</div>
@@ -92,15 +134,32 @@ function MarketCartPay() {
               <tr>
                 <td className="pb-4 pr-4">이름</td>
                 <td>
-                  <input type="text" className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4" />
+                  <input
+                    type="text"
+                    name="name"
+                    value={cartOrderInfo.name}
+                    onChange={handleInputChange}
+                    className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4"
+                  />
                 </td>
               </tr>
               <tr>
                 <td className="pb-4 pr-4">이메일</td>
                 <td>
-                  <input type="email" className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 mr-1" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={cartOrderInfo.email}
+                    onChange={handleInputChange}
+                    className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 mr-1"
+                  />
                   @
-                  <select className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 ml-1">
+                  <select
+                    name="emailDomain"
+                    value={cartOrderInfo.emailDomain}
+                    onChange={handleInputChange}
+                    className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 ml-1"
+                  >
                     <option>gmail.com</option>
                     <option>naver.com</option>
                     <option>daum.com</option>
@@ -110,7 +169,13 @@ function MarketCartPay() {
               <tr>
                 <td className="pb-4 pr-4">전화번호</td>
                 <td>
-                  <input type="tel" className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 mr-1" />
+                  <input
+                    type="tel"
+                    name="phoneNumber"
+                    value={cartOrderInfo.phoneNumber}
+                    onChange={handleInputChange}
+                    className="bg-green-700 border border-lime-300 rounded text-white w-60 px-1 py-1 focus:outline-none mb-4 mr-1"
+                  />
                 </td>
               </tr>
               <tr>
@@ -126,6 +191,7 @@ function MarketCartPay() {
                     ]}
                     className="border border-gray-300 rounded"
                     placeholder="배송 시 요청사항을 선택해 주세요"
+                    onChange={handleDeliveryNoteChange}
                     styles={{
                       menu: provided => ({
                         ...provided,
@@ -146,7 +212,6 @@ function MarketCartPay() {
                       }),
                     }}
                   />
-
                 </td>
               </tr>
             </tbody>
