@@ -1,21 +1,19 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
-import ReactQuill from 'react-quill';
+import { useCallback, useMemo, useRef } from 'react';
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { ImageInfo } from '../../types/Board';
+import CustomImageBlot from './CustomImageBlot';
 
+// 이미지에 src 이외 태그를 넣을 수 있게 커스텀한 Quill 적용
+Quill.register(CustomImageBlot, true);
 interface QuillEditorProps {
+  content: string;
   setContent: React.Dispatch<React.SetStateAction<string>>;
+  setImages: React.Dispatch<React.SetStateAction<ImageInfo[]>>;
 }
 
-interface ImageInfo {
-  blob: Blob;
-  url: string;
-  base64: string;
-  index: number; // 이미지 삽입 위치
-}
+function QuillEditor({ content, setContent,setImages }: QuillEditorProps) {
 
-function QuillEditor({ setContent }: QuillEditorProps) {
-
-  const [images, setImages] = useState<ImageInfo[]>([]);
   const quillRef = useRef<ReactQuill | null>(null);
 
   const handleChange = (content: string) => {
@@ -29,37 +27,35 @@ function QuillEditor({ setContent }: QuillEditorProps) {
     input.setAttribute('accept', 'image/*');
     input.click();
 
-    // 사용자가 이미지를 선택하면 Blob 객체를 메모리에 저장
-    // 이미지 파일의 위치도 같이 저장
-
-    // 미리보기를 위해서 Base64로 보여주기
-
-    // 서버에 보낼 때에는 Base64 문자열을 삭제하고 그 위치에 Blob 객체의 내용을 보내기
-
+    // 사용자가 이미지를 업로드하면 blob 객체로 저장
+    // base64로 미리보기를 보여주고, 고유ID를 생성하여 태그에 저장
+    // 글을 업로드할 경우에 이미지를 s3에 저장
     input.onchange = async () => {
       if (input.files != null && input.files[0]) {
         const file = input.files[0];
         const reader = new FileReader();
 
         reader.onloadend = () => {
-          const base64 = reader.result as string;
-          const blob = new Blob([file], { type: file.type });
-          const url = URL.createObjectURL(blob);
-          if (quillRef.current) {
+          if (quillRef.current && reader.result) {
+            // Blob 객체와 고유 ID 저장
+            const blob = file; // 이미지 객체
+            const imgUrl = ""; // 이미지 s3 url이 들어갈 변수 
+            const uniqueId = `id-${new Date().getTime()}-${Math.random().toString(36).substring(2, 11)}`; // 이미지 고유 id
+            setImages(prevImages => [...prevImages, { blob, imgUrl, uniqueId }]);
+
+            // Quill 에디터에 이미지 미리보기 추가
             const range = quillRef.current.getEditor().getSelection(true);
-            const index = range.index;
-            
-            quillRef.current.getEditor().insertEmbed(index, 'image', base64);
-            
-            setImages(prevImages => [...prevImages, { blob, url, base64, index }]);
+            const imageTag = `<img src="${reader.result}" id="${uniqueId}" />`;
+            console.log(imageTag);
+            quillRef.current.getEditor().clipboard.dangerouslyPasteHTML(range.index, imageTag);
+            quillRef.current.getEditor().setSelection(range.index + 1, 0);
           }
         };
-        
         
         reader.readAsDataURL(file);
       }
     };
-  }, []);  
+  }, [setImages]);  
 
   const modules = useMemo(() => {
     return {
@@ -100,6 +96,7 @@ function QuillEditor({ setContent }: QuillEditorProps) {
         modules={modules}
         theme="snow"
         className="mx-2 min-h-[20rem]"
+        defaultValue={content}
       >
       </ReactQuill>
     </div>

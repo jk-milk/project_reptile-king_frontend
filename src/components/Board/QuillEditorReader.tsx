@@ -1,12 +1,11 @@
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Post } from '../../types/Board';
 
 interface QuillEditorProps {
-  post: Post;
+  content: string;
 }
 
-function QuillEditorReader({ post }: QuillEditorProps) {
+function QuillEditorReader({ content }: QuillEditorProps) {
 
   return (
     <div>
@@ -14,8 +13,9 @@ function QuillEditorReader({ post }: QuillEditorProps) {
         readOnly
         theme="bubble"
         className="min-h-[20rem]"
-        defaultValue={post.content}
+        defaultValue={content}
       />
+        {/* <p className="whitespace-pre-line text-gray-800 mb-5">{post.content}</p> */}
     </div>
   );
 }

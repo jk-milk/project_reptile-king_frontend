@@ -55,6 +55,9 @@ apiWithAuth.interceptors.response.use(
           return apiWithAuth(originalRequest); // 갱신된 토큰으로 요청 재시도
         } catch (error) {
           console.error("토큰 갱신 실패", error);
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          alert("다시 로그인해 주세요!")
           return Promise.reject(error);
         }
       }

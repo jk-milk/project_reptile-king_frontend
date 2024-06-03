@@ -88,14 +88,14 @@ const PostList = ({ posts }: { posts: Post[] | null }) => {
             <div key={post.id} className="py-4 flex justify-between">
               <div className="w-full">
                 <div className="text-lg font-bold">
-                  <Link to={`/board/view/?id=${post.id}`}>{post.title}</Link>
+                  <Link to={`/board/view/${post.id}`}>{post.title}</Link>
                 </div>
                 <div className="text-gray-600 pt-2">
-                  <Link to={`/board/view/?id=${post.id}`}>{cutText(htmlToText(post.content))}</Link>
+                  <Link to={`/board/view/${post.id}`}>{cutText(htmlToText(post.content))}</Link>
                 </div>
                 <div className="pt-4">
                   <span className="text-gray-400">by </span>
-                  <span className="text-gray-600 pe-2">{post.user_id}</span>
+                  <span className="text-gray-600 pe-2">{post.nickname}</span>
                   <span className="text-gray-600 pe-2">•</span>
                   <span className="text-gray-600 pe-2">{timeFromNow(post.created_at)}</span>
                   {/* 실제 api와 연결해서 댓글 수 출력하는 코드 임시 */}
