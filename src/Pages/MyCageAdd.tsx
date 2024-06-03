@@ -9,7 +9,6 @@ function MyCageAdd() {
   const navigate = useNavigate();
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [cageName, setCageName] = useState('');
-  const [memo, setMemo] = useState('');
   const [serialCode, setSerialCode] = useState('');
   const [reptiles, setReptiles] = useState<Reptile[] | null>(null);
   const [reptileSerialCode, setReptileSerialCode] = useState('');
@@ -82,7 +81,6 @@ function MyCageAdd() {
       formData.append('setTemp', '30');
       formData.append('setHum', '40');
       formData.append('serialCode', serialCode);
-      formData.append('memo', memo);
       formData.append('reptileSerialCode', reptileSerialCode);
 
       uploadedImages.forEach(image => {
@@ -216,13 +214,6 @@ function MyCageAdd() {
               value={serialCode}
               onChange={(e) => setSerialCode(e.target.value)}
             />
-
-            <div className="text-lg col-span-1 flex justify-center items-center">메모</div>
-            <textarea
-              className="col-span-3 h-40 border border-gray-300 rounded-md p-2 focus:outline-none mt-3 mb-3"
-              placeholder="메모를 입력해 주세요..."
-              onChange={(e) => setMemo(e.target.value)}
-            ></textarea>
           </div>
 
           <div className="flex justify-center mt-3">
