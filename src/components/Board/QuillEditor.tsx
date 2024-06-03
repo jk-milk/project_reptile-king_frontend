@@ -7,11 +7,12 @@ import CustomImageBlot from './CustomImageBlot';
 // 이미지에 src 이외 태그를 넣을 수 있게 커스텀한 Quill 적용
 Quill.register(CustomImageBlot, true);
 interface QuillEditorProps {
+  content: string;
   setContent: React.Dispatch<React.SetStateAction<string>>;
   setImages: React.Dispatch<React.SetStateAction<ImageInfo[]>>;
 }
 
-function QuillEditor({ setContent,setImages }: QuillEditorProps) {
+function QuillEditor({ content, setContent,setImages }: QuillEditorProps) {
 
   const quillRef = useRef<ReactQuill | null>(null);
 
@@ -95,6 +96,7 @@ function QuillEditor({ setContent,setImages }: QuillEditorProps) {
         modules={modules}
         theme="snow"
         className="mx-2 min-h-[20rem]"
+        defaultValue={content}
       >
       </ReactQuill>
     </div>
