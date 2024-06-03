@@ -16,10 +16,10 @@ function MyCageDetail() {
   const navigate = useNavigate();
   const location = useLocation();
   console.log(location.state);
-  
+
   const reptileSerialCode = location.state.cage.reptile_serial_code;
   console.log(reptileSerialCode);
-  
+
 
   const { id } = useParams();
   const [cage, setCage] = useState<Cage>();
@@ -297,7 +297,7 @@ function MyCageDetail() {
           <div className="bg-white rounded-lg shadow-md px-5 py-4">
             <div className="flex md:flex-row justify-between items-center mb-4 relative">
               <div className="flex flex-col">
-                <MdCreate className="text-2xl absolute left-80 top-10 transform translate-x-8 -translate-y-6"/>
+                <MdCreate className="text-2xl absolute left-80 top-10 transform translate-x-8 -translate-y-6" />
                 <input
                   type="text"
                   value={cage?.name}
@@ -431,13 +431,13 @@ function MyCageDetail() {
                   <div className="text-center mb-5">
                     <h2 className="text-2xl font-semibold">온습도 설정</h2>
                   </div>
-                  <div className="flex justify-around mb-4">
-                    <div className="">
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="ml-14">
                       <p className="text-gray-600 mb-2">현재 온도</p>
                       <p className="text-3xl font-bold">{curTem}°C</p>
                     </div>
-                    <div className="">
-                      <p className="text-gray-600 mb-2">설정 온도 (10°C ~ 40°C)</p>
+                    <div>
+                      <p className="text-gray-600 mb-2 flex items-center justify-center">설정 온도 (10°C ~ 40°C)</p>
                       <div className="flex items-center justify-center">
                         <button onClick={decreaseTemperature} className="text-blue-700 bg-blue-100 hover:bg-blue-200 font-bold py-1.5 px-4 rounded-l-lg">
                           -
@@ -450,13 +450,13 @@ function MyCageDetail() {
                     </div>
                   </div>
                   <hr className="border-t border-gray-200 mb-4" />
-                  <div className="flex justify-around mb-5">
-                    <div className="">
+                  <div className="grid grid-cols-2 gap-4 mb-5">
+                    <div className="ml-14">
                       <p className="text-gray-600 mb-2">현재 습도</p>
                       <p className="text-3xl font-bold">{curHum}%</p>
                     </div>
-                    <div className="">
-                      <p className="text-gray-600 mb-2">설정 습도 (0% ~ 90%)</p>
+                    <div>
+                      <p className="text-gray-600 mb-2 flex items-center justify-center">설정 습도 (0% ~ 90%)</p>
                       <div className="flex items-center justify-center">
                         <button onClick={decreaseHumidity} className="text-blue-700 bg-blue-100 hover:bg-blue-200 font-bold py-1.5 px-4 rounded-l-lg">
                           -
@@ -468,6 +468,7 @@ function MyCageDetail() {
                       </div>
                     </div>
                   </div>
+
                   {/* <div className="flex justify-center">
                     <button onClick={confirmSettings} className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-bold py-2 px-8 rounded-lg">
                       설정
