@@ -11,7 +11,7 @@ export default function ScrollToTop() {
 
     // 현재 경로가 제외 목록에 없으면 스크롤을 최상단으로 이동
     if (!excludePaths.includes(pathname)) {
-      window.scrollTo(0, 0);
+      scrollTo(0, 0);
     }
   }, [pathname]);
 
