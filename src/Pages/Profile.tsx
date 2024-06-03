@@ -2,19 +2,22 @@ import { useEffect, useState } from "react";
 import MypageCategory from "../components/Mypage/MypageCategory"
 import { API } from "../config";
 import axios from "axios";
+import { MdOutlineEmail } from "react-icons/md";
+import { MdPhoneAndroid } from "react-icons/md";
+import { MdOutlineLocationOn } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
 
 interface userInfo {
   id: number,
   name: string,
+  nickName: string,
   password: string,
   email: string,
   phone: string,
   img_urls: {
     1: string,
   },
-  address: {
-    1: string,
-  },
+  address: string,
   payment_selection: {
     1: string,
   },
@@ -47,27 +50,26 @@ function Profile() {
   // }, [userId, token]);
 
   // 테스트 코드
-  useEffect(()=>{
+  useEffect(() => {
     setUserInfo({
       id: userId,
+      nickName: "길동123",
       name: "홍길동",
       password: "axc234fasdff...",
       email: "hong123@gmail.com",
-      phone: "010-1111-2222",
+      phone: "010-1234-5678",
       img_urls: {
-        1: "http:/...",
+        1: "https://search.pstatic.net/sunny/?src=https%3A%2F%2Fcdn2.ppomppu.co.kr%2Fzboard%2Fdata3%2F2022%2F0509%2F20220509173224_d9N4ZGtBVR.jpeg&type=sc960_832",
       },
-      address: {
-        1: "경북 칠곡군 ...",
-      },
+      address: "경상북도 칠곡군 지천면 금송로 60 글로벌캠퍼스 A동",
       payment_selection: {
         "1": "...",
       },
       created_at: "2023-12-31 23:23:45",
       updated_at: "2023-12-31 23:50:45"
     })
-  },[])
-  
+  }, [])
+
 
   // 로딩 중 처리
   if (!userInfo) {
@@ -75,30 +77,71 @@ function Profile() {
   }
 
   return (
-    <div className="laptop:w-[75rem] w-body m-auto flex">
-      <MypageCategory selectedSubCategory={selectedSubCategory} setSelectedSubCategory={setSelectedSubCategory} />
-      <div className="laptop:w-[64.1875rem] flex flex-col p-8">
-        <h2 className="text-xl font-bold mb-4">마이 페이지</h2>
-        <div className="flex items-center mb-6">
-          <img src={userInfo.img_urls['1']} alt="프로필 사진" className="w-20 h-20 mr-4 rounded-full" />
-          <div>
-            <h3 className="text-lg font-bold">{userInfo.name}</h3>
-            <p>{userInfo.email}</p>
+    <div className="pt-12 pb-24 mx-auto max-w-screen-xl flex">
+      {/* 왼쪽 섹션 */}
+      <div className="w-1/4 px-4">
+        <MypageCategory
+          selectedSubCategory={selectedSubCategory}
+          setSelectedSubCategory={setSelectedSubCategory}
+        />
+      </div>
+
+      {/* 오른쪽 섹션 */}
+      <div className="w-3/4 px-4">
+        <div className="bg-green-700 rounded border border-lime-300 px-8 py-4">
+          <div className="flex items-center mt-8 mb-12">
+            <img src={userInfo.img_urls['1']} alt="프로필 사진" className="w-40 h-40 mr-4 rounded-full" />
+            <div>
+              <div className="flex items-center">
+                <h3 className="text-2xl font-bold mr-2 text-white">{userInfo.nickName}</h3>
+              </div>
+              <div className="flex items-center">
+                <h3 className="text-xl text-white"><FaUser /></h3>
+                <h3 className="text-lg text-white ml-2">{userInfo.name}</h3>
+              </div>
+              <div className="flex items-center">
+                <h3 className="text-xl text-white"><MdOutlineEmail /></h3>
+                <h3 className="text-lg text-white ml-2">{userInfo.email}</h3>
+              </div>
+              <div className="flex items-center">
+                <h3 className="text-xl text-white"><MdPhoneAndroid /></h3>
+                <h3 className="text-lg text-white ml-2">{userInfo.phone}</h3>
+              </div>
+              <div className="flex items-center">
+                <h3 className="text-xl text-white"><MdOutlineLocationOn /></h3>
+                <h3 className="text-lg text-white ml-2">{userInfo.address}</h3>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <h4 className="font-bold">가입 날짜:</h4>
-            <p>{new Date(userInfo.created_at).toLocaleDateString()}</p>
+
+          <div className="font-bold text-2xl mb-3 text-white">결제수단</div>
+          <div className="bg-gray-100 rounded flex items-center px-5 py-4 mb-9">
+            <div>
+              <h3 className="text-xl font-bold">배송지 별명</h3>
+              <h3 className="text-lg font-bold">{userInfo.address}</h3>
+              <div className="flex items-center">
+                <h3 className="text-lg mr-3">{userInfo.name}</h3>
+                <h3 className="text-lg">{userInfo.phone}</h3>
+              </div>
+            </div>
           </div>
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <h4 className="font-bold">배송지:</h4>
-            <p>{userInfo.address[1]}</p>
+
+          <div className="font-bold text-2xl mb-3 text-white">배송지</div>
+          <div className="bg-gray-100 rounded flex items-center px-5 py-4">
+            <div>
+              <h3 className="text-xl font-bold">배송지 별명</h3>
+              <h3 className="text-lg font-bold">{userInfo.address}</h3>
+              <div className="flex items-center">
+                <h3 className="text-lg mr-3">{userInfo.name}</h3>
+                <h3 className="text-lg">{userInfo.phone}</h3>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Profile

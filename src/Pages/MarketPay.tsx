@@ -4,7 +4,7 @@ import { API } from '../config';
 import axios from 'axios';
 import { apiWithAuth, apiWithoutAuth } from '../components/common/axios';
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 function MarketPay() {
   const [product, setProduct] = useState<ProductItem | null>(null);
@@ -236,7 +236,9 @@ const handleOrder = async () => {
           <div className="flex justify-between mb-4">
             <div className="text-white font-bold text-2xl">배송지</div>
             <button className="bg-yellow-400 rounded-2xl hover:bg-yellow-200 transition-colors duration-200 focus:outline-none px-3 py-1">
-              <span className="text-gray-700 font-bold">변경</span>
+              <Link to="/mypage">
+                <span className="text-gray-700 font-bold">변경</span>
+              </Link>
             </button>
           </div>
           <div className="flex mb-2">
