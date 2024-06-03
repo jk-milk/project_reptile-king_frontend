@@ -23,7 +23,6 @@ const s3Client = new S3Client({
   }
 });
 
-
 function PostWrite() {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<SelectedCategory>({ name: "카테고리 선택", id: null });
@@ -73,7 +72,7 @@ function PostWrite() {
           Body: blob,
         });
         await s3Client.send(command);
-        const imgUrl = `https://${bucketName}.s3.ap-northeast-2.amazonaws.com/${key}`;
+        const imgUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`;
         return { ...image, imgUrl }; // imgUrl을 업데이트하여 반환
       })
     );
@@ -135,7 +134,7 @@ function PostWrite() {
   };
 
   return (
-    <div className="pt-10 pb-10 laptop:w-[67.5rem] w-body mx-auto mb-10">
+    <div className="pt-10 pb-10 laptop:w-[67.5rem] w-body mx-auto">
       <h1 className="text-white text-2xl mt-5">
         글쓰기
       </h1>
