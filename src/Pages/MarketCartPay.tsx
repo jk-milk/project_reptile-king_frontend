@@ -4,6 +4,7 @@ import * as idb from 'idb';
 import { ProductItem } from "../types/Market";
 import { apiWithAuth } from '../components/common/axios';
 import { API } from '../config';
+import { Link } from 'react-router-dom';
 
 function MarketCartPay() {
   const [selectedProducts, setSelectedProducts] = useState<ProductItem[]>([]);
@@ -108,7 +109,7 @@ function MarketCartPay() {
       console.error('Error sending purchase request:', error);
     }
   };
-  
+
   const handleOrder = async () => {
     try {
       localStorage.setItem('cartOrderInfo', JSON.stringify(cartOrderInfo));
@@ -225,7 +226,9 @@ function MarketCartPay() {
           <div className="flex justify-between mb-4">
             <div className="text-white font-bold text-2xl">배송지</div>
             <button className="bg-yellow-400 rounded-2xl hover:bg-yellow-200 transition-colors duration-200 focus:outline-none px-3 py-1">
-              <span className="text-gray-700 font-bold">변경</span>
+              <Link to="/mypage">
+                <span className="text-gray-700 font-bold">변경</span>
+              </Link>
             </button>
           </div>
           <div className="flex mb-2">
