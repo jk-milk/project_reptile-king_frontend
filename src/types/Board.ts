@@ -25,7 +25,7 @@ export interface PostCategory {
     id: number;
     name: string;
     division: string;
-    parent_id: null;
+    parent_id: number | null;
     img_url: null;
   }[];
 }
