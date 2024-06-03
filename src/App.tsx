@@ -3,8 +3,8 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout/Layout'
 import Home from './Pages/Home'
 import Board from './Pages/Board'
-import BoardDetail from './Pages/PostDetail'
-import BoardModify from './Pages/PostModify'
+import PostDetail from './Pages/PostDetail'
+import PostEdit from './Pages/PostEdit'
 import SignUp from './Pages/SignUp'
 import SignIn from './Pages/SignIn'
 import PasswordResetPage from './Pages/PasswordResetPage'
@@ -18,7 +18,7 @@ import ProductDetails from './Pages/ProductDetails'
 import MarketCart from './Pages/MarketCart'
 import MarketPay from './Pages/MarketPay'
 import MarketPaySuccess from './Pages/MarketPaySuccess'
-import BoardWrite from './Pages/PostWrite'
+import PostWrite from './Pages/PostWrite'
 import MyCage from './Pages/MyCage'
 import MyCageDetail from './Pages/MyCageDetail'
 import MypageOrderReview from './Pages/MypageOrderReview'
@@ -43,7 +43,7 @@ function App() {
       <Route path='/' element={<Layout />}>
         <Route path='board' element={<Board />} />
         <Route path='board/lists' element={<Posts />} />
-        <Route path='board/view' element={<BoardDetail />} />
+        <Route path='board/view/:postId' element={<PostDetail />} />
         <Route path='signup' element={<SignUp />} />
         <Route path='login' element={<SignIn />} />
         <Route path='reset-password' element={<PasswordResetPage />} />
@@ -66,8 +66,8 @@ function App() {
           <Route path='mypage/help/create' element={<MypageHelpCreate />} />
           <Route path='mypage/help/edit' element={<MypageHelpEdit />} />
           <Route path='mypage/help/detail' element={<MypageHelpDetail />} />
-          <Route path='board/write' element={<BoardWrite />} />
-          <Route path='board/modify' element={<BoardModify />} />
+          <Route path='board/write' element={<PostWrite />} />
+          <Route path='board/edit/:postId' element={<PostEdit />} />
         </Route>
       </Route>
       <Route element={<MarketLayout />}>
