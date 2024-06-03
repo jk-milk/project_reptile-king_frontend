@@ -14,10 +14,6 @@ function MyCageEdit() {
     const fetchCage = async () => {
       setCage(location.state);
       setName(location.state.name);
-      if (location.state.reptile_serial_code === null)
-        setReptileSerialCode("none");
-      else
-        setReptileSerialCode(location.state.reptile_serial_code);
       setSerialCode(location.state.serial_code);
       if (location.state.memo !== null)
         setMemo(location.state.memo);
@@ -207,9 +203,9 @@ function MyCageEdit() {
           <div className="col-span-1 flex justify-center items-center text-lg">사진 첨부</div>
           <div className="col-span-3">
             <button
-              className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded transition duration-300"
+              className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded transition duration-300 disabled:bg-gray-200 disabled:border-gray-200 disabled:text-gray-500"
               onClick={() => document.getElementById('imageUpload')?.click()}
-              disabled={imgUrls.length + uploadedImages.length >= 3} // 총 이미지 개수 제한
+              disabled={imgUrls.length + uploadedImages.length >= 3}
             >
               사진 첨부
             </button>
