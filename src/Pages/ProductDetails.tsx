@@ -3,8 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import ProductReviews from '../components/Market/ProductReviews';
 import StarRating from "../components/Market/StarRating";
 import { IoMdRemove, IoMdAdd } from 'react-icons/io';
-import { RiShoppingBasketLine } from 'react-icons/ri';
-import { FiShoppingCart } from 'react-icons/fi';
+import { PiBasketFill } from "react-icons/pi";
+import { BiSolidCart } from "react-icons/bi";
 import axios from 'axios';
 import { GoodsCategory } from '../types/Market';
 import { ProductItem } from "../types/Market";
@@ -215,11 +215,11 @@ function ProductDetails() {
             {/* 버튼 그룹 */}
             <div className="mt-8 grid grid-cols-2 gap-4">
               <button className="bg-pink-600 hover:bg-pink-400 text-white font-bold py-3 rounded-lg flex items-center justify-center transition duration-300 ease-in-out" onClick={handlePayClick}>
-                <FiShoppingCart size={24} className="mr-2" />
+                <BiSolidCart size={24} className="mr-2" />
                 구매하기
               </button>
               <button className="bg-gray-600 hover:bg-gray-400 text-white font-bold py-3 rounded-lg flex items-center justify-center transition duration-300 ease-in-out" onClick={handleCartClick}>
-                <RiShoppingBasketLine size={24} className="mr-2" />
+                <PiBasketFill size={24} className="mr-2" />
                 장바구니
               </button>
             </div>

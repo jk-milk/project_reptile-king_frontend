@@ -5,6 +5,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useState, useRef, useEffect } from "react";
 import { API } from "../../../config";
 import { apiWithAuth } from "../../common/axios";
+import { BiSolidCart } from "react-icons/bi";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ function Navbar() {
     } catch (err) {
       console.error(err);
     } finally {
-      dispatch({type: 'LOGOUT', accessToken: null, refreshToken: null});
+      dispatch({ type: 'LOGOUT', accessToken: null, refreshToken: null });
       alert("로그아웃 되었습니다.")
       navigate('/');
     }
@@ -77,20 +78,25 @@ function Navbar() {
           <div className="auth flex items-center w-full md:w-full">
             {isAuthenticated ? (
               // 로그인 한 상태
-              <div ref={dropdownRef} className="relative">
-                <button 
+              <div className="relative flex items-center">
+                <button
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
-                  onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center p-2 mr-4 transition-colors duration-300 cursor-pointer">
-                  <FaCircleUser size="30" color={isHovered ? "green" : "gray"}/>
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center p-2 transition-colors duration-300 cursor-pointer" // 아이콘 간격 조절
+                >
+                  <FaCircleUser size="30" color={isHovered ? "green" : "gray"} />
                   <span className={isHovered ? "ps-2 text-green-800" : "ps-2"}>{/* 사용자 정보 */}</span>
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20">
+                  <div className="border border-gray-200 absolute top-0.5 right-10 mt-12 py-2 w-48 bg-white rounded-md shadow-xl z-20"> {/* 드롭다운 위치 조절 */}
                     <Link to="/mypage" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">마이 페이지</Link>
                     <button onClick={handleLogout} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">로그아웃</button>
                   </div>
                 )}
+                <button>
+                  <Link to="/market/cart"><BiSolidCart size="30" className="mr-4 text-gray-800 hover:text-green-800 transition-colors duration-300 cursor-pointer" /></Link>
+                </button>
               </div>
             ) : (
               // 로그인 하지 않은 상태
