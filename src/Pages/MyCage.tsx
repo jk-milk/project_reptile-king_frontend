@@ -31,7 +31,7 @@ function MyCage() {
         }
       } catch (error) {
         setCages(null);
-        setCurCages(curCages);
+        setCurCages(null);        
         console.error("케이지 목록 가져오기 서버 에러", error);
         alert("케이지 목록 가져오는 중 에러! 다시 시도해 주세요.");
       }
@@ -136,7 +136,7 @@ function MyCage() {
             </div>
           ) :
             curCages.map((cage) => (
-              <Link to={`/my-cage/${cage.id}`} state={{reptileSerialCode: cage.reptile_serial_code}} key={cage.id}>
+              <Link to={`/my-cage/${cage.id}`} state={{cage: cage}} key={cage.id}>
                 <div className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
                   {cage.img_urls.length !== 0 ?
                     <img 
