@@ -3,8 +3,8 @@
 import { Link } from "react-router-dom";
 import { Post } from "../../types/Board";
 // import { Comment } from "../../types/Board";
-// import { FaCommentDots } from "react-icons/fa";
 import { BiSolidLike } from "react-icons/bi";
+import { FaCommentDots } from "react-icons/fa";
 
 const PostList = ({ posts }: { posts: Post[] | null }) => {
   console.log(posts);
@@ -98,17 +98,15 @@ const PostList = ({ posts }: { posts: Post[] | null }) => {
                   <span className="text-gray-600 pe-2">{post.nickname}</span>
                   <span className="text-gray-600 pe-2">•</span>
                   <span className="text-gray-600 pe-2">{timeFromNow(post.created_at)}</span>
-                  {/* 실제 api와 연결해서 댓글 수 출력하는 코드 임시 */}
-                  {/* {comments[post.id] && comments[post.id].length > 0 && ( // 댓글이 있는지 검사 -> 댓글이 1개 이상 있는지 검사
-              <>
-              <span className="text-gray-400">•</span>
-              <FaCommentDots className="inline-block pe-1 pb-1"/>
-              <span className="text-gray-600 pe-2">{comments[post.id].length} comments</span>
-              </>
-              )} */}
+                  <span className="text-gray-600 pe-2">•</span>
+                  <FaCommentDots className="inline-block pe-1 pb-1"/>
+                  <span className="text-gray-600 pe-2">{post.comments.length}</span>
                   <span className="text-gray-600 pe-2">•</span>
                   <BiSolidLike className="inline-block pe-1 pb-1" />
                   <span className="text-gray-600 pe-2">{post.likes}</span>
+                  <span className="text-gray-600 pe-2">•</span>
+                  <BiSolidLike className="inline-block pe-1 pb-1" />
+                  <span className="text-gray-600 pe-2">{post.views}</span>
                 </div>
               </div>
               <div className="w-20">
