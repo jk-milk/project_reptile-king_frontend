@@ -47,8 +47,9 @@ const PostList = ({ posts }: { posts: Post[] | null }) => {
 
   // html 태그를 제외하고 순수 텍스트만 추출하는 함수
   function htmlToText(content: string) {
-    const reg = /<[^>]*>?/g; // html 태그 정규식
-    return content.replace(reg, '');
+    const tagReg = /<[^>]*>?/g; // html 태그 정규식
+    const nbspReg = /&nbsp;/g; // &nbsp; 엔터티 정규식
+    return content.replace(tagReg, '').replace(nbspReg, ' ');
   }
 
   // 글 내용이 82자 이상이면 잘라서 반환하는 함수
