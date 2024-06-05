@@ -6,6 +6,9 @@ import { useState, useRef, useEffect } from "react";
 import { API } from "../../../config";
 import { apiWithAuth } from "../../common/axios";
 import { BiSolidCart } from "react-icons/bi";
+import { FaRegCommentDots } from "react-icons/fa";
+import { RiShoppingBagLine } from "react-icons/ri";
+import { MdOutlinePets } from "react-icons/md";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -13,7 +16,9 @@ function Navbar() {
   const { isAuthenticated } = state;
   const [isHovered, setIsHovered] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const notificationDropdownRef = useRef<HTMLDivElement | null>(null);
 
   // 드롭다운 버튼 외부 클릭 감지
   useEffect(() => {
@@ -24,13 +29,16 @@ function Navbar() {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
           setDropdownOpen(false);
         }
+        if (notificationDropdownRef.current && !notificationDropdownRef.current.contains(event.target)) {
+          setNotificationDropdownOpen(false);
+        }
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dropdownRef]);
+  }, [dropdownRef, notificationDropdownRef]);
 
   const handleLogout = async () => {
     const refreshToken = localStorage.getItem('refreshToken');
@@ -47,6 +55,15 @@ function Navbar() {
       dispatch({ type: 'LOGOUT', accessToken: null, refreshToken: null });
       alert("로그아웃 되었습니다.")
       navigate('/');
+    }
+  };
+
+  const handleNotificationClick = () => {
+    if (!isAuthenticated) {
+      alert("로그인해 주세요!");
+      navigate('/login');
+    } else {
+      setNotificationDropdownOpen(!notificationDropdownOpen);
     }
   };
 
@@ -85,11 +102,14 @@ function Navbar() {
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center p-2 transition-colors duration-300 cursor-pointer" // 아이콘 간격 조절
                 >
-                  <FaCircleUser size="30" color={isHovered ? "green" : "gray"} />
-                  <span className={isHovered ? "ps-2 text-green-800" : "ps-2"}>{/* 사용자 정보 */}</span>
+                  <div className={`transition-colors duration-300 ${isHovered ? "text-green-800" : "text-gray-500"}`}>
+                    <FaCircleUser size="30" />
+                  </div>
+                  <span className={`ps-2 transition-colors duration-300 ${isHovered ? "text-green-800" : ""}`}>{/* 사용자 정보 */}
+                  </span>
                 </button>
                 {dropdownOpen && (
-                  <div className="border border-gray-200 absolute top-0.5 right-10 mt-12 py-2 w-48 bg-white rounded-md shadow-xl z-20"> {/* 드롭다운 위치 조절 */}
+                  <div ref={dropdownRef} className="border border-gray-200 absolute top-0.5 right-10 mt-12 py-2 w-48 bg-white rounded-md shadow-xl z-20"> {/* 드롭다운 위치 조절 */}
                     <Link to="/mypage" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">마이 페이지</Link>
                     <button onClick={handleLogout} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">로그아웃</button>
                   </div>
@@ -102,7 +122,29 @@ function Navbar() {
               // 로그인 하지 않은 상태
               <Link to="/login" className="font-bold text-lg p-2 mr-4 hover:text-green-800 transition-colors duration-300 cursor-pointer">로그인</Link>
             )}
-            <IoMdNotifications size="30" className="text-gray-800 hover:text-green-800 transition-colors duration-300 cursor-pointer" />
+            <div className="relative">
+              <IoMdNotifications
+                size="30"
+                className="text-gray-800 hover:text-green-800 transition-colors duration-300 cursor-pointer"
+                onClick={handleNotificationClick}
+              />
+                {notificationDropdownOpen && (
+                <div ref={notificationDropdownRef} className="border border-gray-200 top-8 absolute right-0 mt-2 w-80 bg-white rounded-md shadow-xl z-20 max-h-64 overflow-auto">
+                  <div className="px-4 py-3 text-lg font-bold text-black border-b border-gray-200">알림</div>
+                  <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
+                    <RiShoppingBagLine className="mr-2" /> 마켓 알림
+                  </Link>
+                  <div className="border-t border-gray-200"></div>
+                  <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
+                    <FaRegCommentDots className="mr-2" /> 커뮤니티 알림
+                  </Link>
+                  <div className="border-t border-gray-200"></div>
+                  <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
+                    <MdOutlinePets className="mr-2" /> 내 사육장 알림
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

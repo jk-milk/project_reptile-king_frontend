@@ -68,7 +68,7 @@ export function MarketCartPaySuccess() {
     window.location.href = "/mypage/order/detail";
   }
 
-  const totalAmount = selectedProducts.reduce((total, product) => total + product.price * product.quantity, 0);
+  const totalAmount = selectedProducts.reduce((total, product) => total + product.price, 0);
 
   return (
     <div>
