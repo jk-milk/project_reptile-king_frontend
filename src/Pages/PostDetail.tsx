@@ -43,6 +43,7 @@ function PostDetail() {
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<CommentsData[]>([]);
   const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
+  console.log(post?.created_at);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -110,6 +111,27 @@ function PostDetail() {
     setSelectedCommentId(null);
   }
 
+  // 날짜 형식 변경 함수 
+  function formatCreatedAt(createdAt: string) {
+    // Date 객체로 변환
+    const date = new Date(createdAt);
+  
+    // Intl.DateTimeFormat을 사용해 원하는 형식으로 날짜 및 시간 포맷
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit',
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit',
+      hour12: false
+    };
+    const formattedDate = new Intl.DateTimeFormat('ko-KR', options).format(date);
+  
+    // 포맷된 날짜에서 구분자 변경 ('-'를 '.'으로, ','를 공백으로)
+    return formattedDate.replace(/-/g, '.').replace(/(\d{2}),/, '$1').trim();
+  }
+
   if (!post) return <div>Loading...</div>;
 
   return (
@@ -120,7 +142,7 @@ function PostDetail() {
           onClick={() => navigate(-1)}
           className="mt-2 mb-4 text-blue-500 hover:text-blue-700"
         >
-          ← Go back
+          ← 뒤로가기
         </button>
         <div className="mb-5">
           <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
@@ -134,10 +156,10 @@ function PostDetail() {
           </div>
           <div className="mt-2 text-sm text-gray-500">
             by {post.user.nickname} •
-            {post.created_at} •
-            <MdRemoveRedEye className="inline-block text-black" /> {post.views} •
-            <FaCommentDots className="inline-block text-black" /> 댓글 수 •
-            <BiSolidLike className="inline-block text-black" /> {post.likes}
+            <span className="ps-1">{formatCreatedAt(post.created_at)}</span> •
+            <MdRemoveRedEye className="inline-block text-black ms-1 mb-0.5" /> {post.views} •
+            <FaCommentDots className="inline-block text-black ms-1 mb-0.5" /> {post.comments.length} •
+            <BiSolidLike className="inline-block text-black ms-1 mb-0.5" /> {post.likes}
           </div>
         </div>
         <div>
