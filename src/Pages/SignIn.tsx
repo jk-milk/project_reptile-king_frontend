@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { API } from '../config';
 import { apiWithoutAuth } from '../components/common/axios';
 import { isAxiosError } from 'axios';
+import { getNotificationToken } from '../services/notificationToken';
 
 function SignIn() {
 
@@ -25,10 +26,14 @@ function SignIn() {
     e.preventDefault();
 
     try {
+      // 푸시 알림 토큰 가져오기
+      const notificationToken = await getNotificationToken();
       // 서버로 로그인 요청
       const response = await apiWithoutAuth.post(API+'login', {
         email,
         password,
+        notificationToken,
+        platform: "web",
       });
       console.log(response);
 
