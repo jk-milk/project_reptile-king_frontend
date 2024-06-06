@@ -88,34 +88,34 @@ function Profile() {
 
       {/* 오른쪽 섹션 */}
       <div className="w-3/4 px-4">
-        <div className="bg-green-700 rounded border border-lime-300 px-8 py-4">
+        <div className="bg-gray-200 rounded px-8 py-4">
           <div className="flex items-center mt-8 mb-12">
             <img src={userInfo.img_urls['1']} alt="프로필 사진" className="w-40 h-40 mr-4 rounded-full" />
             <div>
               <div className="flex items-center">
-                <h3 className="text-2xl font-bold mr-2 text-white">{userInfo.nickName}</h3>
+                <h3 className="text-2xl font-bold mr-2">{userInfo.nickName}</h3>
               </div>
               <div className="flex items-center">
-                <h3 className="text-xl text-white"><FaUser /></h3>
-                <h3 className="text-lg text-white ml-2">{userInfo.name}</h3>
+                <h3 className="text-xl "><FaUser /></h3>
+                <h3 className="text-lg ml-2">{userInfo.name}</h3>
               </div>
               <div className="flex items-center">
-                <h3 className="text-xl text-white"><MdOutlineEmail /></h3>
-                <h3 className="text-lg text-white ml-2">{userInfo.email}</h3>
+                <h3 className="text-xl"><MdOutlineEmail /></h3>
+                <h3 className="text-lg ml-2">{userInfo.email}</h3>
               </div>
               <div className="flex items-center">
-                <h3 className="text-xl text-white"><MdPhoneAndroid /></h3>
-                <h3 className="text-lg text-white ml-2">{userInfo.phone}</h3>
+                <h3 className="text-xl "><MdPhoneAndroid /></h3>
+                <h3 className="text-lg ml-2">{userInfo.phone}</h3>
               </div>
               <div className="flex items-center">
-                <h3 className="text-xl text-white"><MdOutlineLocationOn /></h3>
-                <h3 className="text-lg text-white ml-2">{userInfo.address}</h3>
+                <h3 className="text-xl"><MdOutlineLocationOn /></h3>
+                <h3 className="text-lg ml-2">{userInfo.address}</h3>
               </div>
             </div>
           </div>
 
-          <div className="font-bold text-2xl mb-3 text-white">결제수단</div>
-          <div className="bg-gray-100 rounded flex items-center px-5 py-4 mb-9">
+          <div className="font-bold text-2xl mb-3">결제수단</div>
+          <div className="bg-white rounded flex items-center px-5 py-4 mb-10">
             <div>
               <h3 className="text-xl font-bold">배송지 별명</h3>
               <h3 className="text-lg font-bold">{userInfo.address}</h3>
@@ -126,8 +126,8 @@ function Profile() {
             </div>
           </div>
 
-          <div className="font-bold text-2xl mb-3 text-white">배송지</div>
-          <div className="bg-gray-100 rounded flex items-center px-5 py-4">
+          <div className="font-bold text-2xl mb-3">배송지</div>
+          <div className="bg-white rounded flex items-center px-5 py-4 mb-5">
             <div>
               <h3 className="text-xl font-bold">배송지 별명</h3>
               <h3 className="text-lg font-bold">{userInfo.address}</h3>
