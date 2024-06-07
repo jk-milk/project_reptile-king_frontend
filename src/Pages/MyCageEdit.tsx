@@ -15,8 +15,6 @@ function MyCageEdit() {
       setCage(location.state);
       setName(location.state.name);
       setSerialCode(location.state.serial_code);
-      if (location.state.memo !== null)
-        setMemo(location.state.memo);
       setImgUrls(location.state.img_urls || []);
     };
     fetchCage();
@@ -29,7 +27,6 @@ function MyCageEdit() {
   const [name, setName] = useState('');
   const [reptileSerialCode, setReptileSerialCode] = useState('');
   const [serialCode, setSerialCode] = useState('');
-  const [memo, setMemo] = useState('');
   const [imgUrls, setImgUrls] = useState<string[]>([]);
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [reptiles, setReptiles] = useState<Reptile[] | null>(null);
@@ -83,7 +80,6 @@ function MyCageEdit() {
 
       formData.append('name', name);
       formData.append('serialCode', cage.serial_code);
-      formData.append('memo', memo);
       formData.append('reptileSerialCode', editReptileSerialCode);
       formData.append('imgUrls', JSON.stringify(imgUrls));
 
@@ -259,14 +255,6 @@ function MyCageEdit() {
             value={serialCode}
             onChange={(e) => setSerialCode(e.target.value)}
           />
-
-          <div className="text-lg col-span-1 flex justify-center items-center">메모</div>
-          <textarea
-            className="col-span-3 h-40 border border-gray-300 rounded-md p-2 focus:outline-none mt-3 mb-3"
-            value={memo}
-            onChange={(e) => setMemo(e.target.value)}
-            placeholder="메모를 입력해 주세요..."
-          ></textarea>
         </div>
 
         <div className="flex justify-center mt-3">

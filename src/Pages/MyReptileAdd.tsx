@@ -11,7 +11,6 @@ function MyReptileAdd() {
   const [species, setSpecies] = useState('');
   const [gender, setGender] = useState('');
   const [birth, setBirth] = useState('');
-  const [memo, setMemo] = useState('');
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -61,7 +60,6 @@ function MyReptileAdd() {
       formData.append('species', species);
       formData.append('gender', gender);
       formData.append('birth', birth);
-      formData.append('memo', memo);
       uploadedImages.forEach(image => {
         formData.append('images[]', image);
       });
@@ -181,13 +179,6 @@ function MyReptileAdd() {
               </div>
             </>
           )}
-
-          <div className="text-lg col-span-1 flex justify-center items-center">메모</div>
-          <textarea
-            className="col-span-3 h-40 border border-gray-300 rounded-md p-2 focus:outline-none mt-3 mb-3"
-            placeholder="메모를 입력해 주세요..."
-            onChange={(e) => setMemo(e.target.value)}
-          ></textarea>
         </div>
         <div className="flex justify-center mt-3">
           <button
