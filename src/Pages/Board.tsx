@@ -99,12 +99,6 @@ function Board() {
     }
   };
 
-  // 검색어 입력 핸들러
-  const handleSearchChange = (search: string) => {
-    // setSearchParams({ ...Object.fromEntries(searchParams), search });
-    navigate(`/board/lists?search=${search}`);
-  };
-
   // 탭 선택 핸들러
   const handleTabChange = (tab: string) => {
     setSearchParams({ ...Object.fromEntries(searchParams), tab: tab });
@@ -124,7 +118,7 @@ function Board() {
     <div className="pt-10 pb-10 laptop:w-[67.5rem] w-body m-auto">
       <div className="bg-white rounded px-5 py-4 flex">
         <div className="flex flex-col space-y-4">
-          <SearchBar handleSearchChange={handleSearchChange} />
+          <SearchBar />
           <Link to={`/board/write`}>
             <button className="text-gray-900 border border-gray-100 focus:outline-none bg-white hover:bg-gray-100 focus:ring-1 focus:ring-gray-300 font-medium text-sm px-2 py-1.5 flex items-center">
               <RiFileList2Line className="mr-2" />
