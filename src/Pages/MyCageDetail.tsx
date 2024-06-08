@@ -5,7 +5,7 @@ import { apiWithAuth } from '../components/common/axios';
 import { API } from '../config';
 import { AvgTempHum, Cage, Reptile } from '../types/Cage';
 import { calculateAge } from '../utils/CalculateAge';
-import LineChart from '../components/Cage/LineChart';
+import TemHumChart from '../components/Cage/TemHumChart';
 import { Autoplay, Pagination, Navigation as SwiperNavigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import ImageWithDeleteButton from '../components/Board/ImageWithDeleteButton';
@@ -535,7 +535,7 @@ function MyCageDetail() {
               </div>
             )}
 
-            <LineChart data={avgTempHum} date={date} setDate={setDate} />
+            <TemHumChart data={avgTempHum} date={date} setDate={setDate} />
 
             <div className="font-bold text-3xl mb-3">실시간 사육장 상태</div>
             <hr className="border-t border-gray-400 mb-6" />
