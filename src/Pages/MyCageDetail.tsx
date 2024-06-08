@@ -502,7 +502,7 @@ function MyCageDetail() {
                     <span className="ml-6">{cage.img_urls.length + uploadedImages.length}/3</span>
                     <span className="text-gray-400 text-sm ml-6">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
                   </div>
-                  <div className="col-span-4 mt-4 flex overflow-x-auto ml-20">
+                  <div className="col-span-4 flex overflow-x-auto ml-20">
                     {cage.img_urls.map((url, index) => (
                       <>
                         <div className="col-span-1"></div>

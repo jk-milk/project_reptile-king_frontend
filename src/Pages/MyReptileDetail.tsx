@@ -8,17 +8,20 @@ import { FaCamera } from 'react-icons/fa6';
 import { Autoplay, Pagination, Navigation as SwiperNavigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import ImageWithDeleteButton from '../components/Board/ImageWithDeleteButton';
+import { MdCreate } from 'react-icons/md';
 
 function MyReptileDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const location = useLocation();  
+  const location = useLocation();
   const reptileSerialCode = location.state.reptileSerialCode;
 
   const [reptile, setReptile] = useState<Reptile>();
   const [showUploadPanel, setShowUploadPanel] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [isEdited, setIsEdited] = useState(false);
+  console.log(reptile);
+
 
 
 
@@ -86,7 +89,7 @@ function MyReptileDetail() {
       setIsEdited(true);
 
       // 새로운 img_urls 배열을 포함하는 새로운 cage 상태 객체를 반환합니다.
-      return {...prevReptile, img_urls: newImgUrls};
+      return { ...prevReptile, img_urls: newImgUrls };
     });
   };
 
@@ -112,6 +115,10 @@ function MyReptileDetail() {
 
       formData.append('_method', 'PATCH');
 
+      for (const pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
+
       try {
         const response = await apiWithAuth.post(`${API}reptiles/${id}`, formData);
         console.log(response);
@@ -127,14 +134,78 @@ function MyReptileDetail() {
     }
   };
 
+  // 이름만 업데이트
+  const updateName = (newName: string) => {
+    setReptile(prevState => ({
+      ...prevState, // 기존 상태를 복사
+      name: newName, // 변경할 값 업데이트
+    }) as Reptile);
+    setIsEdited(true);
+  };
+
+  // 생년월일만 업데이트
+  const updateBirth = (newBirth: string) => {
+    setReptile(prevState => ({
+      ...prevState, // 기존 상태를 복사
+      birth: newBirth, // 변경할 값 업데이트
+    }) as Reptile);
+    setIsEdited(true);
+  };
+
+  console.log(reptile?.birth, typeof (reptile?.birth));
+
+
+  const formatDate = (dateString: string): string => {
+    if (dateString === null) {
+      console.log("?");
+    }
+    const date = new Date(dateString);
+    let month = '' + (date.getMonth() + 1), // getMonth()는 0부터 시작
+      day = '' + date.getDate();
+    const year = date.getFullYear();
+
+    if (month.length < 2)
+      month = '0' + month;
+    if (day.length < 2)
+      day = '0' + day;
+
+    return [year, month, day].join('-'); // 'yyyy-MM-dd' 형식
+  };
+
+
+
   return (
     <>
       {reptile ? (
         <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
           <div className="bg-white rounded-lg shadow-md px-5 py-4">
-            <div className="font-bold text-3xl mb-4 text-gray-800">파충류 세부정보</div>
+            {/* <div className="font-bold text-3xl mb-4 text-gray-800">파충류 세부정보</div> */}
+            <div className="flex md:flex-row justify-between items-center mb-4 relative">
+              <div className="flex flex-col">
+                <MdCreate className="text-2xl absolute left-80 top-10 transform translate-x-8 -translate-y-6" />
+                <input
+                  type="text"
+                  value={reptile?.name}
+                  onChange={(e) => updateName(e.target.value)}
+                  className="border-b-2 border-gray-400 py-2 pr-4 text-3xl font-semibold focus:outline-none focus:border-blue-500 transition-colors"
+                />
+              </div>
+              <div>
+                <button
+                  onClick={handleSaveChanges}
+                  disabled={!isEdited} // isEdited가 false일 경우 버튼을 비활성화
+                  className={`border-2 py-1 px-4 rounded font-semibold transition duration-300 ${isEdited
+                    ? "border-green-500 hover:bg-green-300 text-green-500" // 변경 사항이 있을 때
+                    : "border-gray-500 text-gray-500 bg-gray-200 cursor-default" // 변경 사항이 없을 때
+                    }`}
+                >
+                  저장
+                </button>
+              </div>
+            </div>
+            <hr className="border-t border-gray-200" />
 
-            <div className="flex mb-12 items-start">
+            <div className="flex mt-4 mb-12 items-start">
               <div className="w-1/2 pr-6 relative">
                 <Swiper
                   centeredSlides={true}
@@ -176,22 +247,33 @@ function MyReptileDetail() {
               </div>
 
               <div className="w-1/2">
-                <div className="flex items-center mb-3">
-                  <div className="font-bold text-2xl">파충류 정보</div>
-                </div>
-                <hr className="border-t border-gray-400 mb-2" />
-                <div className="w-full mb-6">
-                  <div className="flex">
-                    <div className="font-semibold text-xl w-1/6">이름</div>
-                    <div className="text-lg">{reptile?.name ? reptile.name : "미등록"}</div>
+                <div className="bg-white rounded-lg shadow-md p-5 max-w-md mx-auto mb-6">
+                  <div className="flex items-center mb-3">
+                    <div className="font-bold text-2xl">파충류 정보</div>
                   </div>
-                  <div className="flex">
-                    <div className="font-semibold text-xl w-1/6">종</div>
-                    <div className="text-lg">{reptile?.species ? reptile.species : "미등록"}</div>
-                  </div>
-                  <div className="flex">
-                    <div className="font-semibold text-xl w-1/6">나이</div>
-                    <div className="text-lg">{calculateAge(reptile?.birth)}</div>
+                  <hr className="border-t border-gray-400 mb-2" />
+                  <div className="w-full mb-6">
+                    <div className="flex">
+                      <div className="font-semibold text-xl w-1/6">이름</div>
+                      <div className="text-lg">{reptile?.name ? reptile.name : "미등록"}</div>
+                    </div>
+                    <div className="flex">
+                      <div className="font-semibold text-xl w-1/6">종</div>
+                      <div className="text-lg">{reptile?.species ? reptile.species : "미등록"}</div>
+                    </div>
+                    <div className="flex">
+                      <div className="font-semibold text-xl w-1/6">나이</div>
+                      <div className="text-lg">{calculateAge(reptile?.birth)}</div>
+                    </div>
+                    <div className="col-span-1 text-lg flex justify-center items-center">
+                      생년월일
+                    </div>
+                    <input
+                      type="date"
+                      className="col-span-3 p-2 border border-gray-300 rounded"
+                      value={formatDate(reptile?.birth)}
+                      onChange={(e) => updateBirth(e.target.value)}
+                    ></input>
                   </div>
                 </div>
               </div>
@@ -221,7 +303,7 @@ function MyReptileDetail() {
                     <span className="ml-6">{reptile.img_urls.length + uploadedImages.length}/3</span>
                     <span className="text-gray-400 text-sm ml-6">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
                   </div>
-                  <div className="col-span-4 mt-4 flex overflow-x-auto ml-20">
+                  <div className="col-span-4 flex overflow-x-auto ml-20">
                     {reptile.img_urls.map((url, index) => (
                       <>
                         <div className="col-span-1"></div>
