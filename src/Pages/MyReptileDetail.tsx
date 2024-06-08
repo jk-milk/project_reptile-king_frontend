@@ -9,6 +9,7 @@ import { Autoplay, Pagination, Navigation as SwiperNavigation } from 'swiper/mod
 import { Swiper, SwiperSlide } from 'swiper/react';
 import ImageWithDeleteButton from '../components/Board/ImageWithDeleteButton';
 import { MdCreate } from 'react-icons/md';
+import ActivityChart from '../components/Cage/ActivityChart';
 
 function MyReptileDetail() {
   const navigate = useNavigate();
@@ -21,6 +22,12 @@ function MyReptileDetail() {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [isEdited, setIsEdited] = useState(false);
   console.log(reptile);
+
+  const [isAdoptModalOpen, setIsAdoptModalOpen] = useState(false);
+
+  const toggleAdoptModal = () => {
+    setIsAdoptModalOpen(!isAdoptModalOpen);
+  };
 
 
 
@@ -172,6 +179,21 @@ function MyReptileDetail() {
     return [year, month, day].join('-'); // 'yyyy-MM-dd' 형식
   };
 
+  // 체크박스 상태를 관리하기 위한 useState
+  const [isChecked, setIsChecked] = useState(false);
+
+  // 체크박스 상태를 변경하는 함수
+  const handleCheckboxChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
+    setIsChecked(event.target.checked);
+  };
+
+  // 분양 정보 서버에 전송
+  const sendAdoptionInfo = () => {
+    console.log('분양 정보를 보내기');
+
+    // 모달 닫기
+    toggleAdoptModal();
+  };
 
 
   return (
@@ -249,7 +271,7 @@ function MyReptileDetail() {
               <div className="w-1/2">
                 <div className="bg-white rounded-lg shadow-md p-5 max-w-md mx-auto mb-6">
                   <div className="flex items-center mb-3">
-                    <div className="font-bold text-2xl">파충류 정보</div>
+                    <div className="font-bold text-2xl">상세정보</div>
                   </div>
                   <hr className="border-t border-gray-400 mb-2" />
                   <div className="w-full mb-6">
@@ -265,20 +287,71 @@ function MyReptileDetail() {
                       <div className="font-semibold text-xl w-1/6">나이</div>
                       <div className="text-lg">{calculateAge(reptile?.birth)}</div>
                     </div>
-                    <div className="col-span-1 text-lg flex justify-center items-center">
-                      생년월일
-                    </div>
-                    <input
-                      type="date"
-                      className="col-span-3 p-2 border border-gray-300 rounded"
-                      value={formatDate(reptile?.birth)}
-                      onChange={(e) => updateBirth(e.target.value)}
-                    ></input>
+
                   </div>
                 </div>
+                <button
+                  onClick={toggleAdoptModal}
+                  className="bg-blue-500 text-white py-2 px-4"
+                >
+                  분양
+                </button>
               </div>
 
+
+
             </div>
+
+
+            {isAdoptModalOpen && (
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+                onClick={toggleAdoptModal}
+              >
+                <div
+                  className="bg-white rounded-lg p-8 shadow-lg max-w-lg w-full"
+                  onClick={(e) => e.stopPropagation()} // 모달창 내부 클릭 시 이벤트 버블링 방지
+                >
+                  <h2 className="text-2xl font-bold mb-4">분양</h2>
+                  <div className="mb-4">
+                    <label className="inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={handleCheckboxChange}
+                        className="form-checkbox w-6 h-6 text-blue-500 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <span className="ml-2 text-gray-700">사육 일지 공개</span>
+                    </label>
+                    <p className="mt-2 text-sm text-gray-600">
+                      이 옵션을 선택하면, 당신의 사육 일지가 분양 대상자에게 공개됩니다.
+                    </p>
+                  </div>
+                  <button
+                    onClick={sendAdoptionInfo}
+                    className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-full"
+                  >
+                    확인
+                  </button>
+                  <button
+                    onClick={toggleAdoptModal}
+                    className="mt-4 bg-red-500 text-white py-2 px-4 rounded-full"
+                  >
+                    닫기
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="col-span-1 text-lg flex justify-center items-center">
+              생년월일
+            </div>
+            <input
+              type="date"
+              className="col-span-3 p-2 border border-gray-300 rounded"
+              value={formatDate(reptile?.birth)}
+              onChange={(e) => updateBirth(e.target.value)}
+            ></input>
 
             {showUploadPanel && (
               <div className="bg-white rounded-lg shadow-lg p-5 max-w-full mx-12 mb-12">
@@ -336,16 +409,18 @@ function MyReptileDetail() {
               </div>
             )}
 
-            <div className="font-bold text-3xl mb-3">건강분석</div>
-            <hr className="border-t border-gray-400 mb-3" />
-            <div className="bg-gray-300 rounded-md flex justify-center items-center">
-              {/* 활동량, 탈피주기 확인 차트 */}
+            {/* <div className="font-bold text-3xl mb-3">건강분석</div>
+            <hr className="border-t border-gray-400 mb-3" /> */}
+            {/* <div className="bg-gray-300 rounded-md flex justify-center items-center">
+              활동량, 탈피주기 확인 차트
               <img
                 src="https://img.freepik.com/free-vector/flat-design-dynamic-veterinary-clinic-infographic_23-2149680939.jpg?t=st=1713955901~exp=1713959501~hmac=42ee9f09ccbdafe5b1fd6c05d86a55899d1bdc2022bb0b057695f7d83bfbdeb4&w=996"
                 alt="활동량, 탈피주기 확인 차트"
                 className='w-full'
               />
-            </div>
+            </div> */}
+            <ActivityChart />
+
 
             <div className="flex justify-center">
               <Link to="/my-cage" className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-semibold py-2 px-4 rounded mt-16 transition duration-300">목록으로 돌아가기</Link>
