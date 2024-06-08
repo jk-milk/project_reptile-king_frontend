@@ -32,7 +32,7 @@ function preprocessData(data: AvgTempHum[]): ProcessedDataItem[] {
   return completeData;
 }
 
-function LineChart({ data, date, setDate }: LineChartProps) {
+function TemHumChart({ data, date, setDate }: LineChartProps) {
 
   // 시간축에 사용할 홀수 + 0 배열
   const oddNumbers = Array.from({ length: 12 }, (_, i) => 2 * i + 1);
@@ -254,4 +254,4 @@ function LineChart({ data, date, setDate }: LineChartProps) {
   );
 }
 
-export default LineChart;
+export default TemHumChart;
