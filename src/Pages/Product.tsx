@@ -128,10 +128,10 @@ const Product: React.FC = () => {
             <Link
               key={category.id}
               to={`/market/${category.id}`}
-              className="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-500 transition-colors duration-300 flex items-center justify-center"
+              className="bg-white px-4 py-2 rounded-md hover:bg-gray-300 transition-colors duration-300 flex items-center justify-center"
             >
               <span className="mr-2">
-                <img src={category.img_url} className="h-6 w-6" />
+                <img src={category.img_url} className="h-6 w-6 border border-gray-300 rounded-xl" />
               </span>
               <span>{category.name}</span>
             </Link>
