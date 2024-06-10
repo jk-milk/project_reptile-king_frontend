@@ -17,6 +17,11 @@ function MarketCartPay() {
     phoneNumber: '',
     deliveryNote: ''
   });
+  const [userInfo, setUserInfo] = useState({
+    address: '',
+    name: '',
+    phone: ''
+  });
 
   const [selectedCartDeliveryNote, setSelectedCartDeliveryNote] = useState('');
 
@@ -52,6 +57,26 @@ function MarketCartPay() {
     return payload.sub;
   })();
 
+  useEffect(() => {
+    if (!userId) {
+      console.error('User ID not found');
+      return;
+    }
+    console.log('Fetching user info for user ID:', userId);
+  
+    const fetchUserInfo = async () => {
+      try {
+        const response = await apiWithAuth.get(`${API}users/${userId}`);
+        console.log('User info fetched:', response.data);
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+  
+    fetchUserInfo();
+  }, [userId]);
+  
   useEffect(() => {
     const storedSelectedItems = localStorage.getItem('selectedItems');
     if (storedSelectedItems) {
@@ -232,13 +257,12 @@ function MarketCartPay() {
             </button>
           </div>
           <div className="flex mb-2">
-            <div className="text-white font-bold text-2xl mr-3">배송지 별명</div>
-            <div className="bg-pink-700 rounded-2xl px-3 py-1">
-              <span className="text-white font-bold">기본 배송지</span>
+            <div className="text-white font-bold text-2xl mr-3">
+              {/* 배송지 이름 */}
             </div>
           </div>
-          <div className="text-white text-xl">경북 칠곡군 지천면 금송로 60, 글로벌생활관 A동</div>
-          <div className="text-white text-xl">배석민 010-3891-5626</div>
+          <div className="text-white text-xl">{userInfo.address}</div>
+          <div className="text-white text-xl">{userInfo.name} {userInfo.phone}</div>
         </div>
       </div>
 
@@ -310,4 +334,5 @@ function MarketCartPay() {
     </div>
   );
 }
+
 export default MarketCartPay;
