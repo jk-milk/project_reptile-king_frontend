@@ -141,14 +141,14 @@ function MyCageDetail() {
   const increaseTemperature = () => {
     setCage(prevState => ({
       ...prevState,
-      set_temp: prevState!.set_temp < 40 ? prevState!.set_temp + 1 : prevState!.set_temp,
+      set_temp: prevState!.set_temp < 30 ? prevState!.set_temp + 1 : prevState!.set_temp,
     }) as Cage);
     setIsEdited(true);
   };
   const decreaseTemperature = () => {
     setCage(prevState => ({
       ...prevState,
-      set_temp: prevState!.set_temp > 10 ? prevState!.set_temp - 1 : prevState!.set_temp,
+      set_temp: prevState!.set_temp > 20 ? prevState!.set_temp - 1 : prevState!.set_temp,
     }) as Cage);
     setIsEdited(true);
   };
@@ -157,14 +157,14 @@ function MyCageDetail() {
   const increaseHumidity = () => {
     setCage(prevState => ({
       ...prevState,
-      set_hum: prevState!.set_hum < 90 ? prevState!.set_hum + 5 : prevState!.set_hum,
+      set_hum: prevState!.set_hum < 60 ? prevState!.set_hum + 5 : prevState!.set_hum,
     }) as Cage);
     setIsEdited(true);
   };
   const decreaseHumidity = () => {
     setCage(prevState => ({
       ...prevState,
-      set_hum: prevState!.set_hum > 0 ? prevState!.set_hum - 5 : prevState!.set_hum,
+      set_hum: prevState!.set_hum > 35 ? prevState!.set_hum - 5 : prevState!.set_hum,
     }) as Cage);
     setIsEdited(true);
   };
@@ -437,7 +437,7 @@ function MyCageDetail() {
                       <p className="text-3xl font-bold">{curTem}°C</p>
                     </div>
                     <div>
-                      <p className="text-gray-600 mb-2 flex items-center justify-center">설정 온도 (10°C ~ 40°C)</p>
+                      <p className="text-gray-600 mb-2 flex items-center justify-center">설정 온도 (20°C ~ 30°C)</p>
                       <div className="flex items-center justify-center">
                         <button onClick={decreaseTemperature} className="text-blue-700 bg-blue-100 hover:bg-blue-200 font-bold py-1.5 px-4 rounded-l-lg">
                           -
@@ -456,7 +456,7 @@ function MyCageDetail() {
                       <p className="text-3xl font-bold">{curHum}%</p>
                     </div>
                     <div>
-                      <p className="text-gray-600 mb-2 flex items-center justify-center">설정 습도 (0% ~ 90%)</p>
+                      <p className="text-gray-600 mb-2 flex items-center justify-center">설정 습도 (35% ~ 60%)</p>
                       <div className="flex items-center justify-center">
                         <button onClick={decreaseHumidity} className="text-blue-700 bg-blue-100 hover:bg-blue-200 font-bold py-1.5 px-4 rounded-l-lg">
                           -
@@ -468,14 +468,12 @@ function MyCageDetail() {
                       </div>
                     </div>
                   </div>
-
                   {/* <div className="flex justify-center">
                     <button onClick={confirmSettings} className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-bold py-2 px-8 rounded-lg">
                       설정
                     </button>
                   </div> */}
                 </div>
-
               </div>
             </div>
 
@@ -530,6 +528,18 @@ function MyCageDetail() {
                         </div>
                       </>
                     ))}
+                  </div>
+                  <div>
+                    <button
+                      onClick={handleSaveChanges}
+                      disabled={!isEdited} // isEdited가 false일 경우 버튼을 비활성화
+                      className={`border-2 py-1 px-4 rounded font-semibold transition duration-300 ${isEdited
+                        ? "border-green-500 hover:bg-green-300 text-green-500" // 변경 사항이 있을 때
+                        : "border-gray-500 text-gray-500 bg-gray-200 cursor-default" // 변경 사항이 없을 때
+                        }`}
+                    >
+                      저장
+                    </button>
                   </div>
                 </div>
               </div>
