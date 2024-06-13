@@ -29,9 +29,6 @@ function MyReptileDetail() {
     setIsAdoptModalOpen(!isAdoptModalOpen);
   };
 
-
-
-
   // 파충류 상세 데이터 가져오기
   useEffect(() => {
     const fetchReptile = async () => {
@@ -189,6 +186,7 @@ function MyReptileDetail() {
 
   // 분양 정보 서버에 전송
   const sendAdoptionInfo = () => {
+    // alert('상대에게 분양 확인 메시지를 보냅니다')
     console.log('분양 정보를 보내기');
 
     // 모달 닫기
@@ -228,50 +226,57 @@ function MyReptileDetail() {
             <hr className="border-t border-gray-200" />
 
             <div className="flex mt-4 mb-12 items-start">
-              <div className="w-1/2 pr-6 relative">
-                <Swiper
-                  centeredSlides={true}
-                  autoplay={{
-                    delay: 3000,
-                    disableOnInteraction: false,
-                  }}
-                  pagination={{
-                    clickable: true,
-                  }}
-                  navigation={false}
-                  modules={[Autoplay, Pagination, SwiperNavigation]}
-                  className="mySwiper"
-                >
-                  {reptile?.img_urls.length !== 0 ? (
-                    reptile?.img_urls.map((url, index) => (
-                      <SwiperSlide key={index}>
-                        <img src={url} alt={`Slide ${index + 1}`} className="w-full h-auto object-cover rounded-lg" />
+              <div className="w-1/2 pr-6">
+                <div className="relative">
+                  <Swiper
+                    centeredSlides={true}
+                    autoplay={{
+                      delay: 3000,
+                      disableOnInteraction: false,
+                    }}
+                    pagination={{
+                      clickable: true,
+                    }}
+                    navigation={false}
+                    modules={[Autoplay, Pagination, SwiperNavigation]}
+                    className="mySwiper"
+                  >
+                    {reptile?.img_urls.length !== 0 ? (
+                      reptile?.img_urls.map((url, index) => (
+                        <SwiperSlide key={index}>
+                          <img src={url} alt={`Slide ${index + 1}`} className="w-full h-auto object-cover rounded-lg" />
+                        </SwiperSlide>
+                      ))
+                    ) : (
+                      <SwiperSlide>
+                        <img
+                          src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/defaults/defaultReptileImage2.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
+                          alt='파충류 기본 이미지'
+                          className="w-full h-auto object-contain object-top rounded-lg"
+                        />
                       </SwiperSlide>
-                    ))
-                  ) : (
-                    <SwiperSlide>
-                      <img
-                        src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/defaults/defaultReptileImage2.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
-
-                        alt='파충류 기본 이미지'
-                        className="w-full h-auto object-contain object-top rounded-lg"
-                      />
-                    </SwiperSlide>
-                  )}
-                </Swiper>
-                <div className="absolute right-6 bottom-0 p-2 z-10">
-                  <label htmlFor="file-upload"
-                    className="cursor-pointer text-4xl bg-white rounded-full p-3 shadow-lg inline-block"
-                    onClick={toggleUploadPanel}>
-                    <FaCamera />
-                  </label>
+                    )}
+                  </Swiper>
+                  <span className="text-gray-400 text-sm ml-2.5">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
+                  <div className="absolute right-0 bottom-5 p-2 z-10">
+                    <label htmlFor="file-upload"
+                      className="cursor-pointer text-4xl bg-white rounded-full p-3 shadow-lg inline-block"
+                      onClick={toggleUploadPanel}>
+                      <FaCamera />
+                    </label>
+                  </div>
                 </div>
               </div>
-
               <div className="w-1/2">
                 <div className="bg-white rounded-lg shadow-md p-5 max-w-md mx-auto mb-6">
-                  <div className="flex items-center mb-3">
+                  <div className="flex items-center justify-between mb-3">
                     <div className="font-bold text-2xl">상세정보</div>
+                    <button
+                      onClick={toggleAdoptModal}
+                      className="border-blue-500 hover:bg-blue-300 text-blue-500 border-2 py-1 px-4 rounded font-semibold transition duration-300"
+                    >
+                      분양
+                </button>
                   </div>
                   <hr className="border-t border-gray-400 mb-2" />
                   <div className="w-full mb-6">
@@ -287,72 +292,11 @@ function MyReptileDetail() {
                       <div className="font-semibold text-xl w-1/6">나이</div>
                       <div className="text-lg">{calculateAge(reptile?.birth)}</div>
                     </div>
-
                   </div>
                 </div>
-                <button
-                  onClick={toggleAdoptModal}
-                  className="bg-blue-500 text-white py-2 px-4"
-                >
-                  분양
-                </button>
+                
               </div>
-
-
-
             </div>
-
-
-            {isAdoptModalOpen && (
-              <div
-                className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-                onClick={toggleAdoptModal}
-              >
-                <div
-                  className="bg-white rounded-lg p-8 shadow-lg max-w-lg w-full"
-                  onClick={(e) => e.stopPropagation()} // 모달창 내부 클릭 시 이벤트 버블링 방지
-                >
-                  <h2 className="text-2xl font-bold mb-4">분양</h2>
-                  <div className="mb-4">
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={handleCheckboxChange}
-                        className="form-checkbox w-6 h-6 text-blue-500 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                      />
-                      <span className="ml-2 text-gray-700">사육 일지 공개</span>
-                    </label>
-                    <p className="mt-2 text-sm text-gray-600">
-                      이 옵션을 선택하면, 당신의 사육 일지가 분양 대상자에게 공개됩니다.
-                    </p>
-                  </div>
-                  <button
-                    onClick={sendAdoptionInfo}
-                    className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-full"
-                  >
-                    확인
-                  </button>
-                  <button
-                    onClick={toggleAdoptModal}
-                    className="mt-4 bg-red-500 text-white py-2 px-4 rounded-full"
-                  >
-                    닫기
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div className="col-span-1 text-lg flex justify-center items-center">
-              생년월일
-            </div>
-            <input
-              type="date"
-              className="col-span-3 p-2 border border-gray-300 rounded"
-              value={formatDate(reptile?.birth)}
-              onChange={(e) => updateBirth(e.target.value)}
-            ></input>
-
             {showUploadPanel && (
               <div className="bg-white rounded-lg shadow-lg p-5 max-w-full mx-12 mb-12">
                 <div className="grid grid-cols-4 gap-4 mt-2">
@@ -408,6 +352,90 @@ function MyReptileDetail() {
                 </div>
               </div>
             )}
+            <div className="flex mt-4 mb-12 items-start">
+              <div className="w-1/2 pr-6">
+                <div className="bg-gray-100 rounded-lg shadow-md p-6">
+                  <h3 className="text-lg font-bold mb-4">탈피 정보</h3>
+                  <ul className="space-y-4">
+                    <li className="flex justify-between items-center border-b border-gray-200 pb-4">
+                      <span>마지막 탈피일</span>
+                      <span>2023-05-15</span>
+                    </li>
+                    <li className="flex justify-between items-center border-b border-gray-200 pb-4">
+                      <span>탈피주기</span>
+                      <span>3-4 개월</span>
+                    </li>
+                    <li className="flex justify-between items-center pb-4">
+                      <span>예상 탈피일</span>
+                      <span>2023-08-15</span>
+                    </li>
+                  </ul>
+                  <div className="mt-6 pl-4 border-l-4 border-gray-300">
+                    <p className="text-gray-500">탈피이력</p>
+                    <ul className="space-y-2 mt-2">
+                      <li>2023-05-15</li>
+                      <li>2022-12-01</li>
+                      <li>2022-08-20</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div className="w-1/2">
+                <ActivityChart />
+              </div>
+            </div>
+
+            {isAdoptModalOpen && (
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+                onClick={toggleAdoptModal}
+              >
+                <div
+                  className="bg-white rounded-lg p-8 shadow-lg max-w-lg w-full"
+                  onClick={(e) => e.stopPropagation()} // 모달창 내부 클릭 시 이벤트 버블링 방지
+                >
+                  <h2 className="text-2xl font-bold mb-4">분양</h2>
+                  <div className="mb-4">
+                    <label className="inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={handleCheckboxChange}
+                        className="form-checkbox w-6 h-6 text-blue-500 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <span className="ml-2 text-gray-700">사육 일지 공개</span>
+                    </label>
+                    <p className="mt-2 text-sm text-gray-600">
+                      이 옵션을 선택하면, 당신의 사육 일지가 분양 대상자에게 공개됩니다.
+                    </p>
+                  </div>
+                  <button
+                    onClick={sendAdoptionInfo}
+                    className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-full"
+                  >
+                    확인
+                  </button>
+                  <button
+                    onClick={toggleAdoptModal}
+                    className="mt-4 bg-red-500 text-white py-2 px-4 rounded-full"
+                  >
+                    닫기
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* <div className="col-span-1 text-lg flex justify-center items-center">
+              생년월일
+            </div>
+            <input
+              type="date"
+              className="col-span-3 p-2 border border-gray-300 rounded"
+              value={formatDate(reptile?.birth)}
+              onChange={(e) => updateBirth(e.target.value)}
+            ></input> */}
+
+
 
             {/* <div className="font-bold text-3xl mb-3">건강분석</div>
             <hr className="border-t border-gray-400 mb-3" /> */}
@@ -419,7 +447,6 @@ function MyReptileDetail() {
                 className='w-full'
               />
             </div> */}
-            <ActivityChart />
 
 
             <div className="flex justify-center">

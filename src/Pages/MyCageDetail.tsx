@@ -370,7 +370,6 @@ function MyCageDetail() {
                     <FaCamera />
                   </label>
                 </div>
-
               </div>
 
               <div className="w-1/2">
@@ -529,7 +528,7 @@ function MyCageDetail() {
                       </>
                     ))}
                   </div>
-                  <div>
+                  {/* <div>
                     <button
                       onClick={handleSaveChanges}
                       disabled={!isEdited} // isEdited가 false일 경우 버튼을 비활성화
@@ -540,7 +539,7 @@ function MyCageDetail() {
                     >
                       저장
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             )}

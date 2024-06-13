@@ -12,7 +12,7 @@ function ActivityChart({ data, date, setDate }: LineChartProps) {
   return (
     <>
       <div>
-        <div className="flex justify-between mb-3">
+        <div className="flex justify-between mt-5 mb-3">
           <div className="font-bold text-3xl">활동량 분석</div>
           <input
             type="date"
