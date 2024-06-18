@@ -29,7 +29,7 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
     // 상품의 수량이 변경될 때마다 IndexedDB에 업데이트
     const updateQuantityInDB = async () => {
       try {
-        const db = await idb.openDB(`cart_${userId}`, 1); // 개별 사용자의 장바구니 데이터베이스를 엽니다.
+        const db = await idb.openDB(`cart_${userId}`, 2); // 개별 사용자의 장바구니 데이터베이스를 엽니다.
         const tx = db.transaction('cart', 'readwrite'); // 'cart' 객체 저장소에 대한 트랜잭션 시작
         const store = tx.objectStore('cart'); // 'cart' 객체 저장소에 대한 참조 가져오기
         await store.put({ ...product, quantity: selectedQuantity, price: price }); // 새로운 수량, 가격으로 업데이트
@@ -57,7 +57,7 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
 
       // IndexedDB에서 해당 상품을 삭제합니다.
       try {
-        const db = await idb.openDB(`cart_${userId}`, 1);
+        const db = await idb.openDB(`cart_${userId}`, 2);
         const tx = db.transaction('cart', 'readwrite');
         const store = tx.objectStore('cart');
         await store.delete(product.id); // 해당 상품을 ID로 삭제
