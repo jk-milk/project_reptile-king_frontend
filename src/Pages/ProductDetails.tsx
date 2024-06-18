@@ -87,7 +87,7 @@ function ProductDetails() {
       const payload = JSON.parse(atob(payloadBase64));
       const userId = payload.sub; // 'sub' 필드가 사용자 ID를 나타냄
   
-      const db = await idb.openDB(`cart_${userId}`, 1, {
+      const db = await idb.openDB(`cart_${userId}`, 2, {
         upgrade(db) {
           db.createObjectStore('cart', { autoIncrement: true, keyPath: 'id' });
         },
@@ -143,17 +143,17 @@ function ProductDetails() {
   return (
     <>
       {/* 카테고리 표시 */}
-      <div className="pt-12 pb-12 mx-auto max-w-screen-lg">
+      <div className="pt-12 pb-10 mx-auto max-w-screen-lg">
         <p className="text-xl text-white font-bold mb-4">카테고리</p>
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
             <Link
               key={category.id}
               to={`/market/${category.id}`}
-              className="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-500 transition-colors duration-300 flex items-center justify-center"
+              className="bg-white px-4 py-2 rounded-md hover:bg-gray-300 transition-colors duration-300 flex items-center justify-center"
             >
               <span className="mr-2">
-                <img src={category.img_url} className="h-6 w-6" alt="카테고리 아이콘" />
+                <img src={category.img_url} className="h-6 w-6 border border-gray-300 rounded-xl" />
               </span>
               <span>{category.name}</span>
             </Link>

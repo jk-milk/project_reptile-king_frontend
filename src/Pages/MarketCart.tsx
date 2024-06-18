@@ -27,7 +27,7 @@ function MarketCart() {
   useEffect(() => {
     const createCartDB = async () => {
       try {
-        const db = await idb.openDB(`cart_${userId}`, 1, {
+        const db = await idb.openDB(`cart_${userId}`, 2, {
           upgrade(db) {
             if (!db.objectStoreNames.contains('cart')) {
               db.createObjectStore('cart', { keyPath: 'id' });
@@ -91,7 +91,7 @@ function MarketCart() {
 
   const handleQuantityChange = async (productId: number, newQuantity: number) => {
     try {
-      const db = await idb.openDB(`cart_${userId}`, 1); // 개별 사용자의 장바구니 데이터베이스를 열기
+      const db = await idb.openDB(`cart_${userId}`, 2); // 개별 사용자의 장바구니 데이터베이스를 열기
       await db.put('cart', { ...cartItems.find(item => item.id === productId), quantity: newQuantity }); // 새로운 수량으로 업데이트
       const updatedCartItems = cartItems.map(item => {
         if (item.id === productId) {
