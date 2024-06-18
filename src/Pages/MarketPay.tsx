@@ -28,23 +28,30 @@ function MarketPay() {
     const payload = JSON.parse(atob(payloadBase64));
     return payload.sub;
   })();
-  const [userAddress, setUserAddress] = useState('');
+  const [userInfo, setUserInfo] = useState({
+    address: '',
+    name: '',
+    phone: ''
+  });
   
   useEffect(() => {
-    const fetchUserDetails = async () => {
+    if (!userId) {
+      console.error('User ID not found');
+      return;
+    }
+    console.log('Fetching user info for user ID:', userId);
+  
+    const fetchUserInfo = async () => {
       try {
-        const response = await apiWithoutAuth.get(`${API}users/${userId}`);
-        if (response.data && response.data.address) {
-          setUserAddress(response.data.address);
-        }
+        const response = await apiWithAuth.get(`${API}users/${userId}`);
+        console.log('User info fetched:', response.data);
+        setUserInfo(response.data);
       } catch (error) {
-        console.error("Error fetching user details:", error);
+        console.error('Error fetching user info:', error);
       }
     };
-    console.log(userId)
-    if (userId) {
-      fetchUserDetails();
-    }
+  
+    fetchUserInfo();
   }, [userId]);
 
   const handleDeliveryNoteChange = (selectedOption) => {
@@ -242,13 +249,10 @@ const handleOrder = async () => {
             </button>
           </div>
           <div className="flex mb-2">
-            <div className="text-white font-bold text-2xl mr-3">배송지 별명</div>
-            <div className="bg-pink-700 rounded-2xl px-3 py-1">
-              <span className="text-white font-bold">기본 배송지</span>
-            </div>
+            <div className="text-white font-bold text-2xl mr-3">{/* 배송지 이름 */}</div>
           </div>
-          <div className="text-white text-xl">{userAddress}</div>
-          <div className="text-white text-xl">배석민 010-3891-5626</div>
+          <div className="text-white text-xl">{userInfo.address}</div>
+          <div className="text-white text-xl">{userInfo.name} {userInfo.phone}</div>
         </div>
       </div>
 

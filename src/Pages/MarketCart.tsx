@@ -27,7 +27,13 @@ function MarketCart() {
   useEffect(() => {
     const createCartDB = async () => {
       try {
-        const db = await idb.openDB(`cart_${userId}`, 1);
+        const db = await idb.openDB(`cart_${userId}`, 1, {
+          upgrade(db) {
+            if (!db.objectStoreNames.contains('cart')) {
+              db.createObjectStore('cart', { keyPath: 'id' });
+            }
+          },
+        });
         const tx = db.transaction('cart', 'readonly');
         const store = tx.objectStore('cart');
         const items = await store.getAll();
