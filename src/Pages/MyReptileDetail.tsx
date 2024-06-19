@@ -23,11 +23,7 @@ function MyReptileDetail() {
   const [isEdited, setIsEdited] = useState(false);
   console.log(reptile);
 
-  const [isAdoptModalOpen, setIsAdoptModalOpen] = useState(false);
 
-  const toggleAdoptModal = () => {
-    setIsAdoptModalOpen(!isAdoptModalOpen);
-  };
 
   // 파충류 상세 데이터 가져오기
   useEffect(() => {
@@ -176,21 +172,63 @@ function MyReptileDetail() {
     return [year, month, day].join('-'); // 'yyyy-MM-dd' 형식
   };
 
-  // 체크박스 상태를 관리하기 위한 useState
-  const [isChecked, setIsChecked] = useState(false);
+  const [isUserSelectModalOpen, setUserSelectModalOpen] = useState(false); // 사용자 검색 모달창
+  const [isAdoptModalOpen, setIsAdoptModalOpen] = useState(false); // 분양 정보 확인 모달창
+  const [isChecked, setIsChecked] = useState(false); // 분양 정보 보내기에 체크 버튼
+  const [selectedUser, setSelectedUser] = useState(''); // 선택된 유저 닉네임
+  const [searchQuery, setSearchQuery] = useState(''); // 유저 닉네임 검색창의 검색어
+  const [filteredUsers, setFilteredUsers] = useState<string[]>([]); // 검색된 유저들의 목록
+  const [error, setError] = useState(''); // 유저가 검색되지 않았을 경우 나타낼 텍스트
 
-  // 체크박스 상태를 변경하는 함수
+  const toggleAdoptModal = () => {
+    setIsAdoptModalOpen(!isAdoptModalOpen);
+  };
+
+  const toggleUserSelectModal = () => {
+    setUserSelectModalOpen(!isUserSelectModalOpen);
+  };
+
   const handleCheckboxChange = (event: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
     setIsChecked(event.target.checked);
   };
 
-  // 분양 정보 서버에 전송
-  const sendAdoptionInfo = () => {
-    // alert('상대에게 분양 확인 메시지를 보냅니다')
-    console.log('분양 정보를 보내기');
-
-    // 모달 닫기
+  const handleUserSelect = (user:string) => {
+    setSelectedUser(user);
+    toggleUserSelectModal();
     toggleAdoptModal();
+  };
+
+  const handleSearch = async () => {
+    try {
+      console.log(searchQuery);
+      
+      // const response = await apiWithAuth.get(`users/${searchQuery}/info`);
+      // console.log(response);
+      
+      // setFilteredUsers([response.data]);
+      setFilteredUsers(["jk"]);
+      setError('');
+    } catch (error) {
+      setFilteredUsers([]);
+      setError('검색 결과가 없습니다.');
+    }
+  };
+
+  // 분양 정보 서버에 전송
+  const sendAdoptionInfo = async () => {
+    try {
+      await apiWithAuth.post('/reptiles/sell-reptile', {
+        receiveNickname: selectedUser,
+        publicStatus: isChecked,
+        reptileId: reptile?.id,
+      });
+      console.log(selectedUser, isChecked, reptile?.id);
+      
+      alert('분양 정보가 성공적으로 전송되었습니다.');
+      toggleAdoptModal();
+    } catch (err) {
+      alert('분양 정보를 전송하는 데 실패했습니다.');
+    }
   };
 
 
@@ -272,11 +310,11 @@ function MyReptileDetail() {
                   <div className="flex items-center justify-between mb-3">
                     <div className="font-bold text-2xl">상세정보</div>
                     <button
-                      onClick={toggleAdoptModal}
+                      onClick={toggleUserSelectModal}
                       className="border-blue-500 hover:bg-blue-300 text-blue-500 border-2 py-1 px-4 rounded font-semibold transition duration-300"
                     >
                       분양
-                </button>
+                    </button>
                   </div>
                   <hr className="border-t border-gray-400 mb-2" />
                   <div className="w-full mb-6">
@@ -294,7 +332,7 @@ function MyReptileDetail() {
                     </div>
                   </div>
                 </div>
-                
+
               </div>
             </div>
             {showUploadPanel && (
@@ -384,17 +422,44 @@ function MyReptileDetail() {
                 <ActivityChart />
               </div>
             </div>
+            {isUserSelectModalOpen && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="bg-white rounded-lg p-8 shadow-lg max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
+                  <h2 className="text-2xl font-bold mb-4">사용자 선택</h2>
+                  <input
+                    type="text"
+                    placeholder="닉네임 검색"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="mb-4 p-2 border rounded w-full"
+                  />
+                  <button onClick={handleSearch} className="mb-4 bg-blue-500 text-white py-2 px-4 rounded-full">
+                    검색
+                  </button>
+                  {error && <p className="text-red-500">{error}</p>}
+                  <ul>
+                    {filteredUsers.map(user => (
+                      <li
+                        key={user}
+                        className="p-2 cursor-pointer hover:bg-gray-200"
+                        onClick={() => handleUserSelect(user)}
+                      >
+                        {user}
+                      </li>
+                    ))}
+                  </ul>
+                  <button onClick={toggleUserSelectModal} className="mt-4 bg-red-500 text-white py-2 px-4 rounded-full">
+                    닫기
+                  </button>
+                </div>
+              </div>
+            )}
 
             {isAdoptModalOpen && (
-              <div
-                className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-                onClick={toggleAdoptModal}
-              >
-                <div
-                  className="bg-white rounded-lg p-8 shadow-lg max-w-lg w-full"
-                  onClick={(e) => e.stopPropagation()} // 모달창 내부 클릭 시 이벤트 버블링 방지
-                >
-                  <h2 className="text-2xl font-bold mb-4">분양</h2>
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="bg-white rounded-lg p-8 shadow-lg max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
+                  <h2 className="text-2xl font-bold mb-4">분양 정보</h2>
+                  <p>선택한 사용자: {selectedUser}</p>
                   <div className="mb-4">
                     <label className="inline-flex items-center cursor-pointer">
                       <input
@@ -406,19 +471,13 @@ function MyReptileDetail() {
                       <span className="ml-2 text-gray-700">사육 일지 공개</span>
                     </label>
                     <p className="mt-2 text-sm text-gray-600">
-                      이 옵션을 선택하면, 당신의 사육 일지가 분양 대상자에게 공개됩니다.
+                      이 옵션을 선택하면, 당신의 사육 일지가 다음 분양 대상자에게 공개됩니다. 사육 경험과 팁을 공유하여 더 건강한 반려동물 공동체를 만들어 가는 데 도움이 됩니다.
                     </p>
                   </div>
-                  <button
-                    onClick={sendAdoptionInfo}
-                    className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-full"
-                  >
+                  <button onClick={sendAdoptionInfo} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-full">
                     확인
                   </button>
-                  <button
-                    onClick={toggleAdoptModal}
-                    className="mt-4 bg-red-500 text-white py-2 px-4 rounded-full"
-                  >
+                  <button onClick={toggleAdoptModal} className="mt-4 bg-red-500 text-white py-2 px-4 rounded-full">
                     닫기
                   </button>
                 </div>
