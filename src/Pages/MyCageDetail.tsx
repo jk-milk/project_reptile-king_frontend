@@ -38,6 +38,7 @@ function MyCageDetail() {
 
   const [showUploadPanel, setShowUploadPanel] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
+  const [isTemHumEdited, setIsTemHumEdited] = useState(false);
 
 
   // 케이지의 상세 데이터 가져오기
@@ -143,30 +144,30 @@ function MyCageDetail() {
       ...prevState,
       set_temp: prevState!.set_temp < 30 ? prevState!.set_temp + 1 : prevState!.set_temp,
     }) as Cage);
-    setIsEdited(true);
+    setIsTemHumEdited(true);
   };
   const decreaseTemperature = () => {
     setCage(prevState => ({
       ...prevState,
       set_temp: prevState!.set_temp > 20 ? prevState!.set_temp - 1 : prevState!.set_temp,
     }) as Cage);
-    setIsEdited(true);
+    setIsTemHumEdited(true);
   };
 
   // 습도 조절 함수
   const increaseHumidity = () => {
     setCage(prevState => ({
       ...prevState,
-      set_hum: prevState!.set_hum < 60 ? prevState!.set_hum + 5 : prevState!.set_hum,
+      set_hum: prevState!.set_hum < 60 ? prevState!.set_hum + 1 : prevState!.set_hum,
     }) as Cage);
-    setIsEdited(true);
+    setIsTemHumEdited(true);
   };
   const decreaseHumidity = () => {
     setCage(prevState => ({
       ...prevState,
-      set_hum: prevState!.set_hum > 35 ? prevState!.set_hum - 5 : prevState!.set_hum,
+      set_hum: prevState!.set_hum > 35 ? prevState!.set_hum - 1 : prevState!.set_hum,
     }) as Cage);
-    setIsEdited(true);
+    setIsTemHumEdited(true);
   };
 
   // 설정 확인 함수
@@ -224,6 +225,7 @@ function MyCageDetail() {
     setUploadedImages((prev) => prev.filter((_, index) => index !== indexToDelete));
   };
 
+  // 사육장 정보 수정(온습도 제외)
   const handleSaveChanges = async () => {
     const confirmSubmit = confirm('사육장 수정을 완료하시겠습니까?');
 
@@ -259,11 +261,6 @@ function MyCageDetail() {
         for (const pair of response.config.data.entries()) {
           console.log(`${pair[0]}: ${pair[1]}`);
         }
-
-        // 온습도 설정 데이터 전송
-        const tempHumResponse = await apiWithAuth.patch(`${API}cages/${id}/update-temperature-humidity`, { setTemp: cage.set_temp, setHum: cage.set_hum });
-        console.log(tempHumResponse);
-
         alert('사육장이 성공적으로 수정되었습니다.');
         // navigate('/my-cage');
         navigate(0);
@@ -275,9 +272,30 @@ function MyCageDetail() {
     }
   };
 
+  // 온습도 변경
+  const handleSaveChangesTemHum = async () => {
+    const confirmSubmit = confirm('온습도 수정을 완료하시겠습니까?');
+
+    if (confirmSubmit && cage) {
+      try {
+        // 온습도 설정 데이터 전송
+        const tempHumResponse = await apiWithAuth.patch(`${API}cages/${id}/update-temperature-humidity`, { setTemp: cage.set_temp, setHum: cage.set_hum });
+        console.log(tempHumResponse);
+
+        alert('온습도 변경이 완료되었습니다.');
+        // navigate('/my-cage');
+        navigate(0);
+        scrollTo(0, 0);
+      } catch (error) {
+        console.error(error);
+        alert('온습도 변경에 실패했습니다.');
+      }
+    }
+  };
+
   // 목록으로 돌아가기
   const handleNavigation = () => {
-    if (isEdited) {
+    if (isEdited || isTemHumEdited) {
       const confirmLeave = confirm("변경 사항을 저장하지 않고 나가시겠습니까?");
       if (confirmLeave) {
         // 확인 - 이동
@@ -427,13 +445,23 @@ function MyCageDetail() {
                 </div>
 
                 <div className="bg-white rounded-lg shadow-lg p-5 max-w-md mx-auto">
-                  <div className="text-center mb-5">
+                  <div className="text-center mb-5 flex justify-around">
                     <h2 className="text-2xl font-semibold">온습도 설정</h2>
+                    <button
+                      onClick={handleSaveChangesTemHum}
+                      disabled={!isTemHumEdited} // isEdited가 false일 경우 버튼을 비활성화
+                      className={`border-2 my-5 py-1 px-4 rounded font-semibold transition duration-300 ${isTemHumEdited
+                        ? "border-green-500 hover:bg-green-300 text-green-500" // 변경 사항이 있을 때
+                        : "border-gray-500 text-gray-500 bg-gray-200 cursor-default" // 변경 사항이 없을 때
+                        }`} 
+                        >
+                      변경
+                    </button>
                   </div>
                   <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="ml-14">
-                      <p className="text-gray-600 mb-2">현재 온도</p>
-                      <p className="text-3xl font-bold">{curTem}°C</p>
+                    <div>
+                      <p className="text-gray-600 mb-2 flex justify-center">현재 온도</p>
+                      <p className="text-3xl font-bold flex justify-center">{curTem}°C</p>
                     </div>
                     <div>
                       <p className="text-gray-600 mb-2 flex items-center justify-center">설정 온도 (20°C ~ 30°C)</p>
@@ -450,9 +478,9 @@ function MyCageDetail() {
                   </div>
                   <hr className="border-t border-gray-200 mb-4" />
                   <div className="grid grid-cols-2 gap-4 mb-5">
-                    <div className="ml-14">
-                      <p className="text-gray-600 mb-2">현재 습도</p>
-                      <p className="text-3xl font-bold">{curHum}%</p>
+                    <div>
+                      <p className="text-gray-600 mb-2 flex justify-center">현재 습도</p>
+                      <p className="text-3xl font-bold flex justify-center">{curHum}%</p>
                     </div>
                     <div>
                       <p className="text-gray-600 mb-2 flex items-center justify-center">설정 습도 (35% ~ 60%)</p>
