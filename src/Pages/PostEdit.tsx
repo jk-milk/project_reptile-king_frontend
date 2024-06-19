@@ -230,7 +230,7 @@ function PostEdit() {
           </div>
         </div>
       </div>
-      <PopularPosts />
+      {/* <PopularPosts /> */}
     </div>
   )
 }
