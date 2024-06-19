@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { API } from "../config";
-import BoardCategory from "../components/Board/BoardCategory";
-import PopularPosts from "../components/Board/PopularPosts";
 import QuillEditor from "../components/Board/QuillEditor";
 import { apiWithAuth, apiWithoutAuth } from "../components/common/axios";
 import Dropdown from "../components/common/Dropdown";
@@ -115,7 +113,6 @@ function PostEdit() {
 
   // 이미지 업로드 함수
   async function uploadImagesToS3(images: ImageInfo[]) {
-
     const uploadedImages = await Promise.all(
       images.map(async (image) => {
         const { blob, uniqueId } = image;
@@ -183,54 +180,61 @@ function PostEdit() {
     }
   };  
 
+  // 취소 버튼을 눌렀을 때 동작
+  const handleCancel = () => {
+    // 이전 페이지로 이동
+    navigate(-1);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="laptop:w-[75rem] w-body m-auto flex">
-      <div className="mt-20">
-        {/* <BoardCategory /> */}
-      </div>
-      <div className="laptop:w-[47.6875rem] w-mainContent">
-        <h1 className="text-white text-2xl mt-5 pb-5">
-          글쓰기
-        </h1>
-        <div className="mb-4 p-2 min-h-[35rem] bg-gray-200 rounded">
-          <div className="flex">
-            <Dropdown
-              items={categories}
-              selectedItem={selectedCategory}
-              setSelectedItem={setSelectedCategory}
-            />
-            <Dropdown
-              items={subCategories}
-              selectedItem={selectedSubCategory}
-              setSelectedItem={setSelectedSubCategory}
-              disabled={selectedCategory.name === "카테고리 선택"}
-            />
-          </div>
-          <div className="my-4 mx-2">
-            <input
-              className="p-2 w-full border border-gray-400 text-gray-900 bg-white focus:ring-2 focus:outline-none focus:ring-gray-300 rounded inline-flex items-center"
-              type="text"
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              placeholder="제목을 입력해 주세요."
-            />
-          </div>
-          <QuillEditor content={content} setContent={setContent} setImages={setImages} />
-          <div className="flex">
-            <button
-              className="mt-8 mb-4 ml-auto mr-2 p-1 w-20 rounded border border-gray-500 text-gray-900 bg-white focus:ring-2 focus:outline-none"
-              onClick={handleSubmit}
-            >
-              등록
-            </button>
-          </div>
+    <div className="pt-10 pb-10 laptop:w-[67.5rem] w-body mx-auto">
+      <h1 className="text-white text-2xl mt-5">
+        글쓰기
+      </h1>
+      <div className="mb-4 p-2 min-h-[35rem] bg-gray-200 rounded">
+        <div className="flex">
+          <Dropdown
+            items={categories}
+            selectedItem={selectedCategory}
+            setSelectedItem={setSelectedCategory}
+          />
+          <Dropdown
+            items={subCategories}
+            selectedItem={selectedSubCategory}
+            setSelectedItem={setSelectedSubCategory}
+            disabled={selectedCategory.name === "카테고리 선택"}
+          />
+        </div>
+
+        <div className="my-4 mx-2">
+          <input
+            className="p-2 w-full border border-gray-400 text-gray-900 bg-white focus:ring-2 focus:outline-none focus:ring-gray-300 rounded inline-flex items-center"
+            type="text"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            placeholder="제목을 입력해 주세요."
+          />
+        </div>
+        <QuillEditor content={content} setContent={setContent} setImages={setImages} />
+        <div className="flex">
+          <button
+            className="mt-8 mb-4 ml-auto mr-2 p-1 w-20 rounded border border-gray-500 text-white bg-gray-600 focus:ring-2 focus:outline-none"
+            onClick={handleCancel}
+          >
+            취소
+          </button>
+          <button
+            className="mt-8 mb-4 mr-2 p-1 w-20 rounded border border-gray-500 text-white bg-blue-600 focus:ring-2 focus:outline-none"
+            onClick={handleSubmit}
+          >
+            등록
+          </button>
         </div>
       </div>
-      <PopularPosts />
     </div>
   )
 }

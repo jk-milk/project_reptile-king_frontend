@@ -32,12 +32,12 @@ function preprocessData(data: AvgTempHum[]): ProcessedDataItem[] {
   return completeData;
 }
 
-function LineChart({ data, date, setDate }: LineChartProps) {
+function TemHumChart({ data, date, setDate }: LineChartProps) {
 
   // 시간축에 사용할 홀수 + 0 배열
   const oddNumbers = Array.from({ length: 12 }, (_, i) => 2 * i + 1);
   // 배열의 앞부분에 0 추가
-  oddNumbers.unshift(0);
+  // oddNumbers.unshift(0);
 
   // 온습도 데이터가 없는 경우
   if (!data || data.length === 0) {
@@ -53,80 +53,84 @@ function LineChart({ data, date, setDate }: LineChartProps) {
           ></input>
         </div>
         <hr className="border-t border-gray-400" />
-        <VictoryChart
-          height={200}
-          domainPadding={{ x: 0 }}
-          domain={{ x: [0, 23], y: [0, 100] }} // X축과 Y축의 범위 설정, Y축은 예시로 0부터 100으로 설정
-          theme={VictoryTheme.material}
-        >
-          <VictoryLabel
-            text="온도 (°C)"
-            x={35}
-            y={30}
-            textAnchor="middle"
-            style={{ fontSize: 9 }}
-          />
-          <VictoryLabel
-            text="습도 (%)"
-            x={310}
-            y={30}
-            textAnchor="middle"
-            style={{ fontSize: 9 }}
-          />
-          <VictoryAxis
-            dependentAxis
-            // label="온도 (°C)"
-            style={{
-              // axis: { stroke: 'transparent' },
-              // ticks: { stroke: 'transparent' },
-              axisLabel: { padding: 40, fontSize: 9, angle: 0 },
-              tickLabels: { fontSize: 7 }
-            }}
-          />
-          <VictoryAxis
-            dependentAxis
-            // label="습도 (%)"
-            orientation="right"
-            style={{
-              axisLabel: { padding: 25, fontSize: 9, angle: 0 },
-              tickLabels: { fontSize: 7 }
-            }}
-          />
-          <VictoryAxis
-            crossAxis
-            label="시간"
-            tickValues={oddNumbers} // 0을 포함한 홀수 배열
-            style={{
-              // axis: {stroke: 'transparent'},
-              ticks: { stroke: 'transparent', padding: -7 },
-              axisLabel: { padding: 20, fontSize: 10 },
-              tickLabels: { fontSize: 5 }
-            }}
-          />
-          <VictoryLabel
-            text="데이터가 없습니다."
-            x={170} // 차트 중앙에 위치하도록 조정
-            y={100}
-            textAnchor="middle"
-            style={{ fontSize: 15 }}
-          />
-          <VictoryLegend x={230} y={10}
-            title=""
-            centerTitle
-            // orientation="horizontal"
-            gutter={10} // 항목 간의 간격 줄이기
-            style={{
-              border: { stroke: "black" },
-              title: { fontSize: 10 }, // 범례 제목의 글자 크기 줄이기
-              labels: { fontSize: 8 } // 범례 항목의 글자 크기 줄이기
-            }}
-            // symbolSpacer={5} // 범례 심볼과 텍스트 사이의 간격 조절
-            data={[
-              { name: "습도", symbol: { fill: "#c43a31", type: "square", size: 4 } },
-              { name: "온도", symbol: { fill: "#0077b6", type: "square", size: 4 } },
-            ]}
-          />
-        </VictoryChart>
+        <div style={{ overflowX: 'auto', width: '100%' }}>
+          <VictoryChart
+            // width={1000}
+            height={200}
+            domainPadding={{ x: 0 }}
+            domain={{ x: [0, 23], y: [0, 100] }} // X축과 Y축의 범위 설정, Y축은 예시로 0부터 100으로 설정
+            theme={VictoryTheme.material}
+          >
+            <VictoryLabel
+              text="온도 (°C)"
+              x={35}
+              y={30}
+              textAnchor="middle"
+              style={{ fontSize: 9 }}
+            />
+            <VictoryLabel
+              text="습도 (%)"
+              x={310}
+              y={30}
+              textAnchor="middle"
+              style={{ fontSize: 9 }}
+            />
+            <VictoryAxis
+              dependentAxis
+              // label="온도 (°C)"
+              style={{
+                // axis: { stroke: 'transparent' },
+                // ticks: { stroke: 'transparent' },
+                axisLabel: { padding: 40, fontSize: 9, angle: 0 },
+                tickLabels: { fontSize: 7 }
+              }}
+            />
+            <VictoryAxis
+              dependentAxis
+              // label="습도 (%)"
+              orientation="right"
+              style={{
+                axisLabel: { padding: 25, fontSize: 9, angle: 0 },
+                tickLabels: { fontSize: 7 }
+              }}
+            />
+            <VictoryAxis
+              crossAxis
+              label="시간"
+              tickValues={oddNumbers} // 0을 포함한 홀수 배열
+              style={{
+                // axis: {stroke: 'transparent'},
+                ticks: { stroke: 'transparent', padding: -7 },
+                axisLabel: { padding: 20, fontSize: 10 },
+                tickLabels: { fontSize: 5 }
+              }}
+            />
+            <VictoryLabel
+              text="데이터가 없습니다."
+              x={170} // 차트 중앙에 위치하도록 조정
+              y={100}
+              textAnchor="middle"
+              style={{ fontSize: 15 }}
+            />
+            <VictoryLegend x={230} y={10}
+              title=""
+              centerTitle
+              // orientation="horizontal"
+              gutter={10} // 항목 간의 간격 줄이기
+              style={{
+                border: { stroke: "black" },
+                title: { fontSize: 10 }, // 범례 제목의 글자 크기 줄이기
+                labels: { fontSize: 8 } // 범례 항목의 글자 크기 줄이기
+              }}
+              // symbolSpacer={5} // 범례 심볼과 텍스트 사이의 간격 조절
+              data={[
+                { name: "습도", symbol: { fill: "#c43a31", type: "square", size: 4 } },
+                { name: "온도", symbol: { fill: "#0077b6", type: "square", size: 4 } },
+              ]}
+            />
+          </VictoryChart>
+        </div>
+
       </>
     );
   }
@@ -254,4 +258,4 @@ function LineChart({ data, date, setDate }: LineChartProps) {
   );
 }
 
-export default LineChart;
+export default TemHumChart;

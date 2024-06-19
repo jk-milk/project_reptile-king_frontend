@@ -100,7 +100,7 @@ function CommentForm({ postId, parentCommentId, onCommentPosted, onCancel}: Comm
 
   return (
     <div className="border border-gray-300 bg-white shadow rounded p-4">
-      <span>로그인 유저 닉네임</span>
+      <span>JK</span>
       <form onSubmit={handleSubmit} className="relative">
         <textarea
           value={comment}

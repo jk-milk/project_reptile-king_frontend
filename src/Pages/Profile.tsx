@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import MypageCategory from "../components/Mypage/MypageCategory"
 import { API } from "../config";
-import axios from "axios";
 import { MdOutlineEmail } from "react-icons/md";
 import { MdPhoneAndroid } from "react-icons/md";
 import { MdOutlineLocationOn } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
+import { apiWithAuth } from "../components/common/axios";
 
 interface userInfo {
   id: number,
@@ -31,23 +31,21 @@ function Profile() {
   const userId = 1; // 사용자 ID
   const token = localStorage.getItem('token');
 
-  // async function fetchUserInfo(userId: number, token: string) {
-  //   try {
-  //     const response = await axios.get(`${API}/users/${userId}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`
-  //       }
-  //     });
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error('사용자 정보를 불러오는데 실패했습니다.', error);
-  //     throw error;
-  //   }
-  // }
+  async function fetchUserInfo() {
+    try {
+      const response = await apiWithAuth.get(`${API}users`);
+      console.log(response);
+      
+      return response.data;
+    } catch (error) {
+      console.error('사용자 정보를 불러오는데 실패했습니다.', error);
+      throw error;
+    }
+  }
 
-  // useEffect(() => {
-  //   fetchUserInfo(userId, token!).then(setUserInfo).catch(console.error);
-  // }, [userId, token]);
+  useEffect(() => {
+    fetchUserInfo().then(setUserInfo).catch(console.error);
+  }, []);
 
   // 테스트 코드
   useEffect(() => {

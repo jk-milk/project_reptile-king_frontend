@@ -1,8 +1,10 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { FaSearch } from 'react-icons/fa';
+import { useNavigate } from "react-router-dom";
 
 // 게시판 검색창
-function SearchBar({ handleSearchChange }: { handleSearchChange: (searchTerm: string) => void }) {
+function SearchBar() {
+  const navigate = useNavigate();
   const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -11,7 +13,7 @@ function SearchBar({ handleSearchChange }: { handleSearchChange: (searchTerm: st
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSearchChange(inputValue);
+    navigate(`/board/lists?search=${inputValue}`);
   };
 
   return (

@@ -19,8 +19,6 @@ function MyReptileEdit() {
         setBirth(location.state.birth)
       setSpecies(location.state.species);
       setGender(location.state.gender);
-      if (location.state.memo !== null)
-        setMemo(location.state.memo);
       setImgUrls(location.state.img_urls || []);
     };
     fetchReptile();
@@ -31,7 +29,6 @@ function MyReptileEdit() {
   const [species, setSpecies] = useState('');
   const [gender, setGender] = useState('');
   const [imgUrls, setImgUrls] = useState<string[]>([]);
-  const [memo, setMemo] = useState('');
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +56,6 @@ function MyReptileEdit() {
       formData.append('species', species);
       formData.append('gender', gender);
       formData.append('birth', birth);
-      formData.append('memo', memo);
       formData.append('imgUrls', JSON.stringify(imgUrls));
 
       uploadedImages.forEach(image => {
@@ -221,14 +217,6 @@ function MyReptileEdit() {
               </div>
             </>
           ))}
-
-          <div className="text-lg col-span-1 flex justify-center items-center">메모</div>
-          <textarea
-            className="col-span-3 h-40 border border-gray-300 rounded-md p-2 focus:outline-none mt-3 mb-3"
-            value={memo}
-            onChange={(e) => setMemo(e.target.value)}
-            placeholder="메모를 입력해 주세요..."
-          ></textarea>
         </div>
 
         <div className="flex justify-center mt-3">

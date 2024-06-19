@@ -5,6 +5,7 @@ import { Post } from "../../types/Board";
 // import { Comment } from "../../types/Board";
 import { BiSolidLike } from "react-icons/bi";
 import { FaCommentDots } from "react-icons/fa";
+import { MdRemoveRedEye } from "react-icons/md";
 
 const PostList = ({ posts }: { posts: Post[] | null }) => {
   console.log(posts);
@@ -106,7 +107,7 @@ const PostList = ({ posts }: { posts: Post[] | null }) => {
                   <BiSolidLike className="inline-block pe-1 pb-1" />
                   <span className="text-gray-600 pe-2">{post.likes}</span>
                   <span className="text-gray-600 pe-2">•</span>
-                  <BiSolidLike className="inline-block pe-1 pb-1" />
+                  <MdRemoveRedEye className="inline-block pe-1 pb-1" />
                   <span className="text-gray-600 pe-2">{post.views}</span>
                 </div>
               </div>

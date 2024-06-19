@@ -90,7 +90,6 @@ function Posts() {
 
   // 검색어 기준 게시글 데이터 가져오는 함수
   const fetchPostsBySearch = async (search: string) => {
-    // URL을 주어진 라우트에 맞게 수정합니다.
     const response = await apiWithAuth.get(`${API}posts/search`, {
       params: {
         search
