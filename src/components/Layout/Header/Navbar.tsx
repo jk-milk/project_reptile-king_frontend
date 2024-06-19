@@ -6,11 +6,9 @@ import { useState, useRef, useEffect } from "react";
 import { API } from "../../../config";
 import { apiWithAuth } from "../../common/axios";
 import { BiSolidCart } from "react-icons/bi";
-import { FaRegCommentDots } from "react-icons/fa";
-import { RiShoppingBagLine } from "react-icons/ri";
-import { MdOutlinePets } from "react-icons/md";
-import { initializeNotificationListener } from "../../../services/foregroundMessage";
 import NotificationDropdown from "./NotificationDropdown";
+import { onMessage } from "firebase/messaging";
+import { messaging } from "../../../services/firebase";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -22,17 +20,41 @@ function Navbar() {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const notificationDropdownRef = useRef<HTMLDivElement | null>(null);
 
+  function initializeNotificationListener() {
+    console.log("initializeNotificationListener");
+
+    onMessage(messaging, async (payload) => {
+      console.log("알림 도착 ", payload);
+      const notificationTitle = payload.notification.title;
+      const notificationOptions = {
+        body: payload.notification.body
+      };
+
+      if (Notification.permission === "granted") {
+        new Notification(notificationTitle, notificationOptions);
+      }
+      // 알림 데이터 업데이트
+      try {
+        if (localStorage.getItem("accessToken") == null) return
+        const response = await apiWithAuth.get('alarms');
+        setNotifications(response.data.alarms);
+      } catch (error) {
+        console.error('알림 데이터 가져오기 실패:', error);
+      }
+    });
+  }
+
   initializeNotificationListener();
 
   const [notifications, setNotifications] = useState([]);
   useEffect(() => {
     const fetchNotifications = async () => {
       if (localStorage.getItem("accessToken") == null) return // 로그인되지 않은 상태라면 알림 데이터 가져오지 않기
-      
+
       try {
         const response = await apiWithAuth.get('alarms');
         console.log(response);
-        
+
         setNotifications(response.data.alarms);
       } catch (error) {
         console.error('알림 데이터 가져오기 실패:', error);
@@ -145,28 +167,19 @@ function Navbar() {
               <Link to="/login" className="font-bold text-lg p-2 mr-4 hover:text-green-800 transition-colors duration-300 cursor-pointer">로그인</Link>
             )}
             <div className="relative">
-              <IoMdNotifications
-                size="30"
-                className="text-gray-800 hover:text-green-800 transition-colors duration-300 cursor-pointer"
-                onClick={handleNotificationClick}
-              />
-                {notificationDropdownOpen && (
-                // <div ref={notificationDropdownRef} className="border border-gray-200 top-8 absolute right-0 mt-2 w-80 bg-white rounded-md shadow-xl z-20 max-h-64 overflow-auto">
-                //   <div className="px-4 py-3 text-lg font-bold text-black border-b border-gray-200">알림</div>
-                //   <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
-                //     <RiShoppingBagLine className="mr-2" /> 마켓 알림
-                //   </Link>
-                //   <div className="border-t border-gray-200"></div>
-                //   <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
-                //     <FaRegCommentDots className="mr-2" /> 커뮤니티 알림
-                //   </Link>
-                //   <div className="border-t border-gray-200"></div>
-                //   <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
-                //     <MdOutlinePets className="mr-2" /> 내 사육장 알림
-                //   </Link>
-                // </div>
-                <NotificationDropdown alarms={notifications} />
-              )}
+              <div className="relative">
+                <IoMdNotifications
+                  size="30"
+                  className="text-gray-800 hover:text-green-800 transition-colors duration-300 cursor-pointer"
+                  onClick={handleNotificationClick}
+                />
+                {notifications.filter((notification) => !notification.readed).length > 0 && (
+                  <div className="absolute -bottom-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                    {notifications.filter((notification) => !notification.readed).length}
+                  </div>
+                )}
+              </div>
+              {notificationDropdownOpen && <NotificationDropdown alarms={notifications} />}
             </div>
           </div>
         </div>
