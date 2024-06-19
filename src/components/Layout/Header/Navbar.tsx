@@ -9,6 +9,8 @@ import { BiSolidCart } from "react-icons/bi";
 import { FaRegCommentDots } from "react-icons/fa";
 import { RiShoppingBagLine } from "react-icons/ri";
 import { MdOutlinePets } from "react-icons/md";
+import { initializeNotificationListener } from "../../../services/foregroundMessage";
+import NotificationDropdown from "./NotificationDropdown";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -19,6 +21,26 @@ function Navbar() {
   const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const notificationDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  initializeNotificationListener();
+
+  const [notifications, setNotifications] = useState([]);
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (localStorage.getItem("accessToken") == null) return // 로그인되지 않은 상태라면 알림 데이터 가져오지 않기
+      
+      try {
+        const response = await apiWithAuth.get('alarms');
+        console.log(response);
+        
+        setNotifications(response.data.alarms);
+      } catch (error) {
+        console.error('알림 데이터 가져오기 실패:', error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
 
   // 드롭다운 버튼 외부 클릭 감지
   useEffect(() => {
@@ -129,20 +151,21 @@ function Navbar() {
                 onClick={handleNotificationClick}
               />
                 {notificationDropdownOpen && (
-                <div ref={notificationDropdownRef} className="border border-gray-200 top-8 absolute right-0 mt-2 w-80 bg-white rounded-md shadow-xl z-20 max-h-64 overflow-auto">
-                  <div className="px-4 py-3 text-lg font-bold text-black border-b border-gray-200">알림</div>
-                  <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
-                    <RiShoppingBagLine className="mr-2" /> 마켓 알림
-                  </Link>
-                  <div className="border-t border-gray-200"></div>
-                  <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
-                    <FaRegCommentDots className="mr-2" /> 커뮤니티 알림
-                  </Link>
-                  <div className="border-t border-gray-200"></div>
-                  <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
-                    <MdOutlinePets className="mr-2" /> 내 사육장 알림
-                  </Link>
-                </div>
+                // <div ref={notificationDropdownRef} className="border border-gray-200 top-8 absolute right-0 mt-2 w-80 bg-white rounded-md shadow-xl z-20 max-h-64 overflow-auto">
+                //   <div className="px-4 py-3 text-lg font-bold text-black border-b border-gray-200">알림</div>
+                //   <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
+                //     <RiShoppingBagLine className="mr-2" /> 마켓 알림
+                //   </Link>
+                //   <div className="border-t border-gray-200"></div>
+                //   <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
+                //     <FaRegCommentDots className="mr-2" /> 커뮤니티 알림
+                //   </Link>
+                //   <div className="border-t border-gray-200"></div>
+                //   <Link to="/notifications" className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors duration-200">
+                //     <MdOutlinePets className="mr-2" /> 내 사육장 알림
+                //   </Link>
+                // </div>
+                <NotificationDropdown alarms={notifications} />
               )}
             </div>
           </div>
