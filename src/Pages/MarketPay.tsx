@@ -8,8 +8,8 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 
 function MarketPay() {
   const [product, setProduct] = useState<ProductItem | null>(null);
-  const [price, setPrice] = useState<number>(0); // 가격 상태 추가
-  const [quantity, setQuantity] = useState<number>(1); // 수량 상태 추가
+  const [price, setPrice] = useState<number>(0);
+  const [quantity, setQuantity] = useState<number>(1);
   const { productId } = useParams<{ productId: string }>();
   const location = useLocation();
   const [orderInfo, setOrderInfo] = useState({
@@ -19,7 +19,9 @@ function MarketPay() {
     phoneNumber: '',
     deliveryNote: ''
   });
-  const [selectedDeliveryNote, setSelectedDeliveryNote] = useState(''); // 선택된 배송 요청 사항 상태 추가
+  const [selectedDeliveryNote, setSelectedDeliveryNote] = useState('');
+  const [deliveryFee, setDeliveryFee] = useState<number>(3000); // Default delivery fee
+
   const userId = (() => {
     const token = localStorage.getItem("accessToken");
     if (!token) return null;
@@ -28,6 +30,7 @@ function MarketPay() {
     const payload = JSON.parse(atob(payloadBase64));
     return payload.sub;
   })();
+  
   const [userInfo, setUserInfo] = useState({
     address: '',
     name: '',
@@ -62,26 +65,28 @@ function MarketPay() {
     const searchParams = new URLSearchParams(location.search);
     const priceParam = searchParams.get('price');
     const quantityParam = searchParams.get('quantity');
-    const parsedPrice = priceParam ? parseFloat(priceParam) : 0; // 가격 파싱
-    const parsedQuantity = quantityParam ? parseInt(quantityParam, 10) : 1; // 수량 파싱
-    setPrice(parsedPrice); // 가격 설정
-    setQuantity(parsedQuantity); // 수량 설정
+    const parsedPrice = priceParam ? parseFloat(priceParam) : 0;
+    const parsedQuantity = quantityParam ? parseInt(quantityParam, 10) : 1;
+    setPrice(parsedPrice);
+    setQuantity(parsedQuantity);
 
     if (productId) {
       const fetchProductDetails = async () => {
         try {
           const response = await axios.get(`${API}goods/${productId}`);
           if (response.data) {
-            const { img_urls, ...productData } = response.data;
-            const { thumbnail } = (img_urls);
+            const { img_urls, delivery_fee, ...productData } = response.data;
+            const { thumbnail } = img_urls;
             const productWithThumbnail = {
               ...productData,
               imageUrl: thumbnail,
+              delivery_fee: delivery_fee
             };
             setProduct(productWithThumbnail);
+            setDeliveryFee(delivery_fee);
           }
         } catch (error) {
-          console.error("상품 정보를 불러오는 중 에러 발생:", error);
+          console.error("Error fetching product details:", error);
         }
       };
 
@@ -93,14 +98,14 @@ function MarketPay() {
     try {
       const response = await apiWithAuth.post(`${API}purchases`, {
         good_id: productId,
-        total_price: price + 3000,
+        total_price: price + deliveryFee,
         quantity: quantity,
         payment_selection: '카드결제',
       });
 
       console.log("Purchase API response:", response.data);
     } catch (error) {
-      console.error("구매 요청 중 에러 발생:", error);
+      console.error("Error sending purchase request:", error);
     }
   };
 
@@ -112,31 +117,31 @@ function MarketPay() {
     }));
   };
   
-const handleOrder = async () => {
-  try {
-    const updatedOrderInfo = { ...orderInfo, deliveryNote: selectedDeliveryNote };
-    localStorage.setItem('orderInfo', JSON.stringify(updatedOrderInfo));
-    await sendPurchaseRequest();
-    const confirmation = window.confirm("해당 상품을 구매하시겠습니까?");
-    if (confirmation) {
-      if (product) {
-        const productInfo = {
-          name: product.name,
-          price: product.price,
-          quantity: quantity,
-          totalPrice: (product.price * quantity + 3000).toLocaleString()
-        };
+  const handleOrder = async () => {
+    try {
+      const updatedOrderInfo = { ...orderInfo, deliveryNote: selectedDeliveryNote };
+      localStorage.setItem('orderInfo', JSON.stringify(updatedOrderInfo));
+      await sendPurchaseRequest();
+      const confirmation = window.confirm("해당 상품을 구매하시겠습니까?");
+      if (confirmation) {
+        if (product) {
+          const productInfo = {
+            name: product.name,
+            price: product.price,
+            quantity: quantity,
+            totalPrice: (product.price * quantity + deliveryFee).toLocaleString()
+          };
 
-        localStorage.setItem('productInfo', JSON.stringify(productInfo));
-        window.location.href = `/market/pay/${productId}/success?price=${price}&quantity=${quantity}`;
-      } else {
-        console.error("상품 정보가 없습니다.");
+          localStorage.setItem('productInfo', JSON.stringify(productInfo));
+          window.location.href = `/market/pay/${productId}/success?price=${price}&quantity=${quantity}`;
+        } else {
+          console.error("상품 정보가 없습니다.");
+        }
       }
+    } catch (error) {
+      console.error('Error during order handling:', error);
     }
-  } catch (error) {
-    console.error('구매 요청 중 에러 발생:', error);
-  }
-};
+  };
 
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-md">
@@ -283,7 +288,7 @@ const handleOrder = async () => {
       <div className="bg-green-700 rounded-xl border-2 border-lime-300 mt-5">
         <div className="px-5 py-4">
           <div className="text-white font-bold text-2xl mb-4">결제금액</div>
-          {product && ( // Conditionally render only when product is not null
+          {product && (
             <div>
               <div className="flex justify-between mb-3">
                 <div className="text-white text-xl">총 상품금액</div>
@@ -291,12 +296,12 @@ const handleOrder = async () => {
               </div>
               <div className="flex justify-between mb-5">
                 <div className="text-white text-xl">배송비</div>
-                <div className="text-white font-bold text-xl">3,000원</div>
+                <div className="text-white font-bold text-xl">{deliveryFee.toLocaleString()}원</div>
               </div>
               <div className="border-lime-300 border-b"></div>
               <div className="flex justify-between pt-5">
                 <div className="text-white font-bold text-2xl">최종 결제금액</div>
-                <div className="text-white font-bold text-2xl">{(product.price * quantity + 3000).toLocaleString()}원</div> {/* 수량에 따른 최종 가격 표시 */}
+                <div className="text-white font-bold text-2xl">{(product.price * quantity + deliveryFee).toLocaleString()}원</div>
               </div>
             </div>
           )}
@@ -317,10 +322,11 @@ const handleOrder = async () => {
           onClick={handleOrder}
           className="bg-pink-700 text-white text-2xl font-bold py-3 px-9 rounded-lg hover:bg-pink-600 focus:outline-none focus:bg-pink-600"
         >
-          {(product && product.price) ? `${((product.price * quantity) + 3000).toLocaleString()}원 결제하기` : '결제하기'}
+          {(product && product.price) ? `${((product.price * quantity) + deliveryFee).toLocaleString()}원 결제하기` : '결제하기'}
         </button>
       </div>
     </div>
   );
 }
+
 export default MarketPay;

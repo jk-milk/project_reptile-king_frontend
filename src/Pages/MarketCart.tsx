@@ -9,11 +9,14 @@ function MarketCart() {
   const [deletedItems, setDeletedItems] = useState<number[]>([]);
   const [selectedQuantities, setSelectedQuantities] = useState<{ [productId: number]: number }>({});
   const [cartItems, setCartItems] = useState<ProductItem[]>([]);
+  const [totalDeliveryFee, setTotalDeliveryFee] = useState<number>(0); // 선택된 상품들의 총 배송비 상태 추가
 
   useEffect(() => {
-    // 선택된 상품을 로컬 스토리지에 저장
     localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-  }, [selectedItems]);
+
+    // 로컬 스토리지에 총 배송비 저장
+    localStorage.setItem('totalDeliveryFee', totalDeliveryFee.toString());
+  }, [selectedItems, totalDeliveryFee]);
 
   const userId = (() => {
     const token = localStorage.getItem("accessToken");
@@ -39,6 +42,15 @@ function MarketCart() {
         const items = await store.getAll();
         setCartItems(items); // 데이터베이스에서 가져온 상품 목록을 상태로 설정
         console.log('사용자 개별 장바구니 DB에서 데이터를 가져왔습니다.');
+
+        // 각 상품의 배송비를 더하여 선택된 상품들의 총 배송비 계산
+        let selectedItemsFee = 0;
+        items.forEach(item => {
+          if (selectedItems.includes(item.id)) {
+            selectedItemsFee += item.deliveryFee || 0; // IDB에서 가져온 배송비를 사용
+          }
+        });
+        setTotalDeliveryFee(selectedItemsFee); // 계산된 선택된 상품들의 총 배송비를 상태에 설정
       } catch (error) {
         console.error('사용자 개별 장바구니 DB에서 데이터를 가져오는 중 에러가 발생했습니다:', error);
       }
@@ -47,7 +59,7 @@ function MarketCart() {
     if (userId) { // 사용자 ID가 존재할 때만 데이터베이스에서 데이터 가져오도록 조건 추가
       createCartDB();
     }
-  }, [userId]);
+  }, [userId, selectedItems]); // selectedItems가 변경될 때마다 실행되도록 추가
 
   const handleSelectAll = () => {
     setSelectAll(!selectAll);
@@ -85,7 +97,7 @@ function MarketCart() {
 
   const calculateOrderTotal = () => {
     const totalPrice = calculateTotalPrice();
-    const orderTotal = totalPrice + 3000;
+    const orderTotal = totalPrice + totalDeliveryFee; // 선택된 상품들의 총 배송비를 주문금액에 추가
     return orderTotal;
   };
 
@@ -151,7 +163,7 @@ function MarketCart() {
               </div>
               <div className="flex justify-between items-center mb-4">
                 <div className="text-white text-2xl">배송비</div>
-                <div className="text-white text-2xl font-bold">3,000원</div>
+                <div className="text-white text-2xl font-bold">{totalDeliveryFee.toLocaleString()}원</div>
               </div>
               <div className="border-lime-300 border-b mb-4"></div>
               <div className="flex justify-between items-center">
