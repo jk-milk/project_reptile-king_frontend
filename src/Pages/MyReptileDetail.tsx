@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { apiWithAuth } from '../components/common/axios';
 import { API } from '../config';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Reptile } from '../types/Cage';
 import { calculateAge } from '../utils/CalculateAge';
 import { FaCamera } from 'react-icons/fa6';
@@ -22,8 +22,6 @@ function MyReptileDetail() {
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [isEdited, setIsEdited] = useState(false);
   console.log(reptile);
-
-
 
   // 파충류 상세 데이터 가져오기
   useEffect(() => {
