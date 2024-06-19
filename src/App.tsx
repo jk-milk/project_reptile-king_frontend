@@ -37,6 +37,7 @@ import MyReptileAdd from './Pages/MyReptileAdd'
 import Posts from './Pages/Posts'
 import MarketCartPay from './Pages/MarketCartPay'
 import MarketCartPaySuccess from './Pages/MarketCartPaySuccess'
+import Notifications from './Pages/Notifications'
 
 function App() {
   return (
@@ -70,6 +71,8 @@ function App() {
           <Route path='mypage/help/detail' element={<MypageHelpDetail />} />
           <Route path='board/write' element={<PostWrite />} />
           <Route path='board/edit/:postId' element={<PostEdit />} />
+          <Route path='notifications' element={<Notifications />} />
+
         </Route>
       </Route>
       <Route element={<MarketLayout />}>
