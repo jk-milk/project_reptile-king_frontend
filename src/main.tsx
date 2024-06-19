@@ -9,7 +9,7 @@ import { initializeNotificationListener } from './services/foregroundMessage.ts'
 
 
 handleAllowNotification();
-initializeNotificationListener();
+// initializeNotificationListener();
 
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
