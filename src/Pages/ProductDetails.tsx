@@ -32,6 +32,7 @@ function ProductDetails() {
               ...productData,
               imageUrl: thumbnail,
               infoUrl: info,
+              delivery_fee: responseData.delivery_fee, 
             };
             setProduct(productWithThumbnail);
           }
@@ -119,7 +120,8 @@ function ProductDetails() {
           quantity: quantity,
           price: product.price,
           name: product.name,
-          imageUrl: product.imageUrl
+          imageUrl: product.imageUrl,
+          deliveryFee : product.delivery_fee
         };
 
         await addToCartIndexedDB(cartProduct);
@@ -185,7 +187,7 @@ function ProductDetails() {
                 )}
                 <div className="flex justify-between">
                   <div className="text-lg font-bold">배송비</div>
-                  <div className="text-lg">3,000원</div>
+                  <div className="text-lg">{product.delivery_fee.toLocaleString()}원</div>
                 </div>
 
                 <hr className="border-gray-400 my-3" />
@@ -207,8 +209,8 @@ function ProductDetails() {
                   <div>{quantity}개</div>
                 </div>
                 <div className="flex items-center justify-between mt-1">
-                  <div className="font-bold">총 상품 금액</div>
-                  <div>{(quantity * product.price).toLocaleString()}원</div>
+                  <div className="font-bold">총 상품 금액 <span className="text-sm text-gray-500 font-thin">(상품금액 + 배송비)</span></div>
+                  <div>{(quantity * product.price + product.delivery_fee).toLocaleString()}원</div>
                 </div>
               </div>
             )}

@@ -23,4 +23,5 @@ export interface ProductItem {
   reviewCount: number;
   created_at: string;
   selected: boolean;
+  delivery_fee: number;
 }

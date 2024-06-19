@@ -62,20 +62,27 @@ function MarketCartPay() {
       console.error('User ID not found');
       return;
     }
+  
     console.log('Fetching user info for user ID:', userId);
   
     const fetchUserInfo = async () => {
       try {
         const response = await apiWithAuth.get(`${API}users/${userId}`);
         console.log('User info fetched:', response.data);
-        setUserInfo(response.data);
+    
+        // Update userInfo state with fetched data
+        setUserInfo({
+          address: response.data.data.address,
+          name: response.data.data.name,
+          phone: response.data.data.phone
+        });
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
     };
   
     fetchUserInfo();
-  }, [userId]);
+  }, [userId]);  
   
   useEffect(() => {
     const storedSelectedItems = localStorage.getItem('selectedItems');
@@ -85,7 +92,7 @@ function MarketCartPay() {
 
       const fetchSelectedProducts = async () => {
         try {
-          const db = await idb.openDB(`cart_${userId}`, 1);
+          const db = await idb.openDB(`cart_${userId}`, 2);
           const tx = db.transaction('cart', 'readonly');
           const store = tx.objectStore('cart');
           const selectedProductsPromises = selectedItems.map(async (productId) => {
@@ -116,13 +123,25 @@ function MarketCartPay() {
     }
   }, [selectedProducts]);
 
+  const totalDeliveryFee = () => {
+    const storedSelectedProducts = JSON.parse(localStorage.getItem('selectedProducts'));
+    if (!storedSelectedProducts) return 3000; // Default delivery fee if no products are found
+
+    // Sum up the delivery fees of selected products
+    const deliveryFees = storedSelectedProducts.reduce((total, product) => {
+      return total + product.deliveryFee; // Assuming each product has a deliveryFee property
+    }, 0);
+
+    return deliveryFees;
+  };
+
   const sendPurchaseRequest = async () => {
     try {
       const selectedProducts = JSON.parse(localStorage.getItem('selectedProducts'));
 
       const purchases = selectedProducts.map((product, index) => ({
         good_id: product.id,
-        total_price: index === 0 ? product.price + 3000 : product.price,
+        total_price: index === 0 ? product.price + totalDeliveryFee() : product.price,
         quantity: product.quantity,
         payment_selection: '카드결제'
       }));
@@ -138,6 +157,11 @@ function MarketCartPay() {
   const handleOrder = async () => {
     try {
       localStorage.setItem('cartOrderInfo', JSON.stringify(cartOrderInfo));
+      
+      // Save final total payment amount to local storage
+      const finalTotalPayment = totalProductPrice + totalDeliveryFee();
+      localStorage.setItem('finalTotalPayment', finalTotalPayment.toLocaleString());
+      
       await sendPurchaseRequest();
       const confirmation = window.confirm("해당 상품을 구매하시겠습니까?");
       if (confirmation) {
@@ -258,7 +282,7 @@ function MarketCartPay() {
           </div>
           <div className="flex mb-2">
             <div className="text-white font-bold text-2xl mr-3">
-              {/* 배송지 이름 */}
+              {userInfo.name}님의 기본 배송지
             </div>
           </div>
           <div className="text-white text-xl">{userInfo.address}</div>
@@ -303,12 +327,12 @@ function MarketCartPay() {
             </div>
             <div className="flex justify-between mb-5">
               <div className="text-white text-xl">배송비</div>
-              <div className="text-white font-bold text-xl">3,000원</div>
+              <div className="text-white font-bold text-xl">{totalDeliveryFee().toLocaleString()}원</div>
             </div>
             <div className="border-lime-300 border-b"></div>
             <div className="flex justify-between pt-5">
               <div className="text-white font-bold text-2xl">최종 결제금액</div>
-              <div className="text-white font-bold text-2xl">{(totalProductPrice + 3000).toLocaleString()}원</div>
+              <div className="text-white font-bold text-2xl">{(totalProductPrice + totalDeliveryFee()).toLocaleString()}원</div>
             </div>
           </div>
         </div>
@@ -328,7 +352,7 @@ function MarketCartPay() {
           onClick={handleOrder}
           className="bg-pink-700 text-white text-2xl font-bold py-3 px-9 rounded-lg hover:bg-pink-600 focus:outline-none focus:bg-pink-600"
         >
-          {(totalProductPrice + 3000).toLocaleString()}원 결제하기
+          {(totalProductPrice + totalDeliveryFee()).toLocaleString()}원 결제하기
         </button>
       </div>
     </div>
