@@ -154,7 +154,7 @@ function MarketCartPaySuccess() {
       </div>
 
       <div className="flex justify-center mt-10 pb-10">
-        <button className="bg-gray-600 hover:bg-gray-800 border text-white font-bold text-xl w-56 py-2 rounded-lg mr-6" onClick={orderDetailClick}>주문내역 확인</button>
+        {/* <button className="bg-gray-600 hover:bg-gray-800 border text-white font-bold text-xl w-56 py-2 rounded-lg mr-6" onClick={orderDetailClick}>주문내역 확인</button> */}
         <button className="bg-pink-700 hover:bg-pink-900 border text-white font-bold text-xl w-56 py-2 rounded-lg" onClick={handlePayClick}>마켓으로</button>
       </div>
     </div>
