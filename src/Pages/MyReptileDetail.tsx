@@ -192,7 +192,7 @@ function MyReptileDetail() {
     setIsChecked(event.target.checked);
   };
 
-  const handleUserSelect = (user:string) => {
+  const handleUserSelect = (user: string) => {
     setSelectedUser(user);
     toggleUserSelectModal();
     toggleAdoptModal();
@@ -201,10 +201,10 @@ function MyReptileDetail() {
   const handleSearch = async () => {
     try {
       console.log(searchQuery);
-      
+
       // const response = await apiWithAuth.get(`users/${searchQuery}/info`);
       // console.log(response);
-      
+
       // setFilteredUsers([response.data]);
       setFilteredUsers(["jk"]);
       setError('');
@@ -223,7 +223,7 @@ function MyReptileDetail() {
         reptileId: reptile?.id,
       });
       console.log(selectedUser, isChecked, reptile?.id);
-      
+
       alert('분양 정보가 성공적으로 전송되었습니다.');
       toggleAdoptModal();
     } catch (err) {
@@ -231,6 +231,20 @@ function MyReptileDetail() {
     }
   };
 
+  // 목록으로 돌아가기
+  const handleNavigation = () => {
+    if (isEdited) {
+      const confirmLeave = confirm("변경 사항을 저장하지 않고 나가시겠습니까?");
+      if (confirmLeave) {
+        // 확인 - 이동
+        navigate("/my-cage");
+      }
+      // 취소 - 그대로
+    } else {
+      // 변경x - 이동
+      navigate("/my-cage");
+    }
+  };
 
   return (
     <>
@@ -507,16 +521,41 @@ function MyReptileDetail() {
               />
             </div> */}
 
-
-            <div className="flex justify-center">
-              <Link to="/my-cage" className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-semibold py-2 px-4 rounded mt-16 transition duration-300">목록으로 돌아가기</Link>
+            <div className="flex justify-end space-x-4 mt-16 ">
+              <button
+                onClick={handleDelete}
+                className="border-red-500 border-2 hover:bg-red-200 text-red-500 font-semibold py-2 px-4 rounded transition duration-300"
+              >
+                삭제
+              </button>
+              <button
+                onClick={handleNavigation}
+                className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-semibold py-2 px-4 rounded transition duration-300"
+              >
+                목록으로 돌아가기
+              </button>
+              <button
+                onClick={handleSaveChanges}
+                disabled={!isEdited} // isEdited가 false일 경우 버튼을 비활성화
+                className={`border-2 py-2 px-4 rounded font-semibold transition duration-300 ${isEdited
+                  ? "border-green-500 hover:bg-green-300 text-green-500" // 변경 사항이 있을 때
+                  : "border-gray-500 text-gray-500 bg-gray-200 cursor-not-allowed" // 변경 사항이 없을 때
+                  }`}
+              >
+                저장
+              </button>
             </div>
+            
           </div>
         </div>
       ) : (
-        <>
-          로딩 중
-        </>
+        <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
+          <div className="bg-white rounded-lg shadow-md px-5 py-4">
+            <h1 className="text-center">
+              Loading...
+            </h1>
+          </div>
+        </div>
       )}
     </>
   );

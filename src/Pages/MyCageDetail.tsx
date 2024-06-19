@@ -622,7 +622,6 @@ function MyCageDetail() {
               >
                 저장
               </button>
-
             </div>
 
           </div>
