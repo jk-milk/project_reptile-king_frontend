@@ -1,8 +1,43 @@
 import { useState, useEffect } from 'react';
 import { apiWithAuth } from '../components/common/axios';
+import { API } from '../config';
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
+  const [filterType, setFilterType] = useState('all');
+  const filterButtons = [
+    {
+      name: '전체',
+      type: 'all',
+    }, 
+    {
+      name: '파충류 등록',
+      type: 'reptile_registration',
+    }, 
+    {
+      name: '파충류 분양 신청',
+      type: 'reptile_sales',
+    }, 
+    {
+      name: '사육장 온도',
+      type: 'temp_abnormality',
+    }, 
+    {
+      name: '로그인 알림',
+      type: 'login',
+    }
+  ];
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const koreaDate = new Date(date.getTime() - (9 * 60 * 60 * 1000)); // GMT+9 시간 보정
+    const month = koreaDate.getMonth() + 1;
+    const day = koreaDate.getDate();
+    const hours = koreaDate.getHours();
+    const minutes = koreaDate.getMinutes();
+    return `${month}월 ${day}일 ${hours}시 ${minutes}분`;
+  };
+  
   useEffect(() => {
     const fetchNotifications = async () => {
       if (localStorage.getItem("accessToken") == null) return // 로그인되지 않은 상태라면 알림 데이터 가져오지 않기
@@ -19,7 +54,6 @@ const NotificationsPage = () => {
 
     fetchNotifications();
   }, []);
-  const [filterType, setFilterType] = useState('all');
 
   // 알림 읽음 처리
   const markAsRead = (id) => {
@@ -38,63 +72,108 @@ const NotificationsPage = () => {
     : notifications.filter((notification) => notification.category === filterType);
 
   console.log(filteredNotifications);
-  
+
+  // 분양 수락
+  async function handleAccept(notificationId: number): Promise<void> {
+    try {
+      const response = await apiWithAuth.post(`${API}alarms/accept-reptile-sale/${notificationId}`);
+      console.log(response);
+      return response.data;
+    } catch (error) {
+      console.error('분양 수락 중 실패.', error);
+      throw error;
+    }
+  }
+
+  async function handleReject(notificationId: number): Promise<void> {
+    try {
+      const response = await apiWithAuth.post(`${API}alarms/reject-reptile-sale/${notificationId}`);
+      console.log(response);
+      return response.data;
+    } catch (error) {
+      console.error('분양 거절 중 실패.', error);
+      throw error;
+    }
+  }
+
+  // 알람 전체 확인
+  async function checkAllAlarms(): Promise<void> {
+    try {
+      const response = await apiWithAuth.post(`${API}alarms/check-all-alarms`);
+      console.log(response);
+      return response.data;
+    } catch (error) {
+      console.error('알람 전체 확인 중 실패.', error);
+      throw error;
+    }
+  }
 
   return (
     <div className="pt-10 pb-10 laptop:w-[67.5rem] w-body m-auto">
       <div className="bg-white rounded mt-20 px-5 py-4">
-
-      <header className="notifications-header">
-        <h1 className="mt-0">알림</h1>
-        <div className="notification-filter">
-          <button
-            className={filterType === 'all' ? 'active' : ''}
-            onClick={() => setFilterType('all')}
-          >
-            전체
-          </button>
-          <button
-            className={filterType === 'reptiles' ? 'active' : ''}
-            onClick={() => setFilterType('reptiles')}
-          >
-            파충류 등록
-          </button>
-          <button
-            className={filterType === 'reptile_sales' ? 'active' : ''}
-            onClick={() => setFilterType('reptile_sales')}
-          >
-            파충류 분양 신청
-          </button>
-          <button
-            className={filterType === 'temp_abnormality' ? 'active' : ''}
-            onClick={() => setFilterType('temp_abnormality')}
-          >
-            사육장 온도
-          </button>
-          <button
-            className={filterType === 'login' ? 'active' : ''}
-            onClick={() => setFilterType('login')}
-          >
-            로그인 알림
-          </button>
-        </div>
-      </header>
-
-      <div className="mt-20">
-        {filteredNotifications.map((notification) => (
-          <div
-            key={notification.id}
-            className={`notification-item ${
-              notification.readed ? 'true' : 'false'
-            }`}
-            onClick={() => markAsRead(notification.id)}
-          >
-            <div className="notification-type">{notification.category}</div>
-            <div className="notification-date">{notification.created_at}</div>
-            <div className="notification-message">{notification.content}</div>
+        <header className="notifications-header">
+          <h1 className="mt-0">알림</h1>
+          <div className="flex justify-between mb-4">
+            <div className="flex justify-start space-x-2">
+              {filterButtons.map((button) => (
+                <button
+                  key={button.name}
+                  className={`bg-white px-4 py-1 rounded-full border transition-colors duration-300 flex items-center justify-center ${
+                    filterType === button.type
+                      ? 'text-blue-500 border-blue-500 '
+                      : 'border-gray-500 hover:bg-blue-200 hover:text-blue-500 hover:border-blue-500'
+                  }`}
+                  onClick={() => setFilterType(button.type)}
+                >
+                  {button.name}
+                </button>
+              ))}
+            </div>
+            <button
+              className="bg-white px-2 py-1 rounded-md hover:bg-gray-300 border border-gray-500 transition-colors duration-300 flex items-center justify-center"
+              onClick={checkAllAlarms}
+            >
+              전체확인
+            </button>
           </div>
-        ))}
-      </div>
+        </header>
+
+        <div className="mt-10">
+          {filteredNotifications.map((notification) => (
+            <div
+              key={notification.id}
+              className={`${notification.readed 
+                ? 'bg-gray-100 hover:bg-gray-200' 
+                : 'bg-white hover:bg-gray-100'
+              } rounded-lg shadow-md p-4 mb-4 cursor-pointer`}
+              onClick={() => markAsRead(notification.id)}
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <span className="font-bold mb-2 mr-2">{notification.title}</span>
+                  <span className="text-gray-600 mb-2">{formatDate(notification.created_at)}</span>
+                  <div className="mb-4">{notification.content}</div>
+                </div>
+                {notification.category === 'reptile_sales' && (
+                  <div className="notification-actions">
+                    <button
+                      className="bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 mr-2"
+                      onClick={() => handleAccept(notification.id)}
+                    >
+                      수락
+                    </button>
+                    <button
+                      className="bg-red-500 hover:bg-red-600 text-white rounded-md px-4 py-2"
+                      onClick={() => handleReject(notification.id)}
+                    >
+                      거부
+                    </button>
+                  </div>
+                )}
+                </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
