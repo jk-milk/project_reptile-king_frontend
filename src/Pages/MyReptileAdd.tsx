@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { apiWithAuth } from '../components/common/axios';
 import { API } from '../config';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ImageWithDeleteButton from '../components/Board/ImageWithDeleteButton';
 
 function MyReptileAdd() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const cage = location.state;
+  console.log(cage);
+  
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [reptileName, setReptileName] = useState('');
   const [species, setSpecies] = useState('');
@@ -65,13 +69,31 @@ function MyReptileAdd() {
       });
 
       try {
-        await apiWithAuth.post(API + 'reptiles', formData, {
+        const response = await apiWithAuth.post(API + 'reptiles', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
+        console.log(response);
 
         alert('파충류가 성공적으로 등록되었습니다.');
+        if (cage) {
+          const cageFormData = new FormData();
+
+          cageFormData.append('name', cage.name);
+          cageFormData.append('serialCode', cage.serial_code);
+          cageFormData.append('reptileSerialCode', response.data.reptile_serial_code);
+          cageFormData.append('imgUrls', JSON.stringify(cage.img_urls));
+          cageFormData.append('_method', 'PATCH');
+
+          try {
+            const cageResponse = await apiWithAuth.post(`${API}cages/${cage.id}`, cageFormData);
+            console.log(cageResponse);
+          } catch (error) {
+            console.error(error);
+            alert('사육장에 파충류 등록 실패')
+          }
+        }
         navigate(-1);
       } catch (error) {
         console.error(error);
