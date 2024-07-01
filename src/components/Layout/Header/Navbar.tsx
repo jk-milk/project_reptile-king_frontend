@@ -88,6 +88,8 @@ function Navbar() {
     const refreshToken = localStorage.getItem('refreshToken');
     try {
       const response = await apiWithAuth.post(API + "logout", {
+        platform: 'web'
+      }, {
         headers: {
           'Refresh-Token': refreshToken
         }
@@ -161,26 +163,24 @@ function Navbar() {
                 <button>
                   <Link to="/market/cart"><BiSolidCart size="30" className="mr-4 text-gray-800 hover:text-green-800 transition-colors duration-300 cursor-pointer" /></Link>
                 </button>
+                <div className="relative">
+                  <IoMdNotifications
+                    size="30"
+                    className="text-gray-800 hover:text-green-800 transition-colors duration-300 cursor-pointer"
+                    onClick={handleNotificationClick}
+                  />
+                  {notifications.filter((notification) => !notification.readed).length > 0 && (
+                    <div className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-3 h-3 flex items-center justify-center text-xs">
+                      {/* {notifications.filter((notification) => !notification.readed).length} */}
+                    </div>
+                  )}
+                </div>
+                {notificationDropdownOpen && <NotificationDropdown alarms={notifications} />}
               </div>
             ) : (
               // 로그인 하지 않은 상태
               <Link to="/login" className="font-bold text-lg p-2 mr-4 hover:text-green-800 transition-colors duration-300 cursor-pointer">로그인</Link>
             )}
-            <div className="relative">
-              <div className="relative">
-                <IoMdNotifications
-                  size="30"
-                  className="text-gray-800 hover:text-green-800 transition-colors duration-300 cursor-pointer"
-                  onClick={handleNotificationClick}
-                />
-                {notifications.filter((notification) => !notification.readed).length > 0 && (
-                  <div className="absolute -bottom-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
-                    {notifications.filter((notification) => !notification.readed).length}
-                  </div>
-                )}
-              </div>
-              {notificationDropdownOpen && <NotificationDropdown alarms={notifications} />}
-            </div>
           </div>
         </div>
       </div>

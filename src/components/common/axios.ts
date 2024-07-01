@@ -41,7 +41,9 @@ apiWithAuth.interceptors.response.use(
         console.log('기존 액세스 토큰', oldAccessToken);
         
         try {
-          const response = await axios.post(`${API}refresh-token`, {}, {
+          const response = await axios.post(`${API}refresh-token`, {
+            platform: 'web'
+          }, {
             headers: {
               'Authorization': refreshToken
             }

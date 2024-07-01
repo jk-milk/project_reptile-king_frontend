@@ -122,7 +122,7 @@ function MarketCart() {
   };
 
   return (
-    <div className="pt-10 pb-10 mx-auto max-w-screen-xl">
+    <div className="pt-10 pb-10 mx-auto max-w-screen-xl min-h-screen">
       <div className="text-white font-bold text-4xl pb-5">장바구니</div>
       <div className="grid grid-cols-12 gap-4">
 

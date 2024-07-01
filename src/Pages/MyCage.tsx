@@ -10,6 +10,8 @@ function MyCage() {
   const [cages, setCages] = useState<Cage[] | null>(); // 케이지 목록 정보
   const [curCages, setCurCages] = useState<CurCage[] | null>(); // 온습도 포함 케이지 목록 정보
   const [reptiles, setReptiles] = useState<Reptile[] | null>(); // 파충류 목록 정보
+  // 현재 가지고 있는 파충류를 보여줄 것인지, 이미 분양시킨 파충류를 보여줄 것인지 토글 버튼 체크 여부
+  const [isChecked, setIsChecked] = useState(true);
 
   // 개인 케이지 목록 가져오기
   useEffect(() => {
@@ -31,13 +33,13 @@ function MyCage() {
         }
       } catch (error) {
         setCages(null);
-        setCurCages(null);        
+        setCurCages(null);
         console.error("케이지 목록 가져오기 서버 에러", error);
         alert("케이지 목록 가져오는 중 에러! 다시 시도해 주세요.");
       }
     };
     fetchCages();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // cages가 변경되면 각각 현재 온도와 습도 가져오기
@@ -71,7 +73,7 @@ function MyCage() {
                 cur_hum: 40,
               };
             }
-          });  
+          });
 
           setCurCages(updatedCages);
         } catch (error) {
@@ -80,14 +82,18 @@ function MyCage() {
       }
     };
     fetchCagesTempHum();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cages]); // cages 상태가 변경될 때마다 실행
 
   // 파충류 목록 가져오기
   useEffect(() => {
     const fetchCages = async () => {
       try {
-        const response = await apiWithAuth.get(API + "reptiles");
+        let response = {}
+        if (isChecked)
+          response =  await apiWithAuth.get(API + "reptiles");
+        else
+          response = await apiWithAuth.get(API + "reptiles/expired");
         console.log(response);
         if (response.status === 204) {
           setReptiles(null);
@@ -101,7 +107,7 @@ function MyCage() {
       }
     };
     fetchCages();
-  }, []);
+  }, [isChecked]);
 
   const handleAddCage = () => {
     navigate('/my-cage/add');
@@ -109,6 +115,11 @@ function MyCage() {
 
   const handleAddReptile = () => {
     navigate('/my-cage/reptile/add');
+  };
+
+  // 현재 가지고 있는 파충류를 보여줄 것인지, 이미 분양시킨 파충류를 보여줄 것인지
+  const handleToggle = () => {
+    setIsChecked(!isChecked);
   };
 
   return (
@@ -136,17 +147,17 @@ function MyCage() {
             </div>
           ) :
             curCages.map((cage) => (
-              <Link to={`/my-cage/${cage.id}`} state={{cage: cage}} key={cage.id}>
+              <Link to={`/my-cage/${cage.id}`} state={{ cage: cage }} key={cage.id}>
                 <div className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
                   {cage.img_urls.length !== 0 ?
-                    <img 
+                    <img
                       src={cage.img_urls[0]}
-                      alt={cage.name} 
+                      alt={cage.name}
                       className="w-full h-48 object-cover rounded-t"
-                    /> : 
-                    <img 
+                    /> :
+                    <img
                       src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/defaults/defaultCageImage.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
-                      alt={cage.name} 
+                      alt={cage.name}
                       className="w-full h-48 object-cover rounded-t"
                     />
                   }
@@ -171,6 +182,25 @@ function MyCage() {
             파충류 추가하기
           </button>
         </div>
+        <div className="flex justify-end">
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={handleToggle}
+              className="sr-only peer"
+            />
+            <span className="me-3 text-sm font-medium text-green-900 dark:text-green-300">
+              {isChecked ? "現在お持ちの爬虫類" : "分譲済みの爬虫類"}
+            </span>
+            <div
+              className={`relative w-11 h-6 bg-gray-200 peer-focus:outline-none dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 ${isChecked
+                ? 'peer-checked:bg-green-600 peer-checked:after:translate-x-full dark:peer-checked:after:-translate-x-full'
+                : ''
+                } after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}
+            ></div>
+          </label>
+        </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {reptiles === undefined ? (
             <p>로딩 중...</p>
@@ -183,9 +213,9 @@ function MyCage() {
               <p className="text-gray-600">파충류를 추가해 주세요!</p>
             </div>
           ) : reptiles.map((reptile) => (
-            <Link to={`/my-cage/reptile/${reptile.id}`} key={reptile.id} state={{reptileSerialCode: reptile.serial_code}}>
+            <Link to={`/my-cage/reptile/${reptile.id}`} key={reptile.id} state={{ reptileSerialCode: reptile.serial_code }}>
               <div className="bg-white border border-gray-300 rounded shadow-lg overflow-hidden">
-                {reptile.img_urls.length !== 0 ? 
+                {reptile.img_urls.length !== 0 ?
                   <img
                     src={reptile.img_urls[0]}
                     alt={reptile.name}

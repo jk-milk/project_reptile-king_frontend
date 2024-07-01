@@ -204,7 +204,7 @@ function MyReptileDetail() {
       // console.log(response);
 
       // setFilteredUsers([response.data]);
-      setFilteredUsers(["jk"]);
+      setFilteredUsers(["배석민"]);
       setError('');
     } catch (error) {
       setFilteredUsers([]);
@@ -221,8 +221,7 @@ function MyReptileDetail() {
         reptileId: reptile?.id,
       });
       console.log(selectedUser, isChecked, reptile?.id);
-
-      alert('분양 정보가 성공적으로 전송되었습니다.');
+      alert('분양 대상자에게 알림을 보냈습니다.');
       toggleAdoptModal();
     } catch (err) {
       alert('분양 정보를 전송하는 데 실패했습니다.');
@@ -344,7 +343,6 @@ function MyReptileDetail() {
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
             {showUploadPanel && (
@@ -445,9 +443,14 @@ function MyReptileDetail() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="mb-4 p-2 border rounded w-full"
                   />
-                  <button onClick={handleSearch} className="mb-4 bg-blue-500 text-white py-2 px-4 rounded-full">
-                    검색
-                  </button>
+                  <div className="flex justify-end">
+                    <button 
+                      onClick={handleSearch} 
+                      className="border-blue-500 hover:bg-blue-300 text-blue-500 border-2 py-1 px-4 rounded font-semibold transition duration-300"
+                    >
+                      검색
+                    </button>
+                  </div>
                   {error && <p className="text-red-500">{error}</p>}
                   <ul>
                     {filteredUsers.map(user => (
@@ -460,9 +463,14 @@ function MyReptileDetail() {
                       </li>
                     ))}
                   </ul>
-                  <button onClick={toggleUserSelectModal} className="mt-4 bg-red-500 text-white py-2 px-4 rounded-full">
-                    닫기
-                  </button>
+                  <div className="flex justify-end">
+                    <button 
+                      onClick={toggleUserSelectModal}
+                      className="mt-4 border-red-500 hover:bg-red-300 text-red-500 border-2 py-1 px-4 rounded font-semibold transition duration-300"
+                    >
+                      닫기
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -472,7 +480,7 @@ function MyReptileDetail() {
                 <div className="bg-white rounded-lg p-8 shadow-lg max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
                   <h2 className="text-2xl font-bold mb-4">분양 정보</h2>
                   <p>선택한 사용자: {selectedUser}</p>
-                  <div className="mb-4">
+                  <div className="my-4">
                     <label className="inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
@@ -483,15 +491,18 @@ function MyReptileDetail() {
                       <span className="ml-2 text-gray-700">사육 일지 공개</span>
                     </label>
                     <p className="mt-2 text-sm text-gray-600">
-                      이 옵션을 선택하면, 당신의 사육 일지가 다음 분양 대상자에게 공개됩니다. 사육 경험과 팁을 공유하여 더 건강한 반려동물 공동체를 만들어 가는 데 도움이 됩니다.
+                      사육 일지가 다음 분양 대상자에게 공개됩니다.
                     </p>
                   </div>
-                  <button onClick={sendAdoptionInfo} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-full">
-                    확인
-                  </button>
-                  <button onClick={toggleAdoptModal} className="mt-4 bg-red-500 text-white py-2 px-4 rounded-full">
-                    닫기
-                  </button>
+                  <div className="mt-4 flex justify-end">
+                    <button onClick={sendAdoptionInfo} className="border-blue-500 hover:bg-blue-300 text-blue-500 border-2 py-1 px-4 rounded font-semibold transition duration-300">
+                      확인
+                    </button>
+                    <button onClick={toggleAdoptModal} className="border-red-500 hover:bg-red-300 text-red-500 border-2 ml-4 py-1 px-4 rounded font-semibold transition duration-300">
+                      닫기
+                    </button>
+                  </div>
+                  
                 </div>
               </div>
             )}
@@ -505,8 +516,6 @@ function MyReptileDetail() {
               value={formatDate(reptile?.birth)}
               onChange={(e) => updateBirth(e.target.value)}
             ></input> */}
-
-
 
             {/* <div className="font-bold text-3xl mb-3">건강분석</div>
             <hr className="border-t border-gray-400 mb-3" /> */}

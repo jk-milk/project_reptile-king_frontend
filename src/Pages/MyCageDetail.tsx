@@ -76,8 +76,10 @@ function MyCageDetail() {
     const fetchCagesTempHum = async () => {
       const response = await apiWithAuth.get(`${API}cages/${id}/latest-temperature-humidity`)
       console.log(response.data.latestData);
-      setCurTem(response.data.latestData.temperature);
-      setCurHum(response.data.latestData.humidity);
+      if (response.data.latestData !== undefined) {
+        setCurTem(response.data.latestData.temperature);
+        setCurHum(response.data.latestData.humidity);
+      }
     };
     fetchCagesTempHum();
     // 일정 시간마다 최신화
@@ -135,7 +137,7 @@ function MyCageDetail() {
   }
 
   const handleAddReptile = () => {
-    navigate("/my-cage/reptile/add");
+    navigate("/my-cage/reptile/add", { state: cage });
   }
 
   // 온도 조절 함수
@@ -211,11 +213,9 @@ function MyCageDetail() {
   // 기존 이미지 삭제
   const handleDeleteExistingImage = (indexToDelete: number) => {
     setCage((prevCage) => {
-      // 새로운 img_urls 배열을 생성합니다. 특정 인덱스의 항목을 제외하고 모든 항목을 포함합니다.
       const newImgUrls = prevCage.img_urls.filter((_, index) => index !== indexToDelete);
       setIsEdited(true);
 
-      // 새로운 img_urls 배열을 포함하는 새로운 cage 상태 객체를 반환합니다.
       return { ...prevCage, img_urls: newImgUrls };
     });
   };
@@ -363,7 +363,7 @@ function MyCageDetail() {
                   }}
                   navigation={false}
                   modules={[Autoplay, Pagination, SwiperNavigation]}
-                  className="mySwiper max-h-[504px] shadow-lg rounded-lg"
+                  className="mySwiper max-h-[529px] h-[529px] shadow-lg rounded-lg bg-gray-300"
                 >
                   {cage?.img_urls.length !== 0 ? (
                     cage.img_urls.map((url, index) => (
