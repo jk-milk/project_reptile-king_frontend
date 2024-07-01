@@ -1,5 +1,5 @@
 export function calculateAge(birth: string | undefined) {
-  if (!birth) return "미등록";
+  if (!birth) return "未登録";
   
   const birthDate = new Date(birth);
   const today = new Date();
