@@ -2,8 +2,28 @@ import { Link } from 'react-router-dom';
 import { FaRegCommentDots } from "react-icons/fa";
 import { RiShoppingBagLine } from "react-icons/ri";
 import { MdOutlinePets } from "react-icons/md";
+import { useEffect, useState } from 'react';
+import { apiWithAuth } from '../../common/axios';
 
-const NotificationDropdown = ({ alarms }) => {
+const NotificationDropdown = () => {
+  const [alarms, setAlarms] = useState([]);
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (localStorage.getItem("accessToken") == null) return // 로그인되지 않은 상태라면 알림 데이터 가져오지 않기
+
+      try {
+        const response = await apiWithAuth.get('alarms');
+        console.log(response);
+
+        setAlarms(response.data.alarms);
+      } catch (error) {
+        console.error('알림 데이터 가져오기 실패:', error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+  
   const getIconByCategory = (category) => {
     switch (category) {
       case 'reptile_sales':
