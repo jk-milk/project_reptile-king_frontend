@@ -21,14 +21,14 @@ const pageTitles: { [key: string]: string[] } = {
   "mypage/help/create": ["Q & A"],
   "mypage/help/edit": ["Q & A"],
   "mypage/help/detail": ["Q & A"],
-  "my-cage": ["MY 사육장"],
-  "my-cage/:id": ["MY 사육장"],
-  "my-cage/:id/video": ["MY 사육장"],
-  "my-cage/add": ["MY 사육장"],
-  "my-cage/edit": ["MY 사육장"],
-  "my-cage/reptile": ["MY 사육장"],
-  "my-cage/reptile/edit": ["MY 사육장"],
-  "my-cage/reptile/add": ["MY 사육장"],
+  "my-cage": ["MY CAGE"],
+  "my-cage/:id": ["MY CAGE"],
+  "my-cage/:id/video": ["MY CAGE"],
+  "my-cage/add": ["MY CAGE"],
+  "my-cage/edit": ["MY CAGE"],
+  "my-cage/reptile": ["MY CAGE"],
+  "my-cage/reptile/edit": ["MY CAGE"],
+  "my-cage/reptile/add": ["MY CAGE"],
 }
 
 const Layout = () => {

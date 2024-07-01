@@ -332,7 +332,7 @@ function MyCageDetail() {
                     : "border-gray-500 text-gray-500 bg-gray-200 cursor-default" // 변경 사항이 없을 때
                     }`}
                 >
-                  저장
+                  セーブ
                 </button>
               </div>
             </div>
@@ -393,7 +393,7 @@ function MyCageDetail() {
               <div className="w-1/2">
                 <div className="bg-white rounded-lg shadow-md p-5 max-w-md mx-auto mb-6">
                   <div className="flex items-center mb-3 max-w-md mx-auto">
-                    <div className="font-bold text-2xl">등록 파충류 정보</div>
+                    <div className="font-bold text-2xl">爬虫類の登録情報</div>
                     <div className="ml-auto">
                       {reptile ? // 파충류가 등록되어 있는 경우
                         <>
@@ -413,7 +413,7 @@ function MyCageDetail() {
                             onClick={handleShowReptileDetail}
                             className="border-blue-600 border-2 hover:bg-blue-200 text-blue-500 font-semibold py-1 px-3 rounded transition duration-300"
                           >
-                            파충류 상세정보 확인
+                            爬虫類の詳細を見る
                           </button>
                         </>
 
@@ -422,7 +422,7 @@ function MyCageDetail() {
                           onClick={handleAddReptile}
                           className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-semibold py-1 px-3 rounded transition duration-300"
                         >
-                          파충류 추가하기
+                          爬虫類を追加する
                         </button>
                       }
                     </div>
@@ -430,15 +430,15 @@ function MyCageDetail() {
                   <hr className="border-t border-gray-200 mb-2" />
                   <div className="w-full ">
                     <div className="flex">
-                      <div className="font-semibold text-xl w-1/6">이름</div>
-                      <div className="text-lg">{reptile?.name ? reptile.name : "미등록"}</div>
+                      <div className="font-semibold text-xl w-1/6">名前</div>
+                      <div className="text-lg">{reptile?.name ? reptile.name : "未登録"}</div>
                     </div>
                     <div className="flex">
-                      <div className="font-semibold text-xl w-1/6">종</div>
-                      <div className="text-lg">{reptile?.species ? reptile.species : "미등록"}</div>
+                      <div className="font-semibold text-xl w-1/6">種類</div>
+                      <div className="text-lg">{reptile?.species ? reptile.species : "未登録"}</div>
                     </div>
                     <div className="flex">
-                      <div className="font-semibold text-xl w-1/6">나이</div>
+                      <div className="font-semibold text-xl w-1/6">年齢</div>
                       <div className="text-lg">{calculateAge(reptile?.birth)}</div>
                     </div>
                   </div>
@@ -446,7 +446,7 @@ function MyCageDetail() {
 
                 <div className="bg-white rounded-lg shadow-lg p-5 max-w-md mx-auto">
                   <div className="text-center mb-5 flex justify-around">
-                    <h2 className="text-2xl font-semibold">온습도 설정</h2>
+                    <h2 className="text-2xl font-semibold">温湿度設定</h2>
                     <button
                       onClick={handleSaveChangesTemHum}
                       disabled={!isTemHumEdited} // isEdited가 false일 경우 버튼을 비활성화
@@ -455,16 +455,16 @@ function MyCageDetail() {
                         : "border-gray-500 text-gray-500 bg-gray-200 cursor-default" // 변경 사항이 없을 때
                         }`} 
                         >
-                      변경
+                      変更
                     </button>
                   </div>
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <p className="text-gray-600 mb-2 flex justify-center">현재 온도</p>
+                      <p className="text-gray-600 mb-2 flex justify-center">現在の温度</p>
                       <p className="text-3xl font-bold flex justify-center">{curTem}°C</p>
                     </div>
                     <div>
-                      <p className="text-gray-600 mb-2 flex items-center justify-center">설정 온도 (20°C ~ 30°C)</p>
+                      <p className="text-gray-600 mb-2 flex items-center justify-center">設定温度 (20°C ~ 30°C)</p>
                       <div className="flex items-center justify-center">
                         <button onClick={decreaseTemperature} className="text-blue-700 bg-blue-100 hover:bg-blue-200 font-bold py-1.5 px-4 rounded-l-lg">
                           -
@@ -479,11 +479,11 @@ function MyCageDetail() {
                   <hr className="border-t border-gray-200 mb-4" />
                   <div className="grid grid-cols-2 gap-4 mb-5">
                     <div>
-                      <p className="text-gray-600 mb-2 flex justify-center">현재 습도</p>
+                      <p className="text-gray-600 mb-2 flex justify-center">現在の湿度</p>
                       <p className="text-3xl font-bold flex justify-center">{curHum}%</p>
                     </div>
                     <div>
-                      <p className="text-gray-600 mb-2 flex items-center justify-center">설정 습도 (35% ~ 60%)</p>
+                      <p className="text-gray-600 mb-2 flex items-center justify-center">設定湿度 (35% ~ 60%)</p>
                       <div className="flex items-center justify-center">
                         <button onClick={decreaseHumidity} className="text-blue-700 bg-blue-100 hover:bg-blue-200 font-bold py-1.5 px-4 rounded-l-lg">
                           -
