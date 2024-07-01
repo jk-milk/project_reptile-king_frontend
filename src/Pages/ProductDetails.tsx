@@ -32,7 +32,7 @@ function ProductDetails() {
               ...productData,
               imageUrl: thumbnail,
               infoUrl: info,
-              delivery_fee: responseData.delivery_fee, 
+              delivery_fee: responseData.delivery_fee,
             };
             setProduct(productWithThumbnail);
           }
@@ -83,33 +83,33 @@ function ProductDetails() {
         console.error("accessToken이 없습니다.");
         return;
       }
-  
+
       const [, payloadBase64] = token.split(".");
       const payload = JSON.parse(atob(payloadBase64));
       const userId = payload.sub; // 'sub' 필드가 사용자 ID를 나타냄
-  
+
       const db = await idb.openDB(`cart_${userId}`, 2, {
         upgrade(db) {
           db.createObjectStore('cart', { autoIncrement: true, keyPath: 'id' });
         },
       });
-  
+
       // 변경된 수량에 따라 가격을 업데이트합니다.
       const updatedProduct = updateProductPrice(product, quantity);
-  
+
       // 조절된 가격과 원래 가격을 추가합니다.
       const productWithPrices = {
         ...updatedProduct,
         originalPrice: product.price,
       };
-  
+
       await db.add('cart', productWithPrices);
       console.log('상품이 장바구니에 추가되었습니다.');
     } catch (error) {
       console.error('장바구니에 상품을 추가하는 중 에러가 발생했습니다:', error);
     }
   };
-  
+
   const handleCartClick = async () => {
     const addToCart = window.confirm("해당 상품을 장바구니에 추가하시겠습니까?");
     if (addToCart && product) {
@@ -121,7 +121,7 @@ function ProductDetails() {
           price: product.price,
           name: product.name,
           imageUrl: product.imageUrl,
-          deliveryFee : product.delivery_fee
+          deliveryFee: product.delivery_fee
         };
 
         await addToCartIndexedDB(cartProduct);
@@ -235,14 +235,14 @@ function ProductDetails() {
             <ul className="flex justify-center">
               {/* 상세정보 탭 */}
               <li
-                className={`px-4 py-4 text-black text-lg text-center cursor-pointer hover:bg-gray-300 font-bold ${selectedTab === 'details' && 'bg-gray-300'} w-1/2`}
+                className={`px-4 py-4 text-black text-lg text-center cursor-pointer font-bold ${selectedTab === 'details' ? 'bg-white' : 'bg-gray-300 hover:bg-gray-100 duration-300'} w-1/2`}
                 onClick={() => setSelectedTab('details')}
               >
                 상세정보
               </li>
               {/* 상품평 탭 */}
               <li
-                className={`px-4 py-4 text-black text-lg text-center  cursor-pointer hover:bg-gray-300 font-bold ${selectedTab === 'reviews' && 'bg-gray-300'} w-1/2`}
+                className={`px-4 py-4 text-black text-lg text-center cursor-pointer font-bold ${selectedTab === 'reviews' ? 'bg-white' : 'bg-gray-300 hover:bg-gray-100 duration-300'} w-1/2`}
                 onClick={() => setSelectedTab('reviews')}
               >
                 리뷰
@@ -257,7 +257,7 @@ function ProductDetails() {
                   <img src={product?.infoUrl} alt="상세 정보" />
                 </div>}
               </div>
-              {selectedTab === "reviews" && <ProductReviews />}
+              {selectedTab === "reviews" && <ProductReviews productId={productId} />}
             </div>
           </div>
         </div>

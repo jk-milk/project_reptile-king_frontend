@@ -25,3 +25,13 @@ export interface ProductItem {
   selected: boolean;
   delivery_fee: number;
 }
+
+export interface Review {
+  id: number;
+  user_profile_url: string;
+  user_name: string;
+  stars: number;
+  created_at: string;
+  img_url?: string;
+  content: string;
+}
