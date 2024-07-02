@@ -104,14 +104,14 @@ function ProductDetails() {
       };
 
       await db.add('cart', productWithPrices);
-      console.log('상품이 장바구니에 추가되었습니다.');
+      console.log('商品がかごに追加されました。');
     } catch (error) {
       console.error('장바구니에 상품을 추가하는 중 에러가 발생했습니다:', error);
     }
   };
 
   const handleCartClick = async () => {
-    const addToCart = window.confirm("해당 상품을 장바구니에 추가하시겠습니까?");
+    const addToCart = window.confirm("この商品をかごに追加しますか？");
     if (addToCart && product) {
       try {
         // 이미 상품 정보가 로드되었으므로 다시 서버에 요청하지 않고 product 변수를 사용합니다.
@@ -135,7 +135,7 @@ function ProductDetails() {
   // 상품 구매
   const handlePayClick = () => {
     const adjustedPrice = quantity * (product?.price || 0);
-    const confirmation = window.confirm("해당 상품을 구매하시겠습니까?");
+    const confirmation = window.confirm("この商品を購入しますか？");
 
     if (confirmation) {
       window.location.href = `/market/pay/${productId}?price=${adjustedPrice}&quantity=${quantity}`;
@@ -146,7 +146,7 @@ function ProductDetails() {
     <>
       {/* 카테고리 표시 */}
       <div className="pt-12 pb-10 mx-auto max-w-screen-lg">
-        <p className="text-xl text-white font-bold mb-4">카테고리</p>
+        <p className="text-xl text-white font-bold mb-4">ジャンル</p>
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
             <Link
@@ -183,11 +183,11 @@ function ProductDetails() {
                   <span className="ml-1">({product.reviewCount})</span>
                 </div>
                 {product.price && (
-                  <div className="text-lg font-bold mb-1">{product.price.toLocaleString()}원</div>
+                  <div className="text-lg font-bold mb-1">{product.price.toLocaleString()}円</div>
                 )}
                 <div className="flex justify-between">
-                  <div className="text-lg font-bold">배송비</div>
-                  <div className="text-lg">{product.delivery_fee.toLocaleString()}원</div>
+                  <div className="text-lg font-bold">送料</div>
+                  <div className="text-lg">{product.delivery_fee.toLocaleString()}円</div>
                 </div>
 
                 <hr className="border-gray-400 my-3" />
@@ -202,15 +202,15 @@ function ProductDetails() {
                       <IoMdAdd size={16} />
                     </button>
                   </div>
-                  <div className="text-xl font-bold">{(quantity * product.price).toLocaleString()}원</div>
+                  <div className="text-xl font-bold">{(quantity * product.price).toLocaleString()}円</div>
                 </div>
                 <div className="flex items-center justify-between mt-6">
-                  <div className="font-bold">주문수량</div>
-                  <div>{quantity}개</div>
+                  <div className="font-bold">数量</div>
+                  <div>{quantity}個</div>
                 </div>
                 <div className="flex items-center justify-between mt-1">
-                  <div className="font-bold">총 상품 금액 <span className="text-sm text-gray-500 font-thin">(상품금액 + 배송비)</span></div>
-                  <div>{(quantity * product.price + product.delivery_fee).toLocaleString()}원</div>
+                  <div className="font-bold">総商品金額 <span className="text-sm text-gray-500 font-thin">(商品金額+送料)</span></div>
+                  <div>{(quantity * product.price + product.delivery_fee).toLocaleString()}円</div>
                 </div>
               </div>
             )}
@@ -218,11 +218,11 @@ function ProductDetails() {
             <div className="mt-8 grid grid-cols-2 gap-4">
               <button className="bg-pink-600 hover:bg-pink-400 text-white font-bold py-3 rounded-lg flex items-center justify-center transition duration-300 ease-in-out" onClick={handlePayClick}>
                 <BiSolidCart size={24} className="mr-2" />
-                구매하기
+                購入手続きへ
               </button>
               <button className="bg-gray-600 hover:bg-gray-400 text-white font-bold py-3 rounded-lg flex items-center justify-center transition duration-300 ease-in-out" onClick={handleCartClick}>
                 <PiBasketFill size={24} className="mr-2" />
-                장바구니
+                商品をかごに追加
               </button>
             </div>
           </div>
@@ -238,14 +238,14 @@ function ProductDetails() {
                 className={`px-4 py-4 text-black text-lg text-center cursor-pointer font-bold ${selectedTab === 'details' ? 'bg-white' : 'bg-gray-300 hover:bg-gray-100 duration-300'} w-1/2`}
                 onClick={() => setSelectedTab('details')}
               >
-                상세정보
+                商品詳細
               </li>
               {/* 상품평 탭 */}
               <li
                 className={`px-4 py-4 text-black text-lg text-center cursor-pointer font-bold ${selectedTab === 'reviews' ? 'bg-white' : 'bg-gray-300 hover:bg-gray-100 duration-300'} w-1/2`}
                 onClick={() => setSelectedTab('reviews')}
               >
-                리뷰
+                レビュー
               </li>
             </ul>
           </div>

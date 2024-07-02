@@ -122,7 +122,7 @@ const Product: React.FC = () => {
   return (
     <div className="pt-12 pb-10 mx-auto max-w-screen-lg">
       <div className="mb-20">
-        <p className="text-xl text-white font-bold mb-4">카테고리</p>
+        <p className="text-xl text-white font-bold mb-4">ジャンル</p>
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
             <Link
@@ -142,17 +142,17 @@ const Product: React.FC = () => {
       <p className="text-3xl text-white font-bold flex justify-center pb-10">{categoryName}</p>
       <div className="flex justify-between items-center mb-10">
         <div>
-          <p className="text-xl text-white">총 <span className="font-bold">{totalProducts.length}</span>개의 상품이 있습니다.</p>
+          <p className="text-xl text-white">合計 <span className="font-bold">{totalProducts.length}</span>件の商品があります。</p>
         </div>
         <ReactSelect
           className="w-40"
-          value={sortOption ? { value: sortOption, label: sortOption === 'latest' ? '최신순' : sortOption === 'lowPrice' ? '낮은 가격순' : '높은 가격순' } : null}
+          value={sortOption ? { value: sortOption, label: sortOption === 'latest' ? '新着順' : sortOption === 'lowPrice' ? '安い順(価格)' : '高い順(価格)' } : null}
           onChange={(selectedOption) => handleSortOptionChange(selectedOption ? selectedOption.value : 'latest')}
           options={[
-            { value: 'latest', label: '최신순' },
-            { value: 'lowPrice', label: '낮은 가격순' },
-            { value: 'highPrice', label: '높은 가격순' },
-            { value: 'highReview', label: '리뷰순' }
+            { value: 'latest', label: '新着順' },
+            { value: 'lowPrice', label: '安い順(価格)' },
+            { value: 'highPrice', label: '高い順(価格)' },
+            { value: 'highReview', label: 'レビュー件数順' }
           ]}
         />
       </div>
@@ -164,7 +164,7 @@ const Product: React.FC = () => {
               <img src={product.imageUrl} alt={product.name} className="w-56 h-72 object-cover mb-2" />
               <div className="text-center">
                 <h3 className="text-white mb-1 font-bold">{product.name}</h3>
-                <p className="text-white">{product.price.toLocaleString()}원</p>
+                <p className="text-white">{product.price.toLocaleString()}円</p>
                 <div className="flex items-center justify-center">
                   <StarRating rating={product.rating} />
                   <span className="text-white ml-1">({product.reviewCount})</span>

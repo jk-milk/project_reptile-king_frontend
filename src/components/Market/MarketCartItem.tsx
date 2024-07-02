@@ -50,7 +50,7 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
   };
 
   const handleDelete = async () => {
-    const isConfirmed = window.confirm('선택하신 상품을 장바구니에서 삭제하시겠습니까?');
+    const isConfirmed = window.confirm('選択した商品をカートから削除しますか？');
     if (isConfirmed) {
       // 화면에서 상품 삭제
       onDelete(product.id);
@@ -105,10 +105,10 @@ const MarketCartItem: React.FC<MarketCartItemProps> = ({ product, checked, setCh
             <IoMdAdd size={16} />
           </button>
         </div>
-        <div className="text-xl text-white font-bold">{calculatePrice().toLocaleString()}원</div>
+        <div className="text-xl text-white font-bold">{calculatePrice().toLocaleString()}円</div>
       </div>
       <button onClick={handleDelete} className="ml-auto bg-yellow-400 text-gray-700 font-bold p-2 rounded-full hover:bg-yellow-200 transition-colors duration-200 focus:outline-none">
-        삭제
+      削除
       </button>
     </div>
   );

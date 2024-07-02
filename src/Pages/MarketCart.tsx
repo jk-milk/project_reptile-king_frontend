@@ -123,7 +123,7 @@ function MarketCart() {
 
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-xl min-h-screen">
-      <div className="text-white font-bold text-4xl pb-5">장바구니</div>
+      <div className="text-white font-bold text-4xl pb-5">買い物かご</div>
       <div className="grid grid-cols-12 gap-4">
 
         <div className="col-span-8">
@@ -135,7 +135,7 @@ function MarketCart() {
                 checked={selectAll}
                 onChange={handleSelectAll}
               />
-              <div className="flex-1 text-left text-xl text-white font-bold">전체선택</div>
+              <div className="flex-1 text-left text-xl text-white font-bold">すべて選択</div>
             </div>
             <div className="border-lime-300 border-b"></div>
             {cartItems.map((product) => (
@@ -158,21 +158,21 @@ function MarketCart() {
           <div className="bg-green-700 rounded-lg shadow-md border-2 border-lime-300 p-4">
             <div className="px-6 py-4">
               <div className="flex justify-between items-center mb-4">
-                <div className="text-white text-2xl">상품금액</div>
-                <div className="text-white text-2xl font-bold">{calculateTotalPrice().toLocaleString()}원</div>
+                <div className="text-white text-2xl">商品金額</div>
+                <div className="text-white text-2xl font-bold">{calculateTotalPrice().toLocaleString()}円</div>
               </div>
               <div className="flex justify-between items-center mb-4">
-                <div className="text-white text-2xl">배송비</div>
-                <div className="text-white text-2xl font-bold">{totalDeliveryFee.toLocaleString()}원</div>
+                <div className="text-white text-2xl">送料</div>
+                <div className="text-white text-2xl font-bold">{totalDeliveryFee.toLocaleString()}円</div>
               </div>
               <div className="border-lime-300 border-b mb-4"></div>
               <div className="flex justify-between items-center">
-                <div className="text-white text-2xl">주문금액</div>
-                <div className="text-white text-2xl font-bold">{calculateOrderTotal().toLocaleString()}원</div>
+                <div className="text-white text-2xl">注文金額</div>
+                <div className="text-white text-2xl font-bold">{calculateOrderTotal().toLocaleString()}円</div>
               </div>
             </div>
           </div>
-          <button className="bg-pink-700 hover:bg-pink-900 border-2 text-white font-bold text-2xl py-4 rounded-lg mt-4 w-full" onClick={handlePayClick}>바로구매</button>
+          <button className="bg-pink-700 hover:bg-pink-900 border-2 text-white font-bold text-2xl py-4 rounded-lg mt-4 w-full" onClick={handlePayClick}>購入手続きへ</button>
         </div>
       </div>
     </div>
