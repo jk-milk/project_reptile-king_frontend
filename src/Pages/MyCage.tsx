@@ -126,24 +126,24 @@ function MyCage() {
     <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
       <div className="bg-white rounded px-5 py-4">
         <div className="flex justify-between items-center mb-3">
-          <div className="font-bold text-3xl">내 사육장</div>
+          <div className="font-bold text-3xl">私の飼育ケージ</div>
           <button
             onClick={handleAddCage}
             className="bg-green-600 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded transition duration-300"
           >
-            사육장 추가하기
+            飼育ケージを追加する
           </button>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {curCages === undefined ? (
-            <p>로딩 중...</p>
+            <p>ロード中...</p>
           ) : curCages === null ? (
             <div className="flex flex-col items-center justify-center col-span-full">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293H9.414a1 1 0 01-.707-.293L6.293 13.293A1 1 0 005.586 13H3" />
               </svg>
-              <p className="mt-2 text-lg text-gray-600">사육장이 없습니다.</p>
-              <p className="text-gray-500">사육장을 추가해 주세요!</p>
+              <p className="mt-2 text-lg text-gray-600">飼育ケージがありません。</p>
+              <p className="text-gray-500">飼育ケージを追加してください！</p>
             </div>
           ) :
             curCages.map((cage) => (
@@ -163,10 +163,10 @@ function MyCage() {
                   }
                   <div className="p-4">
                     <div className="text-lg font-semibold mb-2">{cage.name}</div>
-                    <div className="text-gray-600 mb-2">온도 : {cage.cur_temp}°C</div>
-                    <div className="text-gray-600 mb-2">습도 : {cage.cur_hum}%</div>
-                    <button className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
-                      사육장 상세보기
+                    <div className="text-gray-600 mb-2">温度 : {cage.cur_temp}°C</div>
+                    <div className="text-gray-600 mb-2">湿度 : {cage.cur_hum}%</div>
+                    <button className="bg-blue-500 hover:bg-blue-400 text-white text-sm font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
+                      飼育ケージの詳細を見る
                     </button>
                   </div>
                 </div>
@@ -174,15 +174,15 @@ function MyCage() {
             ))}
         </div>
         <div className="flex justify-between items-center mb-3 mt-24">
-          <div className="font-bold text-3xl">내 파충류</div>
+          <div className="font-bold text-3xl">マイ爬虫類</div>
           <button
             onClick={handleAddReptile}
             className="bg-green-600 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded transition duration-300"
           >
-            파충류 추가하기
+            爬虫類を追加する
           </button>
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-end mb-3">
           <label className="inline-flex items-center cursor-pointer">
             <input
               type="checkbox"
@@ -191,7 +191,7 @@ function MyCage() {
               className="sr-only peer"
             />
             <span className="me-3 text-sm font-medium text-green-900 dark:text-green-300">
-              {isChecked ? "現在お持ちの爬虫類" : "分譲済みの爬虫類"}
+              {isChecked ? "現在お持ちの爬虫類" : "譲渡済みの爬虫類"}
             </span>
             <div
               className={`relative w-11 h-6 bg-gray-200 peer-focus:outline-none dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 ${isChecked
@@ -203,14 +203,14 @@ function MyCage() {
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {reptiles === undefined ? (
-            <p>로딩 중...</p>
+            <p>ロード中...</p>
           ) : reptiles === null ? (
             <div className="col-span-full text-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
               </svg>
-              <p className="mt-2 text-gray-700">파충류가 없습니다.</p>
-              <p className="text-gray-600">파충류를 추가해 주세요!</p>
+              <p className="mt-2 text-gray-700">爬虫類がありません。</p>
+              <p className="text-gray-600">爬虫類を追加してください！</p>
             </div>
           ) : reptiles.map((reptile) => (
             <Link to={`/my-cage/reptile/${reptile.id}`} key={reptile.id} state={{ reptileSerialCode: reptile.serial_code }}>
@@ -231,10 +231,10 @@ function MyCage() {
                 <div className="p-4">
                   <div className="text-lg font-semibold mb-2">{reptile.name}</div>
                   <div className="text-gray-600 mb-2">{reptile.species}</div>
-                  <div className="text-gray-600 mb-2">나이 : {calculateAge(reptile.birth)}</div>
+                  <div className="text-gray-600 mb-2">年齢 : {calculateAge(reptile.birth)}</div>
                   <button
                     className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded mt-4 transition duration-300 w-full">
-                    파충류 상세보기
+                    爬虫類の詳細を見る
                   </button>
                 </div>
               </div>
