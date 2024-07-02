@@ -506,15 +506,15 @@ function MyCageDetail() {
 
             {showUploadPanel && (
               <div className="bg-white rounded-lg shadow-lg p-5 max-w-full mx-12 mb-12">
-                <div className="grid grid-cols-4 gap-4 mt-2">
-                  <div className="col-span-1 flex justify-center items-center text-2xl font-semibold">사진 첨부</div>
-                  <div className="col-span-3">
+                <div className="grid grid-cols-5 gap-4 mt-2">
+                  <div className="col-span-1 flex justify-center items-center text-2xl font-semibold">写真添付</div>
+                  <div className="col-span-4">
                     <button
                       className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded transition duration-300 disabled:bg-gray-200 disabled:border-gray-200 disabled:text-gray-500"
                       onClick={() => document.getElementById('imageUpload')?.click()}
                       disabled={cage.img_urls.length + uploadedImages.length >= 3}
                     >
-                      사진 첨부
+                      写真を貼る
                     </button>
                     <input
                       id="imageUpload"
@@ -525,13 +525,13 @@ function MyCageDetail() {
                       multiple
                     />
                     <span className="ml-6">{cage.img_urls.length + uploadedImages.length}/3</span>
-                    <span className="text-gray-400 text-sm ml-6">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
+                    <span className="text-gray-400 text-sm ml-6">写真は最大2MB以下のJPG、PNG、GIFファイルを3枚まで添付できます。</span>
                   </div>
-                  <div className="col-span-4 flex overflow-x-auto ml-20">
+                  <div className="col-span-5 flex overflow-x-auto ml-8">
                     {cage.img_urls.map((url, index) => (
                       <>
                         <div className="col-span-1"></div>
-                        <div className="col-span-3 flex mt-3">
+                        <div className="col-span-4 flex mt-3">
                           <ImageWithDeleteButton
                             key={`existing-${index}`}
                             src={url}
@@ -545,7 +545,7 @@ function MyCageDetail() {
                     {uploadedImages.map((image, index) => (
                       <>
                         <div className="col-span-1"></div>
-                        <div className="col-span-3 flex mt-3">
+                        <div className="col-span-4 flex mt-3">
                           <ImageWithDeleteButton
                             key={`uploaded-${index}`}
                             src={URL.createObjectURL(image)}
@@ -574,12 +574,12 @@ function MyCageDetail() {
 
             <TemHumChart data={avgTempHum} date={date} setDate={setDate} />
 
-            <div className="font-bold text-3xl mb-3">실시간 사육장 상태</div>
+            <div className="font-bold text-3xl mb-3">リアルタイム飼育ケージ状況</div>
             <hr className="border-t border-gray-400 mb-6" />
             <div className="bg-gray-300 mx-auto max-w-4xl h-[504px] rounded-md flex justify-center items-center relative" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
               {showLive ? (
                 // 실시간 사육장 상태 표시
-                <img src={liveURL} alt="실시간 사육장 상태" className="h-full w-full object-cover rounded-md" />
+                <img src={liveURL} alt="リアルタイム飼育ケージ状況" className="h-full w-full object-cover rounded-md" />
               ) : (
                 // 재생 아이콘 표시
                 <FaRegCirclePlay className="text-8xl text-gray-700 hover:cursor-pointer" onClick={() => setShowLive(true)} />
@@ -595,7 +595,7 @@ function MyCageDetail() {
                 onClick={() => { navigate(`/my-cage/${id}/video`) }}
                 className="border-blue-500 border-2 hover:bg-blue-300 text-blue-500 font-semibold py-1 px-4 rounded transition duration-300"
               >
-                이전 영상 확인하러 가기
+                前の動画を見る
               </button>
             </div>
 
@@ -604,13 +604,13 @@ function MyCageDetail() {
                 onClick={handleDeleteCage}
                 className="border-red-500 border-2 hover:bg-red-200 text-red-500 font-semibold py-2 px-4 rounded transition duration-300"
               >
-                삭제
+                削除
               </button>
               <button
                 onClick={handleNavigation}
                 className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-semibold py-2 px-4 rounded transition duration-300"
               >
-                목록으로 돌아가기
+                リストに戻る
               </button>
               <button
                 onClick={handleSaveChanges}
@@ -620,7 +620,7 @@ function MyCageDetail() {
                   : "border-gray-500 text-gray-500 bg-gray-200 cursor-not-allowed" // 변경 사항이 없을 때
                   }`}
               >
-                저장
+                セーブ
               </button>
             </div>
 
@@ -630,7 +630,7 @@ function MyCageDetail() {
         <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
           <div className="bg-white rounded-lg shadow-md px-5 py-4">
             <h1 className="text-center">
-              Loading...
+              ロード中...
             </h1>
           </div>
         </div>

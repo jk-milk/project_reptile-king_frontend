@@ -44,7 +44,7 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
     return (
       <>
         <div className="flex justify-between mb-3">
-          <div className="font-bold text-3xl">사육장 온습도 현황</div>
+          <div className="font-bold text-3xl">飼育ケージの温湿度状況</div>
           <input
             type="date"
             value={date}
@@ -62,14 +62,14 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
             theme={VictoryTheme.material}
           >
             <VictoryLabel
-              text="온도 (°C)"
+              text="温度 (°C)"
               x={35}
               y={30}
               textAnchor="middle"
               style={{ fontSize: 9 }}
             />
             <VictoryLabel
-              text="습도 (%)"
+              text="湿度 (%)"
               x={310}
               y={30}
               textAnchor="middle"
@@ -96,7 +96,7 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
             />
             <VictoryAxis
               crossAxis
-              label="시간"
+              label="時間"
               tickValues={oddNumbers} // 0을 포함한 홀수 배열
               style={{
                 // axis: {stroke: 'transparent'},
@@ -106,7 +106,7 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
               }}
             />
             <VictoryLabel
-              text="데이터가 없습니다."
+              text="データがありません。"
               x={170} // 차트 중앙에 위치하도록 조정
               y={100}
               textAnchor="middle"
@@ -124,8 +124,8 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
               }}
               // symbolSpacer={5} // 범례 심볼과 텍스트 사이의 간격 조절
               data={[
-                { name: "습도", symbol: { fill: "#c43a31", type: "square", size: 4 } },
-                { name: "온도", symbol: { fill: "#0077b6", type: "square", size: 4 } },
+                { name: "湿度", symbol: { fill: "#c43a31", type: "square", size: 4 } },
+                { name: "温度", symbol: { fill: "#0077b6", type: "square", size: 4 } },
               ]}
             />
           </VictoryChart>
@@ -142,20 +142,20 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
   const temperatureData = completeData.map((item) => ({
     x: item.hour,
     y: item.avgtemp !== null ? item.avgtemp : null,
-    label: item.avgtemp !== null ? `온도: ${item.avgtemp}°C` : undefined
+    label: item.avgtemp !== null ? `温度: ${item.avgtemp}°C` : undefined
   }));
 
   const humidityData = completeData.map((item) => ({
     x: item.hour,
     y: item.avghum !== null ? item.avghum : null,
-    label: item.avghum !== null ? `습도: ${item.avghum}%` : undefined
+    label: item.avghum !== null ? `湿度: ${item.avghum}%` : undefined
   }));
 
   // 데이터가 있는 경우
   return (
     <>
       <div className="flex justify-between mb-3">
-        <div className="font-bold text-3xl">사육장 온습도 현황</div>
+        <div className="font-bold text-3xl">飼育ケージの温湿度状況</div>
         <input
           type="date"
           value={date}
@@ -178,14 +178,14 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
           style={{ fontSize: 10 }}
         /> */}
         <VictoryLabel
-          text="온도 (°C)"
+          text="温度 (°C)"
           x={35}
           y={30}
           textAnchor="middle"
           style={{ fontSize: 9 }}
         />
         <VictoryLabel
-          text="습도 (%)"
+          text="湿度 (%)"
           x={310}
           y={30}
           textAnchor="middle"
@@ -212,7 +212,7 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
         />
         <VictoryAxis
           crossAxis
-          label="시간"
+          label="時間"
           tickValues={oddNumbers} // 0을 포함한 홀수 배열
           style={{
             // axis: {stroke: 'transparent'},
@@ -249,8 +249,8 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
           }}
           // symbolSpacer={5} // 범례 심볼과 텍스트 사이의 간격 조절
           data={[
-            { name: "습도", symbol: { fill: "#c43a31", type: "square", size: 4 } },
-            { name: "온도", symbol: { fill: "#0077b6", type: "square", size: 4 } },
+            { name: "湿度", symbol: { fill: "#c43a31", type: "square", size: 4 } },
+            { name: "温度", symbol: { fill: "#0077b6", type: "square", size: 4 } },
           ]}
         />
       </VictoryChart>
