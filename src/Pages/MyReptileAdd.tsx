@@ -23,7 +23,7 @@ function MyReptileAdd() {
         const file = files[i];
         const extension = file.name.split('.').pop()?.toLowerCase();
         if (extension && !['jpg', 'jpeg', 'png', 'gif'].includes(extension)) {
-          alert('JPG, PNG, GIF 파일만 업로드할 수 있습니다.');
+          alert('JPG、PNG、GIFファイルのみアップロードできます。');
           return;
         }
       }
@@ -37,26 +37,26 @@ function MyReptileAdd() {
   };
 
   const handleCancel = () => {
-    const confirmSubmit = confirm('파충류 등록을 취소하시겠습니까?');
+    const confirmSubmit = confirm('爬虫類の登録をキャンセルしますか？');
     if (confirmSubmit)
       navigate(-1);
   };
 
   const handleSubmit = async () => {
     if (!reptileName) {
-      alert("이름을 입력해 주세요!")
+      alert("名前を入力してください！")
       return;
     }
     if (!species) {
-      alert("종을 입력해 주세요!")
+      alert("種類を入力してください！")
       return;
     }
     if (!gender) {
-      alert("성별을 선택해 주세요!")
+      alert("性別を選択してください！")
       return;
     }
 
-    const confirmSubmit = confirm('파충류 등록을 완료하시겠습니까?');
+    const confirmSubmit = confirm('爬虫類登録を完了しますか？');
 
     if (confirmSubmit) {
       const formData = new FormData();
@@ -76,7 +76,7 @@ function MyReptileAdd() {
         });
         console.log(response);
 
-        alert('파충류가 성공적으로 등록되었습니다.');
+        alert('爬虫類の登録に成功しました。');
         if (cage) {
           const cageFormData = new FormData();
 
@@ -91,13 +91,13 @@ function MyReptileAdd() {
             console.log(cageResponse);
           } catch (error) {
             console.error(error);
-            alert('사육장에 파충류 등록 실패')
+            alert('飼育ケージへの爬虫類登録に失敗')
           }
         }
         navigate(-1);
       } catch (error) {
         console.error(error);
-        alert('파충류 등록에 실패했습니다.');
+        alert('爬虫類の登録に失敗しました。');
       }
     }
   };
@@ -105,29 +105,29 @@ function MyReptileAdd() {
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
       <div className="bg-white rounded-lg shadow-md px-5 py-4">
-        <div className="font-bold text-3xl mb-3">파충류 등록</div>
+        <div className="font-bold text-3xl mb-3">爬虫類登録</div>
         <div className="grid grid-cols-4 gap-4 mt-2">
           <div className="text-lg col-span-1 flex justify-center items-center">
-            이름<span className="text-red-500 ml-1">*</span>
+            名前<span className="text-red-500 ml-1">*</span>
           </div>
           <input
             type="text"
             className="col-span-3 p-2 border border-gray-300 rounded"
-            placeholder="파충류 이름을 입력해 주세요..."
+            placeholder="爬虫類の名前を入力してください..."
             onChange={(e) => setReptileName(e.target.value)}
           />
 
           <div className="text-lg col-span-1 flex justify-center items-center">
-            종<span className="text-red-500 ml-1">*</span>
+            種類<span className="text-red-500 ml-1">*</span>
           </div>
           <input
             type="text"
             className="col-span-3 p-2 border border-gray-300 rounded"
-            placeholder="파충류 종류를 입력해 주세요..."
+            placeholder="爬虫類の種類を入力してください..."
             onChange={(e) => setSpecies(e.target.value)}
           ></input>
 
-          <div className="text-lg col-span-1 flex justify-center items-center">생년월일</div>
+          <div className="text-lg col-span-1 flex justify-center items-center">生年月日</div>
           <input
             type="date"
             value={birth}
@@ -136,7 +136,7 @@ function MyReptileAdd() {
           ></input>
 
           <div className="text-lg col-span-1 flex justify-center items-center">
-            성별<span className="text-red-500 ml-1">*</span>
+            性別<span className="text-red-500 ml-1">*</span>
           </div>
           <div className="col-span-3">
             <div className="flex">
@@ -165,14 +165,14 @@ function MyReptileAdd() {
             </div>
           </div>
 
-          <div className="text-lg col-span-1 flex justify-center items-center">사진 첨부</div>
+          <div className="text-lg col-span-1 flex justify-center items-center">写真添付</div>
           <div className="col-span-3">
             <button
               className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded transition duration-300"
               onClick={() => document.getElementById('imageUpload')?.click()}
               disabled={uploadedImages.length >= 3}
             >
-              사진 첨부
+              写真を貼る
             </button>
             <input
               id="imageUpload"
@@ -183,7 +183,7 @@ function MyReptileAdd() {
               multiple
             />
             <span className="ml-6">{uploadedImages.length}/3</span>
-            <span className="text-gray-400 text-sm ml-6">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
+            <span className="text-gray-400 text-sm ml-6">写真は最大2MB以下のJPG、PNG、GIFファイルを3枚まで添付できます。</span>
           </div>
 
           {uploadedImages.length > 0 && (
@@ -207,13 +207,13 @@ function MyReptileAdd() {
             className="hover:bg-red-200 text-red-500 border-red-500 border-2 font-bold py-1 px-4 rounded mr-6 self-center transition duration-300"
             onClick={handleCancel}
           >
-            취소
+            キャンセル
           </button>
           <button
             className="hover:bg-blue-200 border-blue-500 border-2 text-blue-500 font-bold py-1 px-4 rounded self-center transition duration-300"
             onClick={handleSubmit}
           >
-            등록
+            登録
           </button>
         </div>
       </div>

@@ -174,7 +174,7 @@ function MyCageAdd() {
                 onClick={() => document.getElementById('imageUpload')?.click()}
                 disabled={uploadedImages.length >= 3}
               >
-                写真を張る
+                写真を貼る
               </button>
               <input
                 id="imageUpload"
