@@ -14,7 +14,7 @@ export function calculateAge(birth: string | undefined) {
 
   if (age > 0) {
     // 나이가 1살 이상일 때
-    return `${age}살`;
+    return `${age}歳`;
   } else {
     // 나이가 1살 미만일 경우
     let month = (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate.getMonth());
@@ -22,12 +22,12 @@ export function calculateAge(birth: string | undefined) {
       month--;
     }
     if (month > 0) {
-      return `${month}개월`;
+      return `${month}ヶ月`;
     } else {
       // 1개월 미만일 경우
       const oneDay = 1000 * 60 * 60 * 24; // 하루 -> 밀리초 변환
       const days = Math.floor((today.getTime() - birthDate.getTime()) / oneDay);
-      return `${days}일`;
+      return `${days}日`;
     }
   }
 }

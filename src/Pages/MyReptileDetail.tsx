@@ -410,7 +410,7 @@ function MyReptileDetail() {
                     </li>
                     <li className="flex justify-between items-center border-b border-gray-200 pb-4">
                       <span>脱皮サイクル</span>
-                      <span>3-4 개월</span>
+                      <span>3-4ヶ月</span>
                     </li>
                     <li className="flex justify-between items-center pb-4">
                       <span>脱皮予定日</span>
