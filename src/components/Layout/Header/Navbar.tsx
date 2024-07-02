@@ -179,7 +179,7 @@ function Navbar() {
               </div>
             ) : (
               // 로그인 하지 않은 상태
-              <Link to="/login" className="font-bold text-lg p-2 mr-4 hover:text-green-800 transition-colors duration-300 cursor-pointer">로그인</Link>
+              <Link to="/login" className="font-bold text-lg p-2 mr-4 hover:text-green-800 transition-colors duration-300 cursor-pointer">LOGIN</Link>
             )}
           </div>
         </div>

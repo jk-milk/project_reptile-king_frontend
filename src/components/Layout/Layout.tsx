@@ -5,11 +5,11 @@ import Banner from './Header/Banner'
 import { useLocation } from 'react-router-dom'
 
 const pageTitles: { [key: string]: string[] } = {
-  "board": ["파충류 이모저모", "주인님 같이 놀아요!"],
-  "signup": ["파충KING", "회원가입"],
-  "login": ["파충KING", "로그인"],
-  "reset-password": ["파충KING", "비밀번호 찾기"],
-  "mypage": ["마이페이지"],
+  "board": ["爬虫類のあれこれ", "一緒に遊びましょう！"],
+  "signup": ["ハチュウキング", "会員登録"],
+  "login": ["ハチュウキング", "ログイン"],
+  "reset-password": ["ハチュウキング", "パスワードの再設定"],
+  "mypage": ["マイページ"],
   "mypage/order": ["주문내역"],
   "mypage/order/detail": ["주문내역"],
   "mypage/order/contact": ["취소/반품/교환/환불내역"],
