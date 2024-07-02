@@ -41,9 +41,9 @@ const NotificationDropdown = () => {
     <div className="border border-gray-200 top-8 absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg z-20 max-h-64 overflow-auto">
       <div className="px-4 py-3 text-lg font-bold text-black border-b border-gray-200">
         <div className="flex items-center">
-          <span>알림</span>
+          <span>通知</span>
           <span className="ml-auto text-sm font-normal text-gray-500">
-            {alarms.filter((alarm) => !alarm.readed).length} 개 미확인
+            {alarms.filter((alarm) => !alarm.readed).length}個 未確認
           </span>
         </div>
       </div>
