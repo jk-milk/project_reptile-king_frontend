@@ -50,16 +50,16 @@ function MyReptileDetail() {
   }
 
   const handleDelete = async () => {
-    const check = confirm("정말 삭제하시겠습니까?");
+    const check = confirm("本当に削除しますか？");
     if (check) {
       try {
         const response = await apiWithAuth.delete(API + "reptiles/" + id);
         console.log(response);
-        alert("삭제되었습니다.")
+        alert("削除完了！")
         navigate("/my-cage");
       } catch (error) {
         console.error(error);
-        alert("파충류 삭제 중 에러! 다시 시도해 주세요!")
+        alert("爬虫類の削除中にエラー！もう一度お試しください！")
       }
     }
   }
@@ -97,7 +97,7 @@ function MyReptileDetail() {
   };
 
   const handleSaveChanges = async () => {
-    const confirmSubmit = confirm('파충류 수정을 완료하시겠습니까?');
+    const confirmSubmit = confirm('爬虫類の修正を完了しますか？');
     if (confirmSubmit) {
       const formData = new FormData();
 
@@ -123,11 +123,11 @@ function MyReptileDetail() {
         for (const pair of formData.entries()) {
           console.log(`${pair[0]}: ${pair[1]}`);
         }
-        alert('파충류가 성공적으로 수정되었습니다.');
+        alert('爬虫類修正完了！');
         navigate('/my-cage');
       } catch (error) {
         console.error(error);
-        alert('파충류 수정에 실패했습니다.');
+        alert('爬虫類の修正に失敗しました。');
       }
     }
   };
@@ -208,7 +208,7 @@ function MyReptileDetail() {
       setError('');
     } catch (error) {
       setFilteredUsers([]);
-      setError('검색 결과가 없습니다.');
+      setError('データが見つかりませんでした。');
     }
   };
 
@@ -221,17 +221,17 @@ function MyReptileDetail() {
         reptileId: reptile?.id,
       });
       console.log(selectedUser, isChecked, reptile?.id);
-      alert('분양 대상자에게 알림을 보냈습니다.');
+      alert('対象者に通知を送りました。');
       toggleAdoptModal();
     } catch (err) {
-      alert('분양 정보를 전송하는 데 실패했습니다.');
+      alert('情報の送信に失敗しました。');
     }
   };
 
   // 목록으로 돌아가기
   const handleNavigation = () => {
     if (isEdited) {
-      const confirmLeave = confirm("변경 사항을 저장하지 않고 나가시겠습니까?");
+      const confirmLeave = confirm("変更内容を保存せずに出ますか？");
       if (confirmLeave) {
         // 확인 - 이동
         navigate("/my-cage");
@@ -268,7 +268,7 @@ function MyReptileDetail() {
                     : "border-gray-500 text-gray-500 bg-gray-200 cursor-default" // 변경 사항이 없을 때
                     }`}
                 >
-                  저장
+                  セーブ
                 </button>
               </div>
             </div>
@@ -300,13 +300,12 @@ function MyReptileDetail() {
                       <SwiperSlide>
                         <img
                           src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/defaults/defaultReptileImage2.jpg' // 이미지가 없을 경우 디폴트 이미지 추가
-                          alt='파충류 기본 이미지'
+                          alt='爬虫類デフォルトイメージ'
                           className="w-full h-auto object-contain object-top rounded-lg"
                         />
                       </SwiperSlide>
                     )}
                   </Swiper>
-                  <span className="text-gray-400 text-sm ml-2.5">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
                   <div className="absolute right-0 bottom-5 p-2 z-10">
                     <label htmlFor="file-upload"
                       className="cursor-pointer text-4xl bg-white rounded-full p-3 shadow-lg inline-block"
@@ -319,26 +318,26 @@ function MyReptileDetail() {
               <div className="w-1/2">
                 <div className="bg-white rounded-lg shadow-md p-5 max-w-md mx-auto mb-6">
                   <div className="flex items-center justify-between mb-3">
-                    <div className="font-bold text-2xl">상세정보</div>
+                    <div className="font-bold text-2xl">詳細情報</div>
                     <button
                       onClick={toggleUserSelectModal}
                       className="border-blue-500 hover:bg-blue-300 text-blue-500 border-2 py-1 px-4 rounded font-semibold transition duration-300"
                     >
-                      분양
+                      里親探し
                     </button>
                   </div>
                   <hr className="border-t border-gray-400 mb-2" />
                   <div className="w-full mb-6">
                     <div className="flex">
-                      <div className="font-semibold text-xl w-1/6">이름</div>
-                      <div className="text-lg">{reptile?.name ? reptile.name : "미등록"}</div>
+                      <div className="font-semibold text-xl w-1/6">名前</div>
+                      <div className="text-lg">{reptile?.name ? reptile.name : "未登録"}</div>
                     </div>
                     <div className="flex">
-                      <div className="font-semibold text-xl w-1/6">종</div>
-                      <div className="text-lg">{reptile?.species ? reptile.species : "미등록"}</div>
+                      <div className="font-semibold text-xl w-1/6">種類</div>
+                      <div className="text-lg">{reptile?.species ? reptile.species : "未登録"}</div>
                     </div>
                     <div className="flex">
-                      <div className="font-semibold text-xl w-1/6">나이</div>
+                      <div className="font-semibold text-xl w-1/6">年齢</div>
                       <div className="text-lg">{calculateAge(reptile?.birth)}</div>
                     </div>
                   </div>
@@ -348,14 +347,14 @@ function MyReptileDetail() {
             {showUploadPanel && (
               <div className="bg-white rounded-lg shadow-lg p-5 max-w-full mx-12 mb-12">
                 <div className="grid grid-cols-4 gap-4 mt-2">
-                  <div className="col-span-1 flex justify-center items-center text-2xl font-semibold">사진 첨부</div>
+                  <div className="col-span-1 flex justify-center items-center text-2xl font-semibold">写真添付</div>
                   <div className="col-span-3">
                     <button
                       className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded transition duration-300 disabled:bg-gray-200 disabled:border-gray-200 disabled:text-gray-500"
                       onClick={() => document.getElementById('imageUpload')?.click()}
                       disabled={reptile.img_urls.length + uploadedImages.length >= 3}
                     >
-                      사진 첨부
+                      写真を貼る
                     </button>
                     <input
                       id="imageUpload"
@@ -366,7 +365,7 @@ function MyReptileDetail() {
                       multiple
                     />
                     <span className="ml-6">{reptile.img_urls.length + uploadedImages.length}/3</span>
-                    <span className="text-gray-400 text-sm ml-6">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
+                    <span className="text-gray-400 text-sm ml-6">写真は最大2MB以下のJPG、PNG、GIFファイルを3枚まで添付できます。</span>
                   </div>
                   <div className="col-span-4 flex overflow-x-auto ml-20">
                     {reptile.img_urls.map((url, index) => (
@@ -403,23 +402,23 @@ function MyReptileDetail() {
             <div className="flex mt-4 mb-12 items-start">
               <div className="w-1/2 pr-6">
                 <div className="bg-gray-100 rounded-lg shadow-md p-6">
-                  <h3 className="text-lg font-bold mb-4">탈피 정보</h3>
+                  <h3 className="text-lg font-bold mb-4">脱皮情報</h3>
                   <ul className="space-y-4">
                     <li className="flex justify-between items-center border-b border-gray-200 pb-4">
-                      <span>마지막 탈피일</span>
+                      <span>最終脱皮日</span>
                       <span>2023-05-15</span>
                     </li>
                     <li className="flex justify-between items-center border-b border-gray-200 pb-4">
-                      <span>탈피주기</span>
-                      <span>3-4 개월</span>
+                      <span>脱皮サイクル</span>
+                      <span>3-4ヶ月</span>
                     </li>
                     <li className="flex justify-between items-center pb-4">
-                      <span>예상 탈피일</span>
+                      <span>脱皮予定日</span>
                       <span>2023-08-15</span>
                     </li>
                   </ul>
                   <div className="mt-6 pl-4 border-l-4 border-gray-300">
-                    <p className="text-gray-500">탈피이력</p>
+                    <p className="text-gray-500">脱皮履歴</p>
                     <ul className="space-y-2 mt-2">
                       <li>2023-05-15</li>
                       <li>2022-12-01</li>
@@ -435,10 +434,10 @@ function MyReptileDetail() {
             {isUserSelectModalOpen && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                 <div className="bg-white rounded-lg p-8 shadow-lg max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
-                  <h2 className="text-2xl font-bold mb-4">사용자 선택</h2>
+                  <h2 className="text-2xl font-bold mb-4">ユーザー選択</h2>
                   <input
                     type="text"
-                    placeholder="닉네임 검색"
+                    placeholder="ニックネーム検索"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="mb-4 p-2 border rounded w-full"
@@ -448,7 +447,7 @@ function MyReptileDetail() {
                       onClick={handleSearch} 
                       className="border-blue-500 hover:bg-blue-300 text-blue-500 border-2 py-1 px-4 rounded font-semibold transition duration-300"
                     >
-                      검색
+                      検索
                     </button>
                   </div>
                   {error && <p className="text-red-500">{error}</p>}
@@ -468,7 +467,7 @@ function MyReptileDetail() {
                       onClick={toggleUserSelectModal}
                       className="mt-4 border-red-500 hover:bg-red-300 text-red-500 border-2 py-1 px-4 rounded font-semibold transition duration-300"
                     >
-                      닫기
+                      キャンセル
                     </button>
                   </div>
                 </div>
@@ -478,8 +477,8 @@ function MyReptileDetail() {
             {isAdoptModalOpen && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                 <div className="bg-white rounded-lg p-8 shadow-lg max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
-                  <h2 className="text-2xl font-bold mb-4">분양 정보</h2>
-                  <p>선택한 사용자: {selectedUser}</p>
+                  <h2 className="text-2xl font-bold mb-4">里親探しの情報</h2>
+                  <p>選んだユーザー: {selectedUser}</p>
                   <div className="my-4">
                     <label className="inline-flex items-center cursor-pointer">
                       <input
@@ -488,18 +487,18 @@ function MyReptileDetail() {
                         onChange={handleCheckboxChange}
                         className="form-checkbox w-6 h-6 text-blue-500 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                       />
-                      <span className="ml-2 text-gray-700">사육 일지 공개</span>
+                      <span className="ml-2 text-gray-700">飼育日誌公開</span>
                     </label>
                     <p className="mt-2 text-sm text-gray-600">
-                      사육 일지가 다음 분양 대상자에게 공개됩니다.
+                      飼育日誌は里親に公開されます。
                     </p>
                   </div>
                   <div className="mt-4 flex justify-end">
                     <button onClick={sendAdoptionInfo} className="border-blue-500 hover:bg-blue-300 text-blue-500 border-2 py-1 px-4 rounded font-semibold transition duration-300">
-                      확인
+                      送る
                     </button>
                     <button onClick={toggleAdoptModal} className="border-red-500 hover:bg-red-300 text-red-500 border-2 ml-4 py-1 px-4 rounded font-semibold transition duration-300">
-                      닫기
+                      キャンセル
                     </button>
                   </div>
                   
@@ -533,13 +532,13 @@ function MyReptileDetail() {
                 onClick={handleDelete}
                 className="border-red-500 border-2 hover:bg-red-200 text-red-500 font-semibold py-2 px-4 rounded transition duration-300"
               >
-                삭제
+                削除
               </button>
               <button
                 onClick={handleNavigation}
                 className="border-blue-500 border-2 hover:bg-blue-200 text-blue-500 font-semibold py-2 px-4 rounded transition duration-300"
               >
-                목록으로 돌아가기
+                リストに戻る
               </button>
               <button
                 onClick={handleSaveChanges}
@@ -549,7 +548,7 @@ function MyReptileDetail() {
                   : "border-gray-500 text-gray-500 bg-gray-200 cursor-not-allowed" // 변경 사항이 없을 때
                   }`}
               >
-                저장
+                セーブ
               </button>
             </div>
             
@@ -559,7 +558,7 @@ function MyReptileDetail() {
         <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
           <div className="bg-white rounded-lg shadow-md px-5 py-4">
             <h1 className="text-center">
-              Loading...
+              ロード中...
             </h1>
           </div>
         </div>

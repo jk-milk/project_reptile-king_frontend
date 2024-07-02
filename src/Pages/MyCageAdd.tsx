@@ -27,7 +27,7 @@ function MyCageAdd() {
         }
       } catch {
         console.error("서버 오류");
-        alert("서버 오류! 잠시 후 다시 시도해 주세요.");
+        alert("サーバーエラー！しばらくしてから再試行してください。");
       }
     };
 
@@ -41,7 +41,7 @@ function MyCageAdd() {
         const file = files[i];
         const extension = file.name.split('.').pop()?.toLowerCase();
         if (extension && !['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(extension)) {
-          alert('JPG, PNG, GIF, WEBP, SVG 파일만 업로드할 수 있습니다.');
+          alert('JPG、PNG、GIF、WEBP、SVGファイルのみアップロードできます。');
           return;
         }
       }
@@ -55,22 +55,22 @@ function MyCageAdd() {
   };
 
   const handleCancel = () => {
-    const confirmCancel = confirm('사육장 등록을 취소하시겠습니까?');
+    const confirmCancel = confirm('飼育ケージ登録をキャンセルしますか？');
     if (confirmCancel)
       navigate('/my-cage');
   };
 
   const handleSubmit = async () => {
     if (!cageName) {
-      alert("이름을 입력해 주세요!")
+      alert("名前を入力してください！")
       return;
     }
     if (!serialCode) {
-      alert("시리얼 코드를 입력해 주세요!")
+      alert("シリアルコードを入力してください！")
       return;
     }
 
-    const confirmSubmit = confirm('사육장 등록을 완료하시겠습니까?');
+    const confirmSubmit = confirm('飼育ケージ登録を完了しますか？');
     console.log(uploadedImages);
 
     if (confirmSubmit) {
@@ -95,11 +95,11 @@ function MyCageAdd() {
           console.log(`${pair[0]}: ${pair[1]}`);
         }
 
-        alert('사육장이 성공적으로 등록되었습니다.');
+        alert('飼育ケージの登録に成功しました。');
         navigate('/my-cage');
       } catch (error) {
         console.error(error);
-        alert('사육장 등록에 실패했습니다.');
+        alert('飼育場登録に失敗しました。 しばらくしてからもう一度お試しください。');
       }
     }
   };
@@ -108,38 +108,38 @@ function MyCageAdd() {
     <div>
       <div className="pt-10 pb-10 mx-auto max-w-screen-lg">
         <div className="bg-white rounded-lg shadow-md px-5 py-4">
-          <div className="font-bold text-3xl mb-3">사육장 등록</div>
+          <div className="font-bold text-3xl mb-3">飼育ケージ登録</div>
           <div className="grid grid-cols-4 gap-4 mt-2">
             <div className="text-lg col-span-1 flex justify-center items-center">
-              이름 <span className="text-red-500 ml-1">*</span>
+              名前 <span className="text-red-500 ml-1">*</span>
             </div>
             <input
               type="text"
               className="col-span-3 p-2 border border-gray-300 rounded"
-              placeholder="사육장 이름을 입력해 주세요..."
+              placeholder="名前を入力してください..."
               onChange={(e) => setCageName(e.target.value)}
               required
             />
 
             <div className="col-span-1 text-lg flex justify-center items-center">
-              파충류 선택
+              爬虫類選択
             </div>
             <div className="col-span-3">
 
               {reptiles === null ? (
                 // 로딩 중인 경우
-                <p className="w-fit h-10 p-2 border border-gray-300 rounded mb-2 text-center">로딩 중...</p>
+                <p className="w-fit h-10 p-2 border border-gray-300 rounded mb-2 text-center">ロード中...</p>
               ) : reptiles.length === 0 ? (
                 // 데이터가 없는 경우
                 <div className='flex h-10 mb-2'>
                   <div className="w-fit p-2 border border-gray-300 rounded text-center">
-                    <p>등록된 파충류가 없습니다.</p>
+                    <p>登録された爬虫類がありません。</p>
                   </div>
                   <button
                     onClick={() => navigate('/my-cage/reptile/add')}
                     className="ms-2 hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded"
                   >
-                    파충류 추가하기
+                    爬虫類を追加する
                   </button>
                 </div>
               ) : (
@@ -152,7 +152,7 @@ function MyCageAdd() {
                       console.log(event.target.value); // 선택된 값 출력
                     }}
                     className="w-1/6 h-10 p-2 border border-gray-300 rounded mb-2">
-                    <option value="" disabled>파충류 선택</option>
+                    <option value="" disabled>選択</option>
                     {reptiles.map((reptile) => (
                       <option key={reptile.id} value={reptile.serial_code}>{reptile.name}</option>
                     ))}
@@ -161,20 +161,20 @@ function MyCageAdd() {
                     onClick={() => navigate('/my-cage/reptile/add')}
                     className="ms-2 hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded transition duration-300"
                   >
-                    파충류 추가하기
+                    爬虫類を追加する
                   </button>
                 </div>
               )}
             </div>
 
-            <div className="col-span-1 flex justify-center items-center text-lg">사진 첨부</div>
+            <div className="col-span-1 flex justify-center items-center text-lg">写真添付</div>
             <div className="col-span-3">
               <button
                 className="hover:bg-blue-200 text-blue-500 border-2 border-blue-500 font-bold py-1 px-4 rounded transition duration-300"
                 onClick={() => document.getElementById('imageUpload')?.click()}
                 disabled={uploadedImages.length >= 3}
               >
-                사진 첨부
+                写真を貼る
               </button>
               <input
                 id="imageUpload"
@@ -185,7 +185,7 @@ function MyCageAdd() {
                 multiple
               />
               <span className="ml-6">{uploadedImages.length}/3</span>
-              <span className="text-gray-400 text-sm ml-6">사진은 최대 2MB 이하의 JPG, PNG, GIF 파일 3장까지 첨부 가능합니다.</span>
+              <span className="text-gray-400 text-sm ml-6">写真は最大2MB以下のJPG、PNG、GIFファイルを3枚まで添付できます。</span>
             </div>
 
             {uploadedImages.length > 0 && (
@@ -205,29 +205,29 @@ function MyCageAdd() {
             )}
 
             <div className="text-lg col-span-1 flex justify-center items-center">
-              시리얼 코드<span className="text-red-500 ml-1">*</span>
+              シリアルコード<span className="text-red-500 ml-1">*</span>
             </div>
             <input
               type="text"
               className="col-span-3 p-2 border border-gray-300 rounded"
-              placeholder="시리얼 코드를 입력해 주세요..."
+              placeholder="シリアルコードを入力してください..."
               value={serialCode}
               onChange={(e) => setSerialCode(e.target.value)}
             />
           </div>
 
-          <div className="flex justify-center mt-3">
+          <div className="flex justify-center mt-5">
             <button
               className="hover:bg-red-200 text-red-500 border-red-500 border-2 font-bold py-1 px-4 rounded mr-6 self-center transition duration-300"
               onClick={handleCancel}
             >
-              취소
+              キャンセル
             </button>
             <button
               className="hover:bg-blue-200 border-blue-500 border-2 text-blue-500 font-bold py-1 px-4 rounded self-center transition duration-300"
               onClick={handleSubmit}
             >
-              등록
+              登録
             </button>
           </div>
         </div>
