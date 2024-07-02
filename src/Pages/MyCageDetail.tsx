@@ -118,16 +118,16 @@ function MyCageDetail() {
   // }
 
   const handleDeleteCage = async () => {
-    const check = confirm("정말 삭제하시겠습니까?");
+    const check = confirm("本当に削除しますか？");
     if (check) {
       try {
         const response = await apiWithAuth.delete(API + "cages/" + id);
         console.log(response);
-        alert("삭제되었습니다.")
+        alert("削除完了！")
         navigate("/my-cage");
       } catch (error) {
         console.error(error);
-        alert("사육장 삭제 중 에러! 다시 시도해 주세요!");
+        alert("飼育場の削除中にエラー！もう一度お試しください！");
       }
     }
   }
@@ -174,7 +174,7 @@ function MyCageDetail() {
 
   // 설정 확인 함수
   const confirmSettings = () => {
-    alert(`온도: ${cage?.set_temp}°C, 습도: ${cage?.set_hum}% 설정됨`);
+    alert(`温度: ${cage?.set_temp}°C, 湿度: ${cage?.set_hum}% 設定完了！`);
   };
 
   // 이름만 업데이트
@@ -227,7 +227,7 @@ function MyCageDetail() {
 
   // 사육장 정보 수정(온습도 제외)
   const handleSaveChanges = async () => {
-    const confirmSubmit = confirm('사육장 수정을 완료하시겠습니까?');
+    const confirmSubmit = confirm('飼育ケージの修正を完了しますか？');
 
     if (confirmSubmit && cage) {
       const formData = new FormData();
@@ -261,20 +261,20 @@ function MyCageDetail() {
         for (const pair of response.config.data.entries()) {
           console.log(`${pair[0]}: ${pair[1]}`);
         }
-        alert('사육장이 성공적으로 수정되었습니다.');
+        alert('飼育ケージ修正完了！');
         // navigate('/my-cage');
         navigate(0);
         scrollTo(0, 0);
       } catch (error) {
         console.error(error);
-        alert('사육장 수정에 실패했습니다.');
+        alert('飼育ケージの修正に失敗しました。');
       }
     }
   };
 
   // 온습도 변경
   const handleSaveChangesTemHum = async () => {
-    const confirmSubmit = confirm('온습도 수정을 완료하시겠습니까?');
+    const confirmSubmit = confirm('温度・湿度を変更しますか？');
 
     if (confirmSubmit && cage) {
       try {
@@ -282,13 +282,13 @@ function MyCageDetail() {
         const tempHumResponse = await apiWithAuth.patch(`${API}cages/${id}/update-temperature-humidity`, { setTemp: cage.set_temp, setHum: cage.set_hum });
         console.log(tempHumResponse);
 
-        alert('온습도 변경이 완료되었습니다.');
+        alert('温湿度変更完了!');
         // navigate('/my-cage');
         navigate(0);
         scrollTo(0, 0);
       } catch (error) {
         console.error(error);
-        alert('온습도 변경에 실패했습니다.');
+        alert('温湿度変更に失敗しました。');
       }
     }
   };
@@ -296,7 +296,7 @@ function MyCageDetail() {
   // 목록으로 돌아가기
   const handleNavigation = () => {
     if (isEdited || isTemHumEdited) {
-      const confirmLeave = confirm("변경 사항을 저장하지 않고 나가시겠습니까?");
+      const confirmLeave = confirm("変更内容を保存せずに出ますか？");
       if (confirmLeave) {
         // 확인 - 이동
         navigate("/my-cage");
@@ -375,7 +375,7 @@ function MyCageDetail() {
                     <SwiperSlide>
                       <img
                         src='https://capstone-project-pachungking.s3.ap-northeast-2.amazonaws.com/images/defaults/defaultCageImage.jpg'
-                        alt='사육장 기본 이미지'
+                        alt='飼育ケージデフォルトイメージ'
                         className="w-full h-[504px] object-cover object-top"
                       />
                     </SwiperSlide>
