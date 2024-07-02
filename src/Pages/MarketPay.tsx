@@ -42,20 +42,27 @@ function MarketPay() {
       console.error('User ID not found');
       return;
     }
+  
     console.log('Fetching user info for user ID:', userId);
   
     const fetchUserInfo = async () => {
       try {
         const response = await apiWithAuth.get(`${API}users/${userId}`);
         console.log('User info fetched:', response.data);
-        setUserInfo(response.data);
+    
+        // Update userInfo state with fetched data
+        setUserInfo({
+          address: response.data.data.address,
+          name: response.data.data.name,
+          phone: response.data.data.phone
+        });
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
     };
   
     fetchUserInfo();
-  }, [userId]);
+  }, [userId]); 
 
   const handleDeliveryNoteChange = (selectedOption) => {
     setSelectedDeliveryNote(selectedOption.label);
@@ -122,7 +129,7 @@ function MarketPay() {
       const updatedOrderInfo = { ...orderInfo, deliveryNote: selectedDeliveryNote };
       localStorage.setItem('orderInfo', JSON.stringify(updatedOrderInfo));
       await sendPurchaseRequest();
-      const confirmation = window.confirm("해당 상품을 구매하시겠습니까?");
+      const confirmation = window.confirm("この商品を購入しますか？");
       if (confirmation) {
         if (product) {
           const productInfo = {
@@ -145,16 +152,16 @@ function MarketPay() {
 
   return (
     <div className="pt-10 pb-10 mx-auto max-w-screen-md">
-      <div className="text-white font-bold text-4xl pb-5">주문/결제</div>
+      <div className="text-white font-bold text-4xl pb-5">注文/決済</div>
 
       {/* 주문자 */}
       <div className="bg-green-700 rounded-xl border-2 border-lime-300">
         <div className="px-5 py-4">
-          <div className="text-white font-bold text-2xl mb-4">주문자</div>
+          <div className="text-white font-bold text-2xl mb-4">注文者</div>
           <table className="text-white text-xl">
             <tbody>
               <tr>
-                <td className="pb-4 pr-4">이름</td>
+                <td className="pb-4 pr-4">氏名</td>
                 <td>
                   <input
                     type="text"
@@ -166,7 +173,7 @@ function MarketPay() {
                 </td>
               </tr>
               <tr>
-                <td className="pb-4 pr-4">이메일</td>
+                <td className="pb-4 pr-4">メールアドレス</td>
                 <td>
                   <input
                     type="email"
@@ -189,7 +196,7 @@ function MarketPay() {
                 </td>
               </tr>
               <tr>
-                <td className="pb-4 pr-4">전화번호</td>
+                <td className="pb-4 pr-4">電話番号</td>
                 <td>
                   <input
                     type="tel"
@@ -201,18 +208,18 @@ function MarketPay() {
                 </td>
               </tr>
               <tr>
-                <td className="pb-1 pr-4">배송요청사항</td>
+                <td className="pb-1 pr-4">配送要請事項</td>
                 <td>
                   <Select
                     options={[
-                      { value: 'option1', label: '부재 시 경비실에 맡겨주세요.' },
-                      { value: 'option2', label: '부재 시 택배함에 넣어주세요.' },
-                      { value: 'option3', label: '부재 시 집 앞에 놔 주세요.' },
-                      { value: 'option4', label: '배송 전 연락 바랍니다.' },
-                      { value: 'option5', label: '파손의 위험이 있는 상품입니다. 배송 시 주의해 주세요.' },
+                      { value: 'option1', label: '不在時は警備室にお任せください。' },
+                      { value: 'option2', label: '不在時は宅配ボックスに入れてください。' },
+                      { value: 'option3', label: '不在時は家の前に置いてください。' },
+                      { value: 'option4', label: '配送前にご連絡ください。' },
+                      { value: 'option5', label: '破損の恐れがある商品です。発送の際はご注意ください。' },
                     ]}
                     className="border border-gray-300 rounded"
-                    placeholder="배송 시 요청사항을 선택해 주세요"
+                    placeholder="配送時のご要望を選択してください"
                     onChange={handleDeliveryNoteChange}
                     styles={{
                       menu: provided => ({
@@ -246,27 +253,33 @@ function MarketPay() {
       <div className="bg-green-700 rounded-xl border-2 border-lime-300 mt-5">
         <div className="px-5 py-4">
           <div className="flex justify-between mb-4">
-            <div className="text-white font-bold text-2xl">배송지</div>
+            <div className="text-white font-bold text-2xl">住所</div>
             <button className="bg-yellow-400 rounded-2xl hover:bg-yellow-200 transition-colors duration-200 focus:outline-none px-3 py-1">
               <Link to="/mypage">
-                <span className="text-gray-700 font-bold">변경</span>
+                <span className="text-gray-700 font-bold">変更</span>
               </Link>
             </button>
           </div>
           <div className="flex mb-2">
-            <div className="text-white font-bold text-2xl mr-3">{/* 배송지 이름 */}</div>
+            <div className="text-white font-bold text-2xl mr-3">
+            ユ・ジェギョン様のお届け先
+            </div>
+            {/* <div className="text-white font-bold text-2xl mr-3">
+              {userInfo.name}様のお届け先
+            </div> */}
           </div>
-          <div className="text-white text-xl">{userInfo.address}</div>
-          <div className="text-white text-xl">{userInfo.name} {userInfo.phone}</div>
-        </div>
+          {/* <div className="text-white text-xl">{userInfo.address}</div> */}
+          <div className="text-white text-xl">60, Geumsong-ro, Jicheon-meon, YEUNGJIN UNIVERSITY</div>
+          {/* <div className="text-white text-xl">{userInfo.name} {userInfo.phone}</div>        </div> */}
+          <div className="text-white text-xl">ユ・ジェギョン {userInfo.phone}</div>        </div>
       </div>
 
       {/* 주문상품 */}
       <div className="bg-green-700 rounded-xl border-2 border-lime-300 mt-5">
         <div className="px-5 py-4">
           <div className="flex justify-between">
-            <div className="text-white font-bold text-2xl mb-4">주문상품</div>
-            <div className="text-white text-xl">{quantity}건</div>
+            <div className="text-white font-bold text-2xl mb-4">注文商品</div>
+            <div className="text-white text-xl">{quantity}件</div>
           </div>
           {product && (
             <div className="bg-lime-950 rounded-xl px-5 py-4 border-2 border-lime-300">
@@ -275,8 +288,8 @@ function MarketPay() {
                   <img src={product.imageUrl} alt={product.name} className="rounded-md h-20 w-20 mr-4" />
                 </div>
                 <div>
-                  <div className="text-white text-xl font-bold">{product.name}</div>
-                  <div className="text-white text-xl">{(product.price * quantity).toLocaleString()}원</div>
+                  <div className="text-white text-xl font-bold  ml-4">{product.name}</div>
+                  <div className="text-white text-xl  ml-4">{(product.price * quantity).toLocaleString()}円</div>
                 </div>
               </div>
             </div>
@@ -287,21 +300,21 @@ function MarketPay() {
       {/* 상품금액 */}
       <div className="bg-green-700 rounded-xl border-2 border-lime-300 mt-5">
         <div className="px-5 py-4">
-          <div className="text-white font-bold text-2xl mb-4">결제금액</div>
+          <div className="text-white font-bold text-2xl mb-4">決済金額</div>
           {product && (
             <div>
               <div className="flex justify-between mb-3">
-                <div className="text-white text-xl">총 상품금액</div>
-                <div className="text-white font-bold text-xl">{(product.price * quantity).toLocaleString()}원</div>
+                <div className="text-white text-xl">商品合計金額</div>
+                <div className="text-white font-bold text-xl">{(product.price * quantity).toLocaleString()}円</div>
               </div>
               <div className="flex justify-between mb-5">
-                <div className="text-white text-xl">배송비</div>
-                <div className="text-white font-bold text-xl">{deliveryFee.toLocaleString()}원</div>
+                <div className="text-white text-xl">送料</div>
+                <div className="text-white font-bold text-xl">{deliveryFee.toLocaleString()}円</div>
               </div>
               <div className="border-lime-300 border-b"></div>
               <div className="flex justify-between pt-5">
-                <div className="text-white font-bold text-2xl">최종 결제금액</div>
-                <div className="text-white font-bold text-2xl">{(product.price * quantity + deliveryFee).toLocaleString()}원</div>
+                <div className="text-white font-bold text-2xl">お支払い総額</div>
+                <div className="text-white font-bold text-2xl">{(product.price * quantity + deliveryFee).toLocaleString()}円</div>
               </div>
             </div>
           )}
@@ -311,7 +324,7 @@ function MarketPay() {
       {/* 결제수단 */}
       <div className="bg-green-700 rounded-xl border-2 border-lime-300 mt-5">
         <div className="px-5 py-4">
-          <div className="text-white font-bold text-2xl mb-3">결제</div>
+          <div className="text-white font-bold text-2xl mb-3">決済</div>
           <img src="/src/assets/market_pay.png" alt="결제" />
         </div>
       </div>
@@ -322,7 +335,7 @@ function MarketPay() {
           onClick={handleOrder}
           className="bg-pink-700 text-white text-2xl font-bold py-3 px-9 rounded-lg hover:bg-pink-600 focus:outline-none focus:bg-pink-600"
         >
-          {(product && product.price) ? `${((product.price * quantity) + deliveryFee).toLocaleString()}원 결제하기` : '결제하기'}
+          {(product && product.price) ? `${((product.price * quantity) + deliveryFee).toLocaleString()}円決済する` : '決済する'}
         </button>
       </div>
     </div>

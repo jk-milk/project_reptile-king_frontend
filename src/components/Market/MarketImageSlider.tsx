@@ -22,9 +22,9 @@ const ImageSlider: React.FC = () => {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        <SwiperSlide><img src="market_banner.png" alt="Slide 1" /></SwiperSlide>
-        <SwiperSlide><img src="market_banner.png" alt="Slide 2" /></SwiperSlide>
-        <SwiperSlide><img src="market_banner.png" alt="Slide 3" /></SwiperSlide>
+        <SwiperSlide><img src="market_banner.jpg" alt="Slide 1" /></SwiperSlide>
+        <SwiperSlide><img src="market_banner.jpg" alt="Slide 2" /></SwiperSlide>
+        <SwiperSlide><img src="market_banner.jpg" alt="Slide 3" /></SwiperSlide>
       </Swiper>
       </div>
     </div>

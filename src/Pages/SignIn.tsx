@@ -52,14 +52,14 @@ function SignIn() {
       setEmail('');
       setPassword('');
       setLoginError('');
-      alert('로그인 성공!');
+      alert('ログインできました！');
       navigate("/");
 
     } catch (error) {
       if (isAxiosError(error)) { // error instanceof AxiosError 
-        setLoginError('이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.');
+        setLoginError('メールアドレスまたはパスワードを間違えて入力しました。 入力内容を再確認してください。');
         console.error(error);
-        alert('이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.');
+        alert('メールアドレスまたはパスワードを間違えて入力しました。 入力内容を再確認してください。');
       } else { 
         // error가 Error 타입이 아닐 때의 처리
         console.error(error);
@@ -73,7 +73,7 @@ function SignIn() {
       <div className="bg-[#284420] laptop:min-w-[30rem] laptop:max-w-[30rem] min-w-[35rem] max-w-[35rem] p-10 rounded-md">
         <form onSubmit={loginHandler}>
           <div className="mb-5">
-            <label htmlFor="email" className="block text-white mb-2">이메일</label>
+            <label htmlFor="email" className="block text-white mb-2">メールアドレス</label>
             <input
               id="email"
               name="email"
@@ -85,7 +85,7 @@ function SignIn() {
             />
           </div>
           <div className="mb-5">
-            <label htmlFor="password" className="block text-white mb-2">비밀번호</label>
+            <label htmlFor="password" className="block text-white mb-2">パスワード</label>
             <input
               id="password"
               name="password"
@@ -98,15 +98,16 @@ function SignIn() {
           </div>
           {loginError && <p className="text-red-500">{loginError}</p>}
           <div className="flex justify-center">
-            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-4 py-2 px-4 rounded focus:outline-none focus:shadow-outline">로그인</button>
+            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-4 py-2 px-4 rounded focus:outline-none focus:shadow-outline">ログイン</button>
           </div>
         </form>
         <div className="mt-12 flex justify-center w-full">
           <div className="grid grid-cols-2 gap-4 ml-20">
-            <p className="text-white mr-2">계정이 없나요?</p>
-            <Link to="/signup" className="text-blue-500 hover:text-blue-300">회원가입!</Link>
-            <p className="text-white mr-2">비밀번호를 잊으셨나요?</p>
-            <Link to="/reset-password" className="text-blue-500 hover:text-blue-300">비밀번호 재설정!</Link>
+            <p className="text-white mr-2">会員登録されていない方</p>
+            <Link to="/signup" className="text-blue-500 hover:text-blue-300">会員登録</Link>
+            <p className="text-white mr-2">パスワードを忘れた場合</p>
+            <Link to="/reset-password" className="text-blue-500 hover:text-blue-300">
+            パスワードの再設定</Link>
           </div>
         </div>
       </div>
