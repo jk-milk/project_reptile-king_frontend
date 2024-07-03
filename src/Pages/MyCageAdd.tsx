@@ -151,8 +151,8 @@ function MyCageAdd() {
                       setReptileSerialCode(event.target.value);
                       console.log(event.target.value); // 선택된 값 출력
                     }}
-                    className="w-1/6 h-10 p-2 border border-gray-300 rounded mb-2">
-                    <option value="" disabled>選択</option>
+                    className="w-1/4 h-10 p-2 border border-gray-300 rounded mb-2">
+                    <option value="" disabled>選択してください</option>
                     {reptiles.map((reptile) => (
                       <option key={reptile.id} value={reptile.serial_code}>{reptile.name}</option>
                     ))}
