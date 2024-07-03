@@ -102,12 +102,11 @@ function SignIn() {
           </div>
         </form>
         <div className="mt-12 flex justify-center w-full">
-          <div className="grid grid-cols-2 gap-4 ml-20">
+          <div className="grid grid-cols-2 gap-4 ml-4">
             <p className="text-white mr-2">会員登録されていない方</p>
             <Link to="/signup" className="text-blue-500 hover:text-blue-300">会員登録</Link>
             <p className="text-white mr-2">パスワードを忘れた場合</p>
-            <Link to="/reset-password" className="text-blue-500 hover:text-blue-300">
-            パスワードの再設定</Link>
+            <Link to="/reset-password" className="text-blue-500 hover:text-blue-300">パスワードの再設定</Link>
           </div>
         </div>
       </div>
