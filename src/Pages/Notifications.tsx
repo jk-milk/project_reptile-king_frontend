@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { apiWithAuth } from '../components/common/axios';
 import { API } from '../config';
+import { useNavigate } from 'react-router-dom';
 
 const NotificationsPage = () => {
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [filterType, setFilterType] = useState('all');
   const filterButtons = [
@@ -78,7 +80,7 @@ const NotificationsPage = () => {
     try {
       const response = await apiWithAuth.post(`${API}alarms/accept-reptile-sale/${notificationId}`);
       console.log(response);
-      return response.data;
+      navigate("/my-cage"); // 분양 수락 시 내 사육장 페이지로 이동
     } catch (error) {
       console.error('분양 수락 중 실패.', error);
       throw error;
