@@ -156,7 +156,7 @@ const NotificationsPage = () => {
                   <span className="text-gray-600 mb-2">{formatDate(notification.created_at)}</span>
                   <div className="mb-4">{notification.content}</div>
                 </div>
-                {notification.category === 'reptile_sales' && (
+                {notification.category === 'reptile_sales'&& notification.title !== '爬虫類の譲渡完了' && (
                   <div className="notification-actions">
                     <button
                       className="bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 mr-2"
