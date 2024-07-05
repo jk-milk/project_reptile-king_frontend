@@ -1,29 +1,31 @@
 import { useState, useEffect } from 'react';
 import { apiWithAuth } from '../components/common/axios';
 import { API } from '../config';
+import { useNavigate } from 'react-router-dom';
 
 const NotificationsPage = () => {
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [filterType, setFilterType] = useState('all');
   const filterButtons = [
     {
-      name: '전체',
+      name: 'すべて',
       type: 'all',
     }, 
     {
-      name: '파충류 등록',
+      name: '爬虫類登録',
       type: 'reptile_registration',
     }, 
     {
-      name: '파충류 분양 신청',
+      name: '爬虫類譲渡',
       type: 'reptile_sales',
     }, 
     {
-      name: '사육장 온도',
+      name: '飼育場の温湿度',
       type: 'temp_abnormality',
     }, 
     {
-      name: '로그인 알림',
+      name: 'ログイン通知',
       type: 'login',
     }
   ];
@@ -35,7 +37,7 @@ const NotificationsPage = () => {
     const day = koreaDate.getDate();
     const hours = koreaDate.getHours();
     const minutes = koreaDate.getMinutes();
-    return `${month}월 ${day}일 ${hours}시 ${minutes}분`;
+    return `${month}月 ${day}日 ${hours}時 ${minutes}分`;
   };
   
   useEffect(() => {
@@ -78,7 +80,7 @@ const NotificationsPage = () => {
     try {
       const response = await apiWithAuth.post(`${API}alarms/accept-reptile-sale/${notificationId}`);
       console.log(response);
-      return response.data;
+      navigate("/my-cage"); // 분양 수락 시 내 사육장 페이지로 이동
     } catch (error) {
       console.error('분양 수락 중 실패.', error);
       throw error;
@@ -112,7 +114,7 @@ const NotificationsPage = () => {
     <div className="pt-10 pb-10 laptop:w-[67.5rem] w-body m-auto">
       <div className="bg-white rounded mt-20 px-5 py-4">
         <header className="notifications-header">
-          <h1 className="mt-0">알림</h1>
+          <h1 className="mt-0">通知</h1>
           <div className="flex justify-between mb-4">
             <div className="flex justify-start space-x-2">
               {filterButtons.map((button) => (
@@ -133,7 +135,7 @@ const NotificationsPage = () => {
               className="bg-white px-2 py-1 rounded-md hover:bg-gray-300 border border-gray-500 transition-colors duration-300 flex items-center justify-center"
               onClick={checkAllAlarms}
             >
-              전체확인
+              すべて確認
             </button>
           </div>
         </header>
@@ -154,19 +156,19 @@ const NotificationsPage = () => {
                   <span className="text-gray-600 mb-2">{formatDate(notification.created_at)}</span>
                   <div className="mb-4">{notification.content}</div>
                 </div>
-                {notification.category === 'reptile_sales' && (
+                {notification.category === 'reptile_sales'&& notification.title !== '爬虫類の譲渡完了' && (
                   <div className="notification-actions">
                     <button
                       className="bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 mr-2"
                       onClick={() => handleAccept(notification.id)}
                     >
-                      수락
+                      承諾
                     </button>
                     <button
                       className="bg-red-500 hover:bg-red-600 text-white rounded-md px-4 py-2"
                       onClick={() => handleReject(notification.id)}
                     >
-                      거부
+                      拒否
                     </button>
                   </div>
                 )}

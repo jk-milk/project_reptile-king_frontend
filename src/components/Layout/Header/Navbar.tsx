@@ -99,14 +99,14 @@ function Navbar() {
       console.error(err);
     } finally {
       dispatch({ type: 'LOGOUT', accessToken: null, refreshToken: null });
-      alert("로그아웃 되었습니다.")
+      alert("ログアウトしました。")
       navigate('/');
     }
   };
 
   const handleNotificationClick = () => {
     if (!isAuthenticated) {
-      alert("로그인해 주세요!");
+      alert("ログインしてください！");
       navigate('/login');
     } else {
       setNotificationDropdownOpen(!notificationDropdownOpen);
@@ -156,8 +156,8 @@ function Navbar() {
                 </button>
                 {dropdownOpen && (
                   <div ref={dropdownRef} className="border border-gray-200 absolute top-0.5 right-10 mt-12 py-2 w-48 bg-white rounded-md shadow-xl z-20"> {/* 드롭다운 위치 조절 */}
-                    <Link to="/mypage" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">마이 페이지</Link>
-                    <button onClick={handleLogout} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">로그아웃</button>
+                    <Link to="/mypage" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">マイページ</Link>
+                    <button onClick={handleLogout} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">ログアウト</button>
                   </div>
                 )}
                 <button>

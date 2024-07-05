@@ -134,37 +134,37 @@ const Home = () => {
         <div className="relative h-screen w-screen bg-[url('./assets/reptile1.png')] bg-cover">
           <div className="absolute top-24 left-28 leading-[6rem] max-w-xl">
             <p className="block">
-              <span className="text-mainTextColor text-7xl font-bold font-sans">파충류</span>
-              <span className="text-white text-6xl font-bold font-sans">를 사랑하는</span>
+              <span className="text-mainTextColor text-7xl font-bold font-sans">爬虫類</span>
+              <span className="text-white text-6xl font-bold font-sans">を愛する</span>
             </p>
             {/* <button onClick={refresh}>
               refresh
             </button> */}
-            <span className="text-white text-6xl font-bold font-home">이들을 위한</span>
-            <span className="block text-white text-7xl font-bold font-home">최고의 서비스</span>
+            <span className="text-white text-6xl font-bold font-home">方々のために</span>
+            <span className="block text-white text-7xl font-bold font-home">最高のサービス</span>
           </div>
           <button className="absolute bottom-10 right-64 px-2 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-2 text-white text-center font-sans text-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/my-cage')}>
-            사육장 바로가기
+            飼育ケージへ
           </button>
         </div>
         <div className="relative h-screen w-screen bg-[url('./assets/reptile2.png')] bg-cover">
           <p className="absolute top-20 right-40 max-w-xl">
-            <span className="block text-white text-5xl font-bold font-sans leading-[4rem]">귀여운 파충류의</span>
-            <span className="block text-white text-5xl font-bold font-sans leading-[4rem]">사육장을</span>
-            <span className="block text-white text-5xl font-bold font-sans leading-[4rem]">예쁘게 꾸며 보세요</span>
+            <span className="block text-white text-5xl font-bold font-sans leading-[4rem]">かわいい爬虫類の</span>
+            <span className="block text-white text-5xl font-bold font-sans leading-[4rem]">飼育ケージを</span>
+            <span className="block text-white text-5xl font-bold font-sans leading-[4rem]">きれいに飾ってみましょう</span>
           </p>
           <button className="absolute left-1/2 transform -translate-x-1/2 bottom-20 px-3 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-2 text-white text-center font-sans text-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/market')}>
-            마켓 바로가기
+            マーケットへ
           </button>
         </div>
         <div className="relative h-screen w-screen bg-[url('./assets/reptile3.png')] bg-cover">
           <p className="absolute bottom-10 left-14 max-w-2xl">
-            <span className="block text-white text-7xl font-bold font-home leading-[6rem]">파충류 커뮤니티, </span>
-            <span className="block text-white text-7xl font-bold font-home leading-[6rem]">여러분의 이야기와 </span>
-            <span className="block text-white text-7xl font-bold font-home leading-[6rem]">경험이 만나는 곳 </span>
+            <span className="block text-white text-7xl font-bold font-home leading-[6rem]">爬虫類コミュニティ、 </span>
+            <span className="block text-white text-7xl font-bold font-home leading-[6rem]">みなさんのストーリーと </span>
+            <span className="block text-white text-7xl font-bold font-home leading-[6rem]">経験が出会う場所 </span>
           </p>
           <button className="absolute top-48 right-32 px-3 py-4 bg-[rgba(255,255,255,0.00)] border-solid border-white border-2 text-white text-center font-sans text-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white" onClick={() => navigateTo('/board')}>
-            커뮤니티 바로가기
+            コミュニティへ
           </button>
         </div>
         <Footer />

@@ -72,7 +72,6 @@ function App() {
           <Route path='board/write' element={<PostWrite />} />
           <Route path='board/edit/:postId' element={<PostEdit />} />
           <Route path='notifications' element={<Notifications />} />
-
         </Route>
       </Route>
       <Route element={<MarketLayout />}>
