@@ -315,7 +315,7 @@ function MyCageDetail() {
           <div className="bg-white rounded-lg shadow-md px-5 py-4">
             <div className="flex md:flex-row justify-between items-center mb-4 relative">
               <div className="flex flex-col">
-                <MdCreate className="text-2xl absolute left-80 top-10 transform translate-x-8 -translate-y-6" />
+                <MdCreate className="text-2xl absolute left-96 top-10 transform translate-x-8 -translate-y-6" />
                 <input
                   type="text"
                   value={cage?.name}

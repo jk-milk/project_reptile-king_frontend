@@ -111,7 +111,7 @@ const NotificationsPage = () => {
   }
 
   return (
-    <div className="pt-10 pb-10 laptop:w-[67.5rem] w-body m-auto">
+    <div className="pt-10 pb-10 laptop:w-[67.5rem] w-body m-auto min-h-screen">
       <div className="bg-white rounded mt-20 px-5 py-4">
         <header className="notifications-header">
           <h1 className="mt-0">通知</h1>
@@ -152,9 +152,18 @@ const NotificationsPage = () => {
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="font-bold mb-2 mr-2">{notification.title}</span>
-                  <span className="text-gray-600 mb-2">{formatDate(notification.created_at)}</span>
-                  <div className="mb-4">{notification.content}</div>
+                  <span className={`${notification.readed 
+                    ? "text-gray-400 mb-2 mr-2"
+                    : "font-bold mb-2 mr-2"
+                  }`}>{notification.title}</span>
+                  <span className={`${notification.readed
+                    ? "text-gray-400 mb-2"
+                    : "text-gray-600 mb-2"
+                  }`}>{formatDate(notification.created_at)}</span>
+                  <div className={`${notification.readed
+                    ? "text-gray-400 mb-4"
+                    : "mb-4"
+                  }`}>{notification.content}</div>
                 </div>
                 {notification.category === 'reptile_sales'&& notification.title !== '爬虫類の譲渡完了' && (
                   <div className="notification-actions">
