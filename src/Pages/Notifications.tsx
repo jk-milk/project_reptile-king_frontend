@@ -109,6 +109,7 @@ const NotificationsPage = () => {
     try {
       const response = await apiWithAuth.post(`${API}alarms/check-all-alarms`);
       console.log(response);
+      navigate(0);
       return response.data;
     } catch (error) {
       console.error('알람 전체 확인 중 실패.', error);
