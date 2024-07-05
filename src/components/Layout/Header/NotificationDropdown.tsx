@@ -92,7 +92,7 @@ const NotificationDropdown = ({ isOpen, setIsOpen, alarms, setAlarms }) => {
           className={`flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 transition-colors duration-200 ${
             !alarm.readed ? 'font-bold' : ''  
           }`}
-          onClick={() => checkAlarm(alarm.id)}
+          // onClick={() => checkAlarm(alarm.id)}
         >
           {getIconByCategory(alarm.category)}
           <div>
