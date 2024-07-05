@@ -2,10 +2,26 @@ import { Link } from 'react-router-dom';
 import { FaRegCommentDots } from "react-icons/fa";
 import { RiShoppingBagLine } from "react-icons/ri";
 import { MdOutlinePets } from "react-icons/md";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { apiWithAuth } from '../../common/axios';
 
-const NotificationDropdown = () => {
+const NotificationDropdown = ({ isOpen, setIsOpen }) => {
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownRef, setIsOpen]);
+  
+  
   const [alarms, setAlarms] = useState([]);
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -38,7 +54,8 @@ const NotificationDropdown = () => {
   };
 
   return (
-    <div className="border border-gray-200 top-8 absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg z-20 max-h-64 overflow-auto">
+    isOpen && (
+    <div ref={dropdownRef} className="border border-gray-200 top-8 absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg z-20 max-h-64 overflow-auto">
       <div className="px-4 py-3 text-lg font-bold text-black border-b border-gray-200">
         <div className="flex items-center">
           <span>通知</span>
@@ -63,6 +80,7 @@ const NotificationDropdown = () => {
         </Link>
       ))}
     </div>
+    )
   );
 };
 
