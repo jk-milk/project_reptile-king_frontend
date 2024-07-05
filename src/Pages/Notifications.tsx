@@ -57,17 +57,6 @@ const NotificationsPage = () => {
     fetchNotifications();
   }, []);
 
-  // 알림 읽음 처리
-  const markAsRead = (id) => {
-    setNotifications(
-      notifications.map((notification) =>
-        notification.id === id
-          ? { ...notification, read: true }
-          : notification
-      )
-    );
-  };
-
   // 알림 유형별 필터링
   const filteredNotifications = filterType === 'all'
     ? notifications
@@ -97,6 +86,23 @@ const NotificationsPage = () => {
       throw error;
     }
   }
+
+  // 알람 확인 함수 
+  const checkAlarm = async (alarmId) => {
+    try {
+      const response = await apiWithAuth.post(`alarms/check-alarm/${alarmId}`);
+      console.log(response);
+  
+      // 알림 확인 후 alarms 상태 업데이트
+      setNotifications((prevAlarms) =>
+        prevAlarms.map((alarm) =>
+          alarm.id === alarmId ? { ...alarm, readed: true } : alarm
+        )
+      );
+    } catch (error) {
+      console.error('알림 확인 실패:', error);
+    }
+  };
 
   // 알람 전체 확인
   async function checkAllAlarms(): Promise<void> {
@@ -148,7 +154,7 @@ const NotificationsPage = () => {
                 ? 'bg-gray-100 hover:bg-gray-200' 
                 : 'bg-white hover:bg-gray-100'
               } rounded-lg shadow-md p-4 mb-4 cursor-pointer`}
-              onClick={() => markAsRead(notification.id)}
+              onClick={() => checkAlarm(notification.id)}
             >
               <div className="flex justify-between items-start">
                 <div>
