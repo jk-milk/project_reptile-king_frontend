@@ -175,7 +175,7 @@ function Navbar() {
                     </div>
                   )}
                 </div>
-                {notificationDropdownOpen && <NotificationDropdown isOpen={notificationDropdownOpen} setIsOpen={setNotificationDropdownOpen} />}
+                {notificationDropdownOpen && <NotificationDropdown isOpen={notificationDropdownOpen} setIsOpen={setNotificationDropdownOpen} alarms={notifications} setAlarms={setNotifications}/>}
               </div>
             ) : (
               // 로그인 하지 않은 상태
