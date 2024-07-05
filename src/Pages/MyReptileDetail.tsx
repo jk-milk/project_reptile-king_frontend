@@ -200,11 +200,13 @@ function MyReptileDetail() {
     try {
       console.log(searchQuery);
 
-      // const response = await apiWithAuth.get(`users/${searchQuery}/info`);
-      // console.log(response);
+      const response = await apiWithAuth.get(`users/${searchQuery}/info`);
+      console.log(response);
 
-      // setFilteredUsers([response.data]);
-      setFilteredUsers(["배석민"]);
+      setFilteredUsers(response.data.users);
+      console.log(filteredUsers);
+      
+      // setFilteredUsers(["배석민"]);
       setError('');
     } catch (error) {
       setFilteredUsers([]);
@@ -251,7 +253,7 @@ function MyReptileDetail() {
             {/* <div className="font-bold text-3xl mb-4 text-gray-800">파충류 세부정보</div> */}
             <div className="flex md:flex-row justify-between items-center mb-4 relative">
               <div className="flex flex-col">
-                <MdCreate className="text-2xl absolute left-80 top-10 transform translate-x-8 -translate-y-6" />
+                <MdCreate className="text-2xl absolute left-96 top-10 transform translate-x-8 -translate-y-6" />
                 <input
                   type="text"
                   value={reptile?.name}
@@ -451,11 +453,11 @@ function MyReptileDetail() {
                     </button>
                   </div>
                   {error && <p className="text-red-500">{error}</p>}
-                  <ul>
+                  <ul className="my-5">
                     {filteredUsers.map(user => (
                       <li
                         key={user}
-                        className="p-2 cursor-pointer hover:bg-gray-200"
+                        className="p-2 cursor-pointer hover:bg-gray-200 "
                         onClick={() => handleUserSelect(user)}
                       >
                         {user}
