@@ -158,7 +158,7 @@ const Home = () => {
           </button>
         </div>
         <div className="relative h-screen w-screen bg-[url('./assets/reptile3.png')] bg-cover">
-          <p className="absolute bottom-10 left-14 max-w-2xl">
+          <p className="absolute bottom-10 left-14 max-w-4xl">
             <span className="block text-white text-7xl font-bold font-home leading-[6rem]">爬虫類コミュニティ、 </span>
             <span className="block text-white text-7xl font-bold font-home leading-[6rem]">みなさんのストーリーと </span>
             <span className="block text-white text-7xl font-bold font-home leading-[6rem]">経験が出会う場所 </span>
