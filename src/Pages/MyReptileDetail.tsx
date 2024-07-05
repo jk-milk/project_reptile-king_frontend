@@ -408,7 +408,7 @@ function MyReptileDetail() {
                   <ul className="space-y-4">
                     <li className="flex justify-between items-center border-b border-gray-200 pb-4">
                       <span>最終脱皮日</span>
-                      <span>2023-05-15</span>
+                      <span>2024-05-15</span>
                     </li>
                     <li className="flex justify-between items-center border-b border-gray-200 pb-4">
                       <span>脱皮サイクル</span>
@@ -416,15 +416,15 @@ function MyReptileDetail() {
                     </li>
                     <li className="flex justify-between items-center pb-4">
                       <span>脱皮予定日</span>
-                      <span>2023-08-15</span>
+                      <span>2024-08-15</span>
                     </li>
                   </ul>
                   <div className="mt-6 pl-4 border-l-4 border-gray-300">
                     <p className="text-gray-500">脱皮履歴</p>
                     <ul className="space-y-2 mt-2">
-                      <li>2023-05-15</li>
-                      <li>2022-12-01</li>
-                      <li>2022-08-20</li>
+                      <li>2024-05-15</li>
+                      <li>2023-12-01</li>
+                      <li>2023-08-20</li>
                     </ul>
                   </div>
                 </div>
