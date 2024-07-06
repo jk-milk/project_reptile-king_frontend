@@ -124,8 +124,8 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
               }}
               // symbolSpacer={5} // 범례 심볼과 텍스트 사이의 간격 조절
               data={[
-                { name: "湿度", symbol: { fill: "#c43a31", type: "square", size: 4 } },
-                { name: "温度", symbol: { fill: "#0077b6", type: "square", size: 4 } },
+                { name: "湿度", symbol: { fill: "#0077b6", type: "square", size: 4 } },
+                { name: "温度", symbol: { fill: "#c43a31", type: "square", size: 4 } },
               ]}
             />
           </VictoryChart>
@@ -224,7 +224,7 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
         <VictoryLine
           data={temperatureData}
           style={{
-            data: { stroke: "#0077b6" }
+            data: { stroke: "#c43a31" }
           }}
           labels={({ datum }) => datum.label}
           labelComponent={<VictoryTooltip />}
@@ -232,7 +232,7 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
         <VictoryLine
           data={humidityData}
           style={{
-            data: { stroke: "#c43a31" }
+            data: { stroke: "#0077b6" }
           }}
           labels={({ datum }) => datum.label}
           labelComponent={<VictoryTooltip />}
@@ -249,8 +249,8 @@ function TemHumChart({ data, date, setDate }: LineChartProps) {
           }}
           // symbolSpacer={5} // 범례 심볼과 텍스트 사이의 간격 조절
           data={[
-            { name: "湿度", symbol: { fill: "#c43a31", type: "square", size: 4 } },
-            { name: "温度", symbol: { fill: "#0077b6", type: "square", size: 4 } },
+            { name: "湿度", symbol: { fill: "#0077b6", type: "square", size: 4 } },
+            { name: "温度", symbol: { fill: "#c43a31", type: "square", size: 4 } },
           ]}
         />
       </VictoryChart>
