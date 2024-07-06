@@ -45,7 +45,7 @@ function MyCageDetail() {
   useEffect(() => {
     const fetchCages = async () => {
       const cageResponse = await apiWithAuth.get(API + "cages/" + id);
-      console.log(cageResponse);
+      console.log(cageResponse, "케이지 상세 데이터");
       setCage(cageResponse.data.cage);
       // setEditedName(cageResponse.data.cage.name);
       // setTemp(cageResponse.data.cage.set_temp);
@@ -75,7 +75,7 @@ function MyCageDetail() {
   useEffect(() => {
     const fetchCagesTempHum = async () => {
       const response = await apiWithAuth.get(`${API}cages/${id}/latest-temperature-humidity`)
-      console.log(response.data.latestData);
+      console.log(response.data.latestData, "현재 온습도 데이터");
       if (response.data.latestData !== undefined) {
         setCurTem(response.data.latestData.temperature);
         setCurHum(response.data.latestData.humidity);
@@ -93,7 +93,7 @@ function MyCageDetail() {
   useEffect(() => {
     const fetchCagesTempHumGraphs = async () => {
       const response = await apiWithAuth.get(`${API}cages/${id}/daily-temperature-humidity/${date}`)
-      console.log(response);
+      console.log(response, "온습도 그래프 데이터");
       setAvgTempHum(response.data.avgData);
     }
     fetchCagesTempHumGraphs();
@@ -102,10 +102,10 @@ function MyCageDetail() {
   // 해당 케이지에 속하는 파충류 상세 데이터 가져오기
   useEffect(() => {
     const fetchReptiles = async () => {
-      console.log(reptileSerialCode);
+      console.log(reptileSerialCode, "파충류 시리얼 코드");
 
       const response = await apiWithAuth.get(API + "reptiles/" + reptileSerialCode);
-      console.log(response);
+      console.log(response, "파충류 상세 데이터");
       setReptile(response.data.reptile);
     };
     fetchReptiles();
@@ -122,7 +122,7 @@ function MyCageDetail() {
     if (check) {
       try {
         const response = await apiWithAuth.delete(API + "cages/" + id);
-        console.log(response);
+        console.log(response, "케이지 삭제 결과");
         alert("削除完了！")
         navigate("/my-cage");
       } catch (error) {
@@ -257,7 +257,7 @@ function MyCageDetail() {
       try {
         // 온습도 데이터 제외 전송
         const response = await apiWithAuth.post(`${API}cages/${id}`, formData);
-        console.log(response);
+        console.log(response, "사육장 정보 수정 결과");
         for (const pair of response.config.data.entries()) {
           console.log(`${pair[0]}: ${pair[1]}`);
         }
@@ -280,7 +280,7 @@ function MyCageDetail() {
       try {
         // 온습도 설정 데이터 전송
         const tempHumResponse = await apiWithAuth.patch(`${API}cages/${id}/update-temperature-humidity`, { setTemp: cage.set_temp, setHum: cage.set_hum });
-        console.log(tempHumResponse);
+        console.log(tempHumResponse, "온습도 변경 결과");
 
         alert('温湿度変更完了!');
         // navigate('/my-cage');
