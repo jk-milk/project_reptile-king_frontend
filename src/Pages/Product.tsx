@@ -35,7 +35,7 @@ const Product: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://54.180.158.4:8000/api/categories");
+        const response = await axios.get("http://3.38.185.224:8000/api/categories");
         const goods = response.data.filter((data: GoodsCategory) => data.division === 'goods');
         setCategories(goods);
       } catch (error) {
@@ -56,7 +56,7 @@ const Product: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://54.180.158.4:8000/api/goods");
+        const response = await axios.get("http://3.38.185.224:8000/api/goods");
         const productsWithThumbnail = response.data.map((product: ProductItem) => {
           const imageUrl = typeof product.img_urls === 'string' ? JSON.parse(product.img_urls).thumbnail : product.img_urls.thumbnail;
           return {

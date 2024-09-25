@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MypageCategory from '../components/Mypage/MypageCategory';
 import MypageOrderContactItem from '../components/Mypage/MypageOrderContactItem'
 import { orders } from './MypageOrder';
@@ -8,6 +9,10 @@ function MypageOrderContactDetail() {
   const [selectedSubCategory, setSelectedSubCategory] = useState('마이 페이지'); // 선택된 세부 카테고리
   const selectedTransaction = transaction[0];
   const firstOrder = orders[0];
+  const navigate = useNavigate();
+  const handleGoBack = () => {
+    navigate(-1); // 이전 페이지로 이동하거나 다른 경로로 설정 가능
+  };
 
   return (
     <div className="pt-12 pb-24 mx-auto max-w-screen-xl flex">
@@ -28,7 +33,7 @@ function MypageOrderContactDetail() {
             {/* 첫 번째 주문만 표시 */}
             <div>
               {/* 주문 상세 정보 */}
-              <MypageOrderContactItem order={firstOrder} transaction={selectedTransaction} /> 
+              <MypageOrderContactItem order={firstOrder} transaction={selectedTransaction} />
               {/* 상세 정보 */}
               <div className="mt-16">
                 <div className="text-xl mb-3 font-bold">상세정보</div>
@@ -78,6 +83,16 @@ function MypageOrderContactDetail() {
                     <div className="text-gray-500 w-40">환불 예상금액</div>
                     <div className="font-bold text-xl text-red-600">{firstOrder.productPrice.toLocaleString()}원</div>
                   </div>
+
+                </div>
+                {/* "목록으로" 버튼 */}
+                <div className="mt-24 flex justify-center items-center">
+                  <button
+                    onClick={handleGoBack}
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                  >
+                    목록으로
+                  </button>
                 </div>
               </div>
             </div>
