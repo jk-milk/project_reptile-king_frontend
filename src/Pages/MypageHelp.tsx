@@ -22,7 +22,7 @@ function MypageFAQ() {
         {/* 오른쪽 섹션 */}
         <div className="w-3/4 px-4">
           <div className="bg-gray-200 rounded px-5 py-4">
-            <div className="font-bold text-2xl mb-3">문의내역</div>
+            <div className="font-bold text-2xl mb-3">문의하기</div>
 
             <div className="bg-white rounded px-5 py-4">
 
