@@ -40,6 +40,8 @@ import MarketCartPaySuccess from './Pages/MarketCartPaySuccess'
 import Notifications from './Pages/Notifications'
 import MypageOrderContact from './Pages/MypageOrderContact'
 import MypageOrderContactDetail from './Pages/MypageOrderContactDetail'
+import MypagePaymentMethod from './Pages/MypagePaymentMethod'
+import MypageDeliveryAddress from './Pages/MypageDeliveryAddress'
 
 function App() {
   return (
@@ -62,6 +64,8 @@ function App() {
           <Route path='my-cage/reptile/edit/:id' element={<MyReptileEdit />} />
           <Route path='my-cage/reptile/add' element={<MyReptileAdd />} />
           <Route path='mypage' element={<Profile />} />
+          <Route path='mypage/payment' element={<MypagePaymentMethod />} />
+          <Route path='mypage/address' element={<MypageDeliveryAddress />} />
           <Route path='mypage/order' element={<MypageOrder />} />
           <Route path='mypage/order/contact' element={<MypageOrderContact />} />
           <Route path='mypage/order/contact/detail' element={<MypageOrderContactDetail />} />
@@ -77,7 +81,6 @@ function App() {
           <Route path='board/write' element={<PostWrite />} />
           <Route path='board/edit/:postId' element={<PostEdit />} />
           <Route path='notifications' element={<Notifications />} />
-
         </Route>
       </Route>
       <Route element={<MarketLayout />}>
