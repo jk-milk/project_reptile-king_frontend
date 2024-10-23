@@ -323,6 +323,12 @@ function MyCageDetail() {
                   className="border-b-2 border-gray-400 py-2 pr-4 text-3xl font-semibold focus:outline-none focus:border-blue-500 transition-colors"
                 />
               </div>
+              {/* <button
+                // onClick={toggleUserSelectModal}
+                className="border-blue-500 hover:bg-blue-300 text-blue-500 border-2 py-1 px-4 rounded font-semibold transition duration-300"
+              >
+                里親探し
+              </button> */}
               <div>
                 <button
                   onClick={handleSaveChanges}

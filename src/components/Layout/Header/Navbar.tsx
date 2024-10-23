@@ -99,7 +99,6 @@ function Navbar() {
       console.error(err);
     } finally {
       dispatch({ type: 'LOGOUT', accessToken: null, refreshToken: null });
-      alert("ログアウトしました。")
       navigate('/');
     }
   };

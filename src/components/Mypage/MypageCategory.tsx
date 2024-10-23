@@ -3,48 +3,60 @@ import { useNavigate } from 'react-router-dom';
 type MypageCategoryProps = {
   selectedSubCategory: string;
   setSelectedSubCategory: (value: string) => void;
-};
+}
 
 const categories = [
   {
     id: 1,
-    category: '정보',
+    category: 'プロフィール',
     subCategories: [
       {
-        title: '마이페이지',
+        title: '会員情報の管理',
+        link: '/mypage',
       },
       {
-        title: '프로필 수정',
+        title: 'お支払い方法',
+        link: '/mypage/payment',
+      },
+      {
+        title: 'アドレス',
+        link: '/mypage/address',
       },
     ],
   },
   {
     id: 2,
-    category: '쇼핑',
+    category: 'ショッピング',
     subCategories: [
       {
-        title: '주문내역',
+        title: '注文履歴',
+        link: '/mypage/order',
       },
       {
-        title: '취소/반품/교환/환불내역',
+        title: 'キャンセル・返品・交換・返金履歴',
+        link: '/mypage/order/contact',
       },
       {
-        title: '리뷰관리',
+        title: 'レビュー管理',
+        link: '/mypage/order/review',
       },
       {
-        title: '문의하기',
+        title: 'お問い合わせ',
+        link: '/mypage/help',
       },
     ],
   },
   {
     id: 3,
-    category: '커뮤니티',
+    category: 'コミュニティ',
     subCategories: [
       {
-        title: '내 게시글',
+        title: 'マイポスト',
+        link: '/mypage/posts',
       },
       {
-        title: '내 댓글',
+        title: 'マイコメント',
+        link: '/mypage/comments',
       },
     ],
   },
@@ -53,33 +65,19 @@ const categories = [
 const MypageCategory = ({ selectedSubCategory, setSelectedSubCategory }: MypageCategoryProps) => {
   const navigate = useNavigate();
 
-  const handleClick = (subCategoryTitle: string) => {
-    setSelectedSubCategory(subCategoryTitle);
-
-    if (subCategoryTitle === '주문내역') {
-      navigate('/mypage/order');
-    }
-
-    if (subCategoryTitle === '취소/반품/교환/환불내역') {
-      navigate('/mypage/order/contact');
-    }
-
-    if (subCategoryTitle === '리뷰관리') {
-      navigate('/mypage/order/review');
-    }
-
-    if (subCategoryTitle === '문의하기') {
-      navigate('/mypage/help');
-    }
-
+  const handleClick = (subCategory: { title: string; link: string }) => {
+    setSelectedSubCategory(subCategory.title);
+    navigate(subCategory.link);
   };
 
   return (
-    <div className="w-52 mr-28">
+    <div className="w-52 mr-28 mt-9">
       {categories.map((category) => (
         <div key={category.id} className="w-full p-2">
           <div className="border-b-2 pb-2">
-            <p className="text-lg text-white ps-2">{category.category}</p>
+            <p className="text-lg ps-2">
+              {category.category}
+            </p>
           </div>
           <ul className="w-full pt-2 pb-4">
             {category.subCategories.map((subCategory) => (
@@ -87,10 +85,10 @@ const MypageCategory = ({ selectedSubCategory, setSelectedSubCategory }: MypageC
                 <button
                   className={
                     selectedSubCategory === subCategory.title
-                      ? 'ps-2 py-0.5 text-white font-bold hover:underline'
-                      : 'ps-2 py-0.5 text-white hover:font-bold hover:underline text-left'
+                      ? "ps-2 py-0.5 font-bold hover:underline"
+                      : "ps-2 py-0.5 hover:font-bold hover:underline text-left"
                   }
-                  onClick={() => handleClick(subCategory.title)}
+                  onClick={() => handleClick(subCategory)}
                 >
                   {subCategory.title}
                 </button>
@@ -101,6 +99,6 @@ const MypageCategory = ({ selectedSubCategory, setSelectedSubCategory }: MypageC
       ))}
     </div>
   );
-};
+}
 
 export default MypageCategory;

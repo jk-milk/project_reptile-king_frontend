@@ -200,7 +200,7 @@ function MyReptileDetail() {
     try {
       console.log(searchQuery);
 
-      const response = await apiWithAuth.get(`users/${searchQuery}/info`);
+      const response = await apiWithAuth.get(`users/${searchQuery}/find`);
       console.log(response);
 
       setFilteredUsers(response.data.users);
