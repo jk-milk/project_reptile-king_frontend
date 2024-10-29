@@ -23,26 +23,27 @@ const PostList = ({ posts }: { posts: Post[] | null }) => {
   // }, [posts]);
 
   // 현재 시간과 post의 create_at과의 차이를 출력
-  function timeFromNow(date: string) {
+  function timeFromNow(dateString: string) {
     const now = new Date();
-    const postDate = new Date(date);
-
-    const diffInSeconds = Math.floor((now.getTime() - postDate.getTime()) / 1000);
+    const postDate = new Date(dateString);
+  
+    const diffInMilliseconds = Math.abs(now.getTime() - postDate.getTime());
+    const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     const diffInHours = Math.floor(diffInMinutes / 60);
     const diffInDays = Math.floor(diffInHours / 24);
     const diffInWeeks = Math.floor(diffInDays / 7);
-
+  
     if (diffInSeconds < 60) {
-      return `${diffInSeconds} seconds ago`;
+      return `${diffInSeconds}秒前`;
     } else if (diffInMinutes < 60) {
-      return `${diffInMinutes} minutes ago`;
+      return `${diffInMinutes}分前`;
     } else if (diffInHours < 24) {
-      return `${diffInHours} hours ago`;
+      return `${diffInHours}時間前`;
     } else if (diffInDays < 7) {
-      return `${diffInDays} days ago`;
+      return `${diffInDays}日前`;
     } else {
-      return `${diffInWeeks} weeks ago`;
+      return `${diffInWeeks}週間前`;
     }
   }
 
@@ -102,7 +103,7 @@ const PostList = ({ posts }: { posts: Post[] | null }) => {
                   <span className="text-gray-600 pe-2">{timeFromNow(post.created_at)}</span>
                   <span className="text-gray-600 pe-2">•</span>
                   <FaCommentDots className="inline-block pe-1 pb-1"/>
-                  <span className="text-gray-600 pe-2">{post.comments.length}</span>
+                  {/* <span className="text-gray-600 pe-2">{post.comments.length}</span> */}
                   <span className="text-gray-600 pe-2">•</span>
                   <BiSolidLike className="inline-block pe-1 pb-1" />
                   <span className="text-gray-600 pe-2">{post.likes}</span>

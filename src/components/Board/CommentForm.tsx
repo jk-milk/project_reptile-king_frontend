@@ -105,7 +105,7 @@ function CommentForm({ postId, parentCommentId, onCommentPosted, onCancel}: Comm
         <textarea
           value={comment}
           onChange={handleChange}
-          placeholder="댓글을 남겨보세요"
+          placeholder="コメントをどうぞ"
           className="appearance-none w-full pt-2 pb-6 text-gray-700 leading-tight focus:outline-none resize-none overflow-hidden"
         />
         {/* 대댓글일 때만 취소 버튼 보여주기 */}
@@ -115,7 +115,7 @@ function CommentForm({ postId, parentCommentId, onCommentPosted, onCancel}: Comm
             onClick={handleCancel}
             className="text-gray-400 font-bold px-1 absolute bottom-0 right-14"
           >
-            취소
+            キャンセル
           </button>
         )}
 
@@ -123,7 +123,7 @@ function CommentForm({ postId, parentCommentId, onCommentPosted, onCancel}: Comm
           type="submit" 
           className="text-gray-400 font-bold px-1 absolute bottom-0 right-2"
         >
-          등록
+          登録
         </button>
       </form>
     </div>

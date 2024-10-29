@@ -25,9 +25,9 @@ const s3Client = new S3Client({
 
 function PostWrite() {
   const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState<SelectedCategory>({ name: "카테고리 선택", id: null });
+  const [selectedCategory, setSelectedCategory] = useState<SelectedCategory>({ name: "カテゴリー選択", id: null });
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedSubCategory, setSelectedSubCategory] = useState<SelectedCategory>({ name: "세부 카테고리 선택", id: null });
+  const [selectedSubCategory, setSelectedSubCategory] = useState<SelectedCategory>({ name: "詳細カテゴリー選択", id: null });
   const [subCategories, setSubCategories] = useState<Category[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -119,7 +119,7 @@ function PostWrite() {
 
     try {
       await apiWithAuth.post(API + "posts", postData);
-      alert("글 작성 완료!");
+      // alert("글 작성 완료!");
       navigate(`/board/lists?category=${selectedCategory.id}`);
     } catch (error) {
       console.error('서버 오류', error);
@@ -136,7 +136,7 @@ function PostWrite() {
   return (
     <div className="pt-10 pb-10 laptop:w-[67.5rem] w-body mx-auto">
       <h1 className="text-white text-2xl mt-5">
-        글쓰기
+        書き込み
       </h1>
       <div className="mb-4 p-2 min-h-[35rem] bg-gray-200 rounded">
         <div className="flex">
@@ -149,7 +149,7 @@ function PostWrite() {
             items={subCategories}
             selectedItem={selectedSubCategory}
             setSelectedItem={setSelectedSubCategory}
-            disabled={selectedCategory.name === "카테고리 선택"}
+            disabled={selectedCategory.name === "カテゴリー選択"}
           />
         </div>
 
@@ -165,16 +165,16 @@ function PostWrite() {
         <QuillEditor setContent={setContent} setImages={setImages} />
         <div className="flex">
           <button
-            className="mt-8 mb-4 ml-auto mr-2 p-1 w-20 rounded border border-gray-500 text-white bg-gray-600 focus:ring-2 focus:outline-none"
+            className="mt-8 mb-4 ml-auto mr-2 p-1 w-auto rounded border border-gray-500 text-white bg-gray-600 focus:ring-2 focus:outline-none"
             onClick={handleCancel}
           >
-            취소
+            キャンセル
           </button>
           <button
             className="mt-8 mb-4 mr-2 p-1 w-20 rounded border border-gray-500 text-white bg-blue-600 focus:ring-2 focus:outline-none"
             onClick={handleSubmit}
           >
-            등록
+            登録
           </button>
         </div>
       </div>

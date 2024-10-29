@@ -120,9 +120,9 @@ function Board() {
         <div className="flex flex-col space-y-4">
           <SearchBar />
           <Link to={`/board/write`}>
-            <button className="text-gray-900 border border-gray-100 focus:outline-none bg-white hover:bg-gray-100 focus:ring-1 focus:ring-gray-300 font-medium text-sm px-2 py-1.5 flex items-center">
+            <button className="text-gray-900 border border-gray-100 focus:outline-none bg-white hover:bg-gray-100 focus:ring-1 focus:ring-gray-300 font-medium text-sm ml-2 px-2 py-1.5 flex items-center">
               <RiFileList2Line className="mr-2" />
-              글쓰기
+              書き込み
             </button>
           </Link>
           <BoardCategory categories={categories} selectedCategory={selectedCategory} onSelectCategory={navigateCategory} />
@@ -141,7 +141,7 @@ function Board() {
               <LatestPosts />
             </div>
             <div className="w-1/2">
-              <LatestPostsByCategory categoryId={27} />
+              <LatestPostsByCategory categoryId={57} />
             </div>
           </div>
         </div>

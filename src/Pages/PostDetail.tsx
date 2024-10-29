@@ -156,7 +156,7 @@ function PostDetail() {
           <Link to={`/board/write`}>
             <button className="text-gray-900 border border-gray-100 focus:outline-none bg-white hover:bg-gray-100 focus:ring-1 focus:ring-gray-300 font-medium text-sm px-2 py-1.5 flex items-center">
               <RiFileList2Line className="mr-2" />
-              글쓰기
+              書き込み
             </button>
           </Link>
           <BoardCategory categories={categories} selectedCategory={selectedCategory} onSelectCategory={navigateCategory} />
@@ -181,7 +181,7 @@ function PostDetail() {
                     <span className="text-gray-700">{post.user.nickname}</span>
                     <div className="text-gray-600 text-sm">
                       <span>{new Date(post.created_at).toLocaleDateString()}</span> |
-                      <span> 조회 {post.views}</span>
+                      <span> 閲覧 {post.views}</span>
                     </div>
                   </div>
                 </div>
@@ -200,14 +200,14 @@ function PostDetail() {
                           className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                           onClick={() => navigate(`/board/edit/${post.id}`)}
                         >
-                          수정
+                          修正
                         </button>
                         {/* 글 작성자나 관리자일 경우에만 렌더링 */}
                         <button
                           className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
                           onClick={handleDeletePost}
                         >
-                          삭제
+                          削除
                         </button>
                       </div>
                     </div>
@@ -235,7 +235,7 @@ function PostDetail() {
           <hr className="border-t border-gray-400 mb-10" />
 
           <div>
-            댓글
+            コメント
             {comments.filter(comment => comment.group_comment_id === null).map(comment => (
               <Comment key={comment.id} comment={comment} allComments={comments} postId={postId} updateComments={updateComments} />
             ))}

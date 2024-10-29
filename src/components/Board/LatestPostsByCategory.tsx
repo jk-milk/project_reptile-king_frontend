@@ -28,7 +28,7 @@ const LatestPostsByCategory = ({ categoryId }: { categoryId: number }) => {
           {posts[0]?.category_name}
         </Link>
         <Link to={`/board/lists?category=${categoryId}`} className="flex items-center text-sm text-gray-500">
-          더보기 {">"}
+          もっと見る {">"}
         </Link>
       </div>
       <hr />

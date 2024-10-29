@@ -16,13 +16,13 @@ const FilterButtons = ({ handleSortChange, sort }: FilterButtonsProps) => {
         onClick={() => handleSortChange('')}
       >
         <RiFileList2Line className="inline-block pe-1 pb-1" />
-        전체글
+        通常
       </button>
       <button className="text-white border border-red-700 focus:outline-none bg-red-700 hover:bg-red-800 focus:ring-1 focus:ring-red-700 font-semibold text-sm pl-2 pr-2 py-1.5"
         onClick={() => handleSortChange('popular')}
       >
         <FaFire className="inline-block pe-1 pb-1" />
-        인기글
+        人気
       </button>
       <button
         onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -37,10 +37,10 @@ const FilterButtons = ({ handleSortChange, sort }: FilterButtonsProps) => {
         <div className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow mt-1 ml-40 w-44">
           <ul className="py-2 text-sm text-gray-700">
             <li>
-              <button onClick={() => { setDropdownOpen(false); handleSortChange('latest'); }} className="block px-4 py-2 w-full text-left hover:bg-gray-100">latest</button>
+              <button onClick={() => { setDropdownOpen(false); handleSortChange('新着順'); }} className="block px-4 py-2 w-full text-left hover:bg-gray-100">新着順</button>
             </li>
             <li>
-              <button onClick={() => { setDropdownOpen(false); handleSortChange('oldest'); }} className="block px-4 py-2 w-full text-left hover:bg-gray-100">oldest</button>
+              <button onClick={() => { setDropdownOpen(false); handleSortChange('投稿順'); }} className="block px-4 py-2 w-full text-left hover:bg-gray-100">投稿順</button>
             </li>
             {/* 추후 '댓글순' 추가 가능 */}
           </ul>

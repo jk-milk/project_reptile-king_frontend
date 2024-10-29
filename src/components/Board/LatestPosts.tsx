@@ -26,10 +26,10 @@ const LatestPosts = () => {
 
       <div className="flex justify-between items-center mb-1">
         <Link to={`/board/lists`} className="font-semibold text-lg text-green-600">
-          전체글보기
+          全体一覧
         </Link>
         <Link to={`/board/lists`} className="flex items-center text-sm text-gray-500">
-          더보기 {">"}
+          もっと見る {">"}
         </Link>
       </div>
       <hr />
