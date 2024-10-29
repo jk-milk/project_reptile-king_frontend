@@ -16,12 +16,12 @@ function Posts() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [categories, setCategories] = useState<PostCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<SelectedCategory>({ name: "전체 게시글", id: null }); // 선택된 세부 카테고리
-  const [title, setTitle] = useState<string>(); // 게시글 상단 문자열
+  const [title, setTitle] = useState<string>("全体一覧"); // 게시글 상단 문자열
 
   const [posts, setPosts] = useState<Post[] | null>(null);
   console.log(posts);
 
-  const [sort, setSort] = useState("latest"); // 정렬 방식
+  const [sort, setSort] = useState("新着順"); // 정렬 방식
 
   const LIKES_NUMBER = 5; // 인기글 조건: 좋아요 수 LIKES_NUMBER 이상인 글들이 인기글
   const [paginationData, setPaginationData] = useState({
@@ -54,7 +54,7 @@ function Posts() {
   }, []);
 
   // 전체 게시글 가져오는 함수
-  const fetchPosts = async (sort: string = 'latest', page: number = 1) => {
+  const fetchPosts = async (sort: string = '新着順', page: number = 1) => {
     const response = await apiWithoutAuth.get(`${API}posts`, {
       params: {
         sort,
@@ -73,7 +73,7 @@ function Posts() {
   };
 
   // 카테고리 기준 게시글 데이터 가져오는 함수
-  const fetchPostsByCategory = async (category_id: number, sort: string = 'latest', page: number = 1) => {
+  const fetchPostsByCategory = async (category_id: number, sort: string = '新着順', page: number = 1) => {
     const response = await apiWithoutAuth.get(`${API}posts/category/${category_id}`, {
       params: {
         sort,
@@ -109,7 +109,7 @@ function Posts() {
     const search = searchParams.get('search');
     if (categoryId === null) {
       if (search === null)
-        fetchPosts('latest', currentPage);
+        fetchPosts('新着順', currentPage);
       else {
         // 검색어 기준 게시글 데이터 가져오는 함수
         fetchPostsBySearch(search);
@@ -153,7 +153,7 @@ function Posts() {
   const handleSortChange = (sort: string) => {
     if (sort === '') {
       console.log(sort, "빈문자열");
-      setSort('latest')
+      setSort('新着順')
       searchParams.delete('sort');
       setSearchParams({ ...Object.fromEntries(searchParams) });
     } else {
@@ -190,17 +190,11 @@ function Posts() {
             <Link to={`/board/write`}>
               <button className="text-gray-900 border border-gray-100 focus:outline-none bg-white  hover:bg-gray-100 focus:ring-1 focus:ring-gray-300 font-semibold text-sm pl-2 pr-2 py-1.5">
                 <RiFileList2Line className="inline-block pe-1 pb-1" />
-                글쓰기
+                書き込み
               </button>
             </Link>
           </div>
           <PostList posts={posts} />
-          {/* <Pagination
-            totalPosts={totalPosts}
-            postsPerPage={POSTS_PER_PAGE}
-            currentPage={currentPage}
-            paginate={paginate}
-          /> */}
           <Pagination paginationData={paginationData} onPageChange={handlePageChange} />
         </div>
         {/* <PopularPosts /> */}

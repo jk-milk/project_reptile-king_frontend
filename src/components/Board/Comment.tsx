@@ -117,26 +117,26 @@ const Comment = ({ comment, allComments, postId, updateComments }: CommentProps)
             </button>
             {showDropdown && (
               <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg">
-                <button onClick={handleEdit} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">수정</button>
-                <button onClick={handleDelete} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">삭제</button>
+                <button onClick={handleEdit} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">修正</button>
+                <button onClick={handleDelete} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">削除  </button>
               </div>
             )}
           </div>
         </div>
         <p>{comment.content}</p>
         <span className="text-sm">{formatCreatedAt(comment.created_at)}</span>
-        <button onClick={() => setShowReplyInput(!showReplyInput)} className="py-1 px-3 text-gray-600">답글쓰기</button>
+        <button onClick={() => setShowReplyInput(!showReplyInput)} className="py-1 px-3 text-gray-600">返信</button>
       </div>
       {showReplyInput && (
         <div className={replyInputClassName}>
           <span>JK</span>
           <textarea
-            placeholder="댓글을 남겨보세요..."
+            placeholder="コメントをどうぞ..."
             value={replyContent}
             onChange={e => setReplyContent(e.target.value)}
             className="appearance-none w-full pt-2 text-gray-700 leading-tight focus:outline-none resize-none overflow-hidden"
           />
-          <button onClick={handleReplySubmit} className="mb-1 py-1 px-3 float-right rounded font-bold text-gray-400">등록</button>
+          <button onClick={handleReplySubmit} className="mb-1 py-1 px-3 float-right rounded font-bold text-gray-400">登録</button>
           <p className="clear-both"></p>
         </div>
       )}
