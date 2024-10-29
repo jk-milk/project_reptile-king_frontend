@@ -69,7 +69,7 @@ const PostList = ({ posts }: { posts: Post[] | null }) => {
     return (
       <div className="bg-[#f9f9f9] pt-20 px-5 min-h-[50rem] border-t border-black flex justify-center">
         <div>
-          <p className="text-xl font-semibold">로딩 중...</p>
+          <p className="text-xl font-semibold">読み込み中です...</p>
         </div>
       </div>
     );
